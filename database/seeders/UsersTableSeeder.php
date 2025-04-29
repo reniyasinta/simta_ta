@@ -16,6 +16,7 @@ class UsersTableSeeder extends Seeder
         $admin = User::firstOrCreate(
             ['email' => 'admin@gmail.com'], // Kriteria pencarian
             [
+                'id' => '1',
                 'name' => 'Admin',
                 'password' => bcrypt('11'),
             ]
@@ -26,6 +27,7 @@ class UsersTableSeeder extends Seeder
     $dosen = User::firstOrCreate(
         ['email' => 'dosen@gmail.com'], // Kriteria pencarian
         [
+            'id' => '2',
             'name' => 'Dosen',
             'password' => bcrypt('22'),
         ]
@@ -35,6 +37,7 @@ class UsersTableSeeder extends Seeder
     $dosen = User::firstOrCreate(
         ['email' => 'mahasiswa@gmail.com'], // Kriteria pencarian
         [
+            'id' => '3',
             'name' => 'Mahasiswa',
             'password' => bcrypt('33'),
         ]
@@ -44,6 +47,7 @@ class UsersTableSeeder extends Seeder
     $dosen = User::firstOrCreate(
         ['email' => 'panitia@gmail.com'], // Kriteria pencarian
         [
+            'id' => '4',
             'name' => 'Panitia',
             'password' => bcrypt('44'),
         ]
