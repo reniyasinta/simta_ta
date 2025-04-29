@@ -8,6 +8,6 @@ class DosenController extends Controller
 {
     public function index()
     {
-        return view('dashboard.dosen');
+        return view('pages.dosen.dashboard');
     }
 }

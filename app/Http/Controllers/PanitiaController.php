@@ -8,6 +8,6 @@ class PanitiaController extends Controller
 {
     public function index()
     {
-        return view('dashboard.panitia');
+        return view('pages.panitia.dashboard');
     }
 }
