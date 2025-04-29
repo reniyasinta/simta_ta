@@ -9,6 +9,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PanitiaController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\LogsController;
+use App\Http\Controllers\JadwalController;
 
 // Halaman login (GET)
 Route::get('/', function () {
@@ -20,9 +21,9 @@ Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login']);
 
 // Password reset & register (akses sebelum login)
-Route::get('password/request', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
-Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-Route::post('register', [RegisterController::class, 'register']);
+// Route::get('password/request', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+// Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+// Route::post('register', [RegisterController::class, 'register']);
 
 // Setelah login
 Route::middleware(['auth'])->group(function () {
@@ -49,3 +50,5 @@ Route::middleware(['auth'])->group(function () {
 });
 
 
+// Route Jadwal
+Route::get('/jadwal', [JadwalController::class, 'index']);

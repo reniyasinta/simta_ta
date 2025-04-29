@@ -34,7 +34,7 @@ class UsersTableSeeder extends Seeder
     );
     $dosen->assignRole('dosen');
 
-    $dosen = User::firstOrCreate(
+    $mahasiswa = User::firstOrCreate(
         ['email' => 'mahasiswa@gmail.com'], // Kriteria pencarian
         [
             'id' => '3',
@@ -42,9 +42,9 @@ class UsersTableSeeder extends Seeder
             'password' => bcrypt('33'),
         ]
     );
-    $dosen->assignRole('mahasiswa');
+    $mahasiswa->assignRole('mahasiswa');
 
-    $dosen = User::firstOrCreate(
+    $panitia = User::firstOrCreate(
         ['email' => 'panitia@gmail.com'], // Kriteria pencarian
         [
             'id' => '4',
@@ -52,6 +52,6 @@ class UsersTableSeeder extends Seeder
             'password' => bcrypt('44'),
         ]
     );
-    $dosen->assignRole('panitia');
+    $panitia->assignRole('panitia');
 }
 }
