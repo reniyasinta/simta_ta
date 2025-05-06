@@ -25,20 +25,20 @@ class UsersTableSeeder extends Seeder
             'role_id' => $adminRole->id,
         ]);
 
+          // Panitia user
+          User::create([
+            'name' => 'Panitia',
+            'email' => 'panitia@gmail.com',
+            'password' => Hash::make('22'),
+            'role_id' => $panitiaRole->id,
+        ]);
+
         // Dosen user
         User::create([
             'name' => 'Dosen',
             'email' => 'dosen@gmail.com',
-            'password' => Hash::make('22'),
-            'role_id' => $dosenRole->id,
-        ]);
-
-        // Panitia user
-        User::create([
-            'name' => 'Panitia',
-            'email' => 'panitia@gmail.com',
             'password' => Hash::make('33'),
-            'role_id' => $panitiaRole->id,
+            'role_id' => $dosenRole->id,
         ]);
 
         // Mahasiswa user

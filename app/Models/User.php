@@ -53,8 +53,8 @@ class User extends Authenticatable
     {
         return match ($this->role_id) {
             1 => 'admin',
-            2 => 'dosen',
-            3 => 'panitia',
+            2 => 'panitia',
+            3 => 'dosen',
             4 => 'mahasiswa',
             default => 'unknown',
         };
@@ -67,8 +67,8 @@ class User extends Authenticatable
     {
         return match ($this->role_id) {
             1 => route('admin.dashboard'),
-            2 => route('dosen.dashboard'),
-            3 => route('panitia.dashboard'),
+            2 => route('panitia.dashboard'),
+            3 => route('dosen.dashboard'),
             4 => route('mahasiswa.dashboard'),
             default => '/',
         };

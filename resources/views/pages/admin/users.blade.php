@@ -16,11 +16,14 @@
                 <div class="alert alert-success">{{ session('success') }}</div>
             @endif
 
-            <div class="clearfix mb-3"></div>
+            <div class="d-flex justify-content-between mb-3">
+                <a href="{{ route('admin.create') }}" class="btn btn-primary">+ Tambah User</a>
+                <a href="{{ route('admin.import') }}" class="btn btn-success">Import User</a>
+            </div>
+
 
             <div class="table-responsive">
                 <table class="table table-bordered table-striped mt-3">
-                    <a href="{{ route('admin.create') }}" class="btn btn-primary">+ Tambah User</a>
                     <thead>
                         <tr>
                             <th>No</th>
@@ -41,7 +44,7 @@
                                 <td>{{ $user->role_name }}</td>
                                 <td>
                                     <a href="{{ route('admin.edit', $user->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                                    <form action="{{route('admin.destroy', $user->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin hapus user ini?')">
+                                    <form action="{{ route('admin.destroy', $user->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin hapus user ini?')">
                                         @csrf
                                         @method('DELETE')
                                         <button class="btn btn-sm btn-danger">Hapus</button>
@@ -59,4 +62,5 @@
         </section>
     </div>
 </div>
+
 @endsection

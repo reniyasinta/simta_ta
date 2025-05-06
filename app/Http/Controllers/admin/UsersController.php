@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Role;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\UsersImport;
 
 class UsersController extends Controller
 {
@@ -79,5 +81,21 @@ public function destroy($id)
     return redirect()->route('admin.users')->with('success', 'User berhasil dihapus.');
 }
 
+
+public function importForm()
+{
+    return view('pages.admin.import');
+}
+
+public function importStore(Request $request)
+{
+    $request->validate([
+        'file_excel' => 'required|file|mimes:xlsx,xls',
+    ]);
+
+    Excel::import(new UsersImport, $request->file('file_excel'));
+
+    return redirect()->route('admin.users')->with('success', 'Data pengguna berhasil diimport!');
+}
 
 }

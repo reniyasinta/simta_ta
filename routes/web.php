@@ -8,12 +8,14 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\UsersController;
-use App\Http\Controllers\PanitiaController;
+use App\Http\Controllers\Panitia\PanitiaController;
 use App\Http\Controllers\LogsController;
 use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\Mahasiswa\MahasiswaController;
 use App\Http\Controllers\Mahasiswa\PengajuanController;
 use App\Http\Controllers\Mahasiswa\KelompokController;
+use App\Http\Controllers\Panitia\PanitiaPengajuanController;
+
 
 
 // Halaman login (GET)
@@ -48,11 +50,20 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/{id}/edit', [UsersController::class, 'edit'])->name('admin.edit');
         Route::put('/admin/{id}', [UsersController::class, 'update'])->name('admin.update');
         Route::delete('/admin/{id}', [UsersController::class, 'destroy'])->name('admin.destroy');
+        Route::get('/admin/import', [UsersController::class, 'importForm'])->name('admin.import');
+        Route::post('/admin/import', [UsersController::class, 'importStore'])->name('admin.import.store');
+
     });
 
     Route::middleware(['role:panitia'])->group(function () {
         Route::get('/panitia/dashboard', [PanitiaController::class, 'index'])->name('panitia.dashboard');
+
+        // Gunakan prefix URL panitia
+        Route::get('/panitia/pengajuan', [PanitiaPengajuanController::class, 'index'])->name('panitia.pengajuan.index');
+        Route::get('/panitia/pengajuan/{id}/edit', [PanitiaPengajuanController::class, 'edit'])->name('panitia.pengajuan.edit');
+        Route::put('/panitia/pengajuan/{id}', [PanitiaPengajuanController::class, 'update'])->name('panitia.pengajuan.update');
     });
+
 
     Route::middleware(['role:dosen'])->group(function () {
         Route::get('/dosen/dashboard', [DosenController::class, 'index'])->name('dosen.dashboard');

@@ -11,8 +11,8 @@ class RoleMiddleware
     // Mapping role name => role_id
     protected $roleMap = [
         'admin' => 1,
-        'dosen' => 2,
-        'panitia' => 3,
+       'panitia' => 2,
+       'dosen' => 3,
         'mahasiswa' => 4,
     ];
 
