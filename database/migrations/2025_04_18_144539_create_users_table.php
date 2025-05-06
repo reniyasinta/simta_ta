@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('mahasiswa', function (Blueprint $table) {
-            $table->id('id_mhs');
-            $table->foreignId('id_user')->constrained('user','id_user');
-            $table->string('nim_mhs');
-            $table->string('nama_mhs');
-            $table->string('prodi_mhs');
-            $table->string('semester');
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email');
+            $table->string('password');
             $table->timestamps();
         });
     }
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('mahasiswa');
+        Schema::dropIfExists('users');
     }
 };

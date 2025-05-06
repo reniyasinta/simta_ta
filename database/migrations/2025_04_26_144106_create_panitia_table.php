@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('panitia', function (Blueprint $table) {
             $table->id('id_panitia');
-            $table->foreignId('id_user')->constrained('user','id_user');
+            $table->foreignId('id_users')->constrained('users');
             $table->string('prodi');
             $table->timestamps();
         });

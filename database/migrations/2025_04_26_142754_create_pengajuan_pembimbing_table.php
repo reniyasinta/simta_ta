@@ -18,8 +18,8 @@ return new class extends Migration
             $table->foreignId('id_dosen2')->constrained('dosen','id_dosen');
             $table->string('judul_ta');
             $table->string('proposal');
-            $table->string('status');
-            $table->string('keterangan');
+            $table->enum('status', ['Menunggu', 'Diterima', 'Ditolak'])->default('Menunggu');
+            $table->text('keterangan')->nullable();
             $table->timestamps();
         });
     }

@@ -1,11 +1,4 @@
-Schema::create('sessions', function (Blueprint $table) {
-    $table->id('id')->primary();
-    $table->foreignId('user_id')->nullable()->index()->constrained()->onDelete('cascade');
-    $table->string('ip_address', 45)->nullable();
-    $table->text('user_agent')->nullable();
-    $table->longText('payload');
-    $table->integer('last_activity')->index();
-});<?php
+<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
