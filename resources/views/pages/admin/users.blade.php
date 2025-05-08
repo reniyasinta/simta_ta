@@ -21,7 +21,6 @@
                 <a href="{{ route('admin.import') }}" class="btn btn-success">Import User</a>
             </div>
 
-
             <div class="table-responsive">
                 <table class="table table-bordered table-striped mt-3">
                     <thead>
@@ -29,8 +28,8 @@
                             <th>No</th>
                             <th>Nama</th>
                             <th>Email</th>
-                            {{-- <th>Password</th> --}}
                             <th>Role</th>
+                            <th>NIP/NIM</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -40,8 +39,8 @@
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
-                                {{-- <td>{{ $user->password }}</td> --}}
-                                <td>{{ $user->role_name }}</td>
+                                <td>{{ $user->role->name ?? '-' }}</td>
+                                <td>{{ $user->role_id == 4 ? $user->nim : $user->nip }}</td>
                                 <td>
                                     <a href="{{ route('admin.edit', $user->id) }}" class="btn btn-sm btn-warning">Edit</a>
                                     <form action="{{ route('admin.destroy', $user->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin hapus user ini?')">
@@ -53,7 +52,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="text-center">Tidak ada pengguna terdaftar.</td>
+                                <td colspan="6" class="text-center">Tidak ada pengguna terdaftar.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -62,5 +61,4 @@
         </section>
     </div>
 </div>
-
 @endsection

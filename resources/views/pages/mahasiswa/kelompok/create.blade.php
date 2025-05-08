@@ -22,7 +22,6 @@
                 <div class="clearfix mb-3"></div>
                 <form action="{{ route('kelompok.store') }}" method="POST">
                     @csrf
-                    @csrf
 
                 <div class="form-group mb-3">
                     <label>Anggota 1 (NIM)</label>

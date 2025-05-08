@@ -17,6 +17,8 @@ class User extends Authenticatable
         'email',
         'password',
         'role_id',
+        'nip', // ← tambahan
+        'nim', // ← tambahan
     ];
 
     protected $hidden = [
@@ -25,6 +27,7 @@ class User extends Authenticatable
     ];
 
     protected $casts = [
+        'role_id' => 'integer',
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
@@ -47,7 +50,6 @@ class User extends Authenticatable
 
     /**
      * Accessor untuk mendapatkan nama role dari role_id.
-     * Bisa dipanggil via $user->role_name
      */
     public function getRoleNameAttribute()
     {

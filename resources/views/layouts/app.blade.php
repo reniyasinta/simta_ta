@@ -3,30 +3,28 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no"
-        name="viewport">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
     <title>@yield('title') &mdash; Stisla</title>
 
     <!-- General CSS Files -->
-    <link rel="stylesheet"
-        href="{{ asset('library/bootstrap/dist/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('library/bootstrap/dist/css/bootstrap.min.css') }}">
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
         integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
         crossorigin="anonymous"
         referrerpolicy="no-referrer" />
 
+    <!-- jQuery CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     @stack('style')
 
     <!-- Template CSS -->
-    <link rel="stylesheet"
-        href="{{ asset('css/style.css') }}">
-    <link rel="stylesheet"
-        href="{{ asset('css/components.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/components.css') }}">
 
     <!-- Start GA -->
-    <script async
-        src="https://www.googletagmanager.com/gtag/js?id=UA-94034622-3"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-94034622-3"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
 
@@ -34,12 +32,9 @@
             dataLayer.push(arguments);
         }
         gtag('js', new Date());
-
         gtag('config', 'UA-94034622-3');
     </script>
-
     <!-- END GA -->
-</head>
 </head>
 
 <body>
@@ -73,6 +68,36 @@
     <!-- Template JS File -->
     <script src="{{ asset('js/scripts.js') }}"></script>
     <script src="{{ asset('js/custom.js') }}"></script>
+
+    <!-- Script Toggle NIP/NIM -->
+    <script>
+        function toggleNipNim() {
+            const role = parseInt(document.getElementById('roleSelect')?.value);
+            const nipGroup = document.getElementById('nip-group');
+            const nimGroup = document.getElementById('nim-group');
+
+            if (!role || (!nipGroup && !nimGroup)) return;
+
+            if ([1, 2, 3].includes(role)) {
+                nipGroup.style.display = 'block';
+                nimGroup.style.display = 'none';
+            } else if (role === 4) {
+                nipGroup.style.display = 'none';
+                nimGroup.style.display = 'block';
+            } else {
+                nipGroup.style.display = 'none';
+                nimGroup.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const roleSelect = document.getElementById('roleSelect');
+            if (roleSelect) {
+                roleSelect.addEventListener('change', toggleNipNim);
+                toggleNipNim();
+            }
+        });
+    </script>
 </body>
 
 </html>

@@ -28,30 +28,45 @@
                 @method('PUT')
 
                 <div class="form-group">
-                    <label>Nama</label>
-                    <input type="text" name="name" class="form-control" value="{{ old('name', $user->name) }}" required>
+                    <label for="name">Nama</label>
+                    <input type="text" name="name" id="name" class="form-control"
+                           value="{{ old('name', $user->name) }}" required>
                 </div>
 
                 <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" name="email" class="form-control" value="{{ old('email', $user->email) }}" required>
+                    <label for="email">Email</label>
+                    <input type="email" name="email" id="email" class="form-control"
+                           value="{{ old('email', $user->email) }}" required>
                 </div>
 
                 <div class="form-group">
-                    <label>Password (Biarkan kosong jika tidak diubah)</label>
-                    <input type="password" name="password" class="form-control">
+                    <label for="password">Password (Biarkan kosong jika tidak diubah)</label>
+                    <input type="password" name="password" id="password" class="form-control">
                 </div>
 
                 <div class="form-group">
-                    <label>Role</label>
-                    <select name="role_id" class="form-control" required>
+                    <label for="role_id">Role</label>
+                    <select name="role_id" id="roleSelect" class="form-control" required>
                         <option value="">-- Pilih Role --</option>
                         @foreach($roles as $role)
-                            <option value="{{ $role->id }}" {{ $role->id == old('role_id', $user->role_id) ? 'selected' : '' }}>
-                                {{ $role->name }}
+                            <option value="{{ $role->id }}"
+                                {{ $role->id == old('role_id', $user->role_id) ? 'selected' : '' }}>
+                                {{ ucfirst($role->name) }}
                             </option>
                         @endforeach
                     </select>
+                </div>
+
+                <div class="form-group" id="nip-group" style="{{ in_array(old('role_id', $user->role_id), [1,2,3]) ? '' : 'display:none;' }}">
+                    <label for="nip">NIP</label>
+                    <input type="text" name="nip" id="nip" class="form-control"
+                           value="{{ old('nip', $user->nip) }}">
+                </div>
+
+                <div class="form-group" id="nim-group" style="{{ old('role_id', $user->role_id) == 4 ? '' : 'display:none;' }}">
+                    <label for="nim">NIM</label>
+                    <input type="text" name="nim" id="nim" class="form-control"
+                           value="{{ old('nim', $user->nim) }}">
                 </div>
 
                 <div class="form-group mt-3">
@@ -63,16 +78,19 @@
     </div>
 </div>
 @endsection
+
+@section('scripts')
 <script>
-    const togglePassword = document.getElementById('togglePassword');
-    const passwordInput = document.getElementById('user-password');
+    function toggleNipNim() {
+        const roleValue = parseInt(document.getElementById('roleSelect').value);
+        const nipGroup = document.getElementById('nip-group');
+        const nimGroup = document.getElementById('nim-group');
 
-    togglePassword.addEventListener('click', function () {
-        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-        passwordInput.setAttribute('type', type);
+        nipGroup.style.display = [1, 2, 3].includes(roleValue) ? 'block' : 'none';
+        nimGroup.style.display = roleValue === 4 ? 'block' : 'none';
+    }
 
-        this.classList.toggle('fa-eye');
-        this.classList.toggle('fa-eye-slash');
-    });
+    document.getElementById('roleSelect').addEventListener('change', toggleNipNim);
+    window.addEventListener('DOMContentLoaded', toggleNipNim);
 </script>
-
+@endsection

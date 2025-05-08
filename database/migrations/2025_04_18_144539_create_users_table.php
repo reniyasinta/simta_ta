@@ -14,9 +14,18 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email');
+            $table->string('email')->unique();
             $table->string('password');
+
+            // Tambahan kolom untuk role dan identitas
+            $table->unsignedBigInteger('role_id');
+            $table->string('nip')->nullable()->unique(); // untuk admin, dosen, panitia
+            $table->string('nim')->nullable()->unique(); // untuk mahasiswa
+
             $table->timestamps();
+
+            // Optional: jika kamu ingin relasi ke tabel roles
+            // $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
         });
     }
 
