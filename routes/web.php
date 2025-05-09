@@ -15,6 +15,7 @@ use App\Http\Controllers\Mahasiswa\MahasiswaController;
 use App\Http\Controllers\Mahasiswa\PengajuanController;
 use App\Http\Controllers\Mahasiswa\KelompokController;
 use App\Http\Controllers\Panitia\PanitiaPengajuanController;
+use App\Http\Controllers\Panitia\PanitiaJadwalController;
 
 
 
@@ -80,5 +81,20 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/kelompok/create', [KelompokController::class, 'create'])->name('kelompok.create');
         Route::post('/kelompok', [KelompokController::class, 'store'])->name('kelompok.store');
     });
+
+    // Upload Excel Jadwal
+    Route::post('/jadwal/import', [PanitiaJadwalController::class, 'importJadwal'])->name('jadwal.import');
+    Route::get('/jadwal/import', [PanitiaJadwalController::class, 'importForm'])->name('jadwal.import.form');
+    // Input satu-satu
+    Route::get('/jadwal/create', [PanitiaJadwalController::class, 'create'])->name('jadwal.create');
+    Route::post('/jadwal', [PanitiaJadwalController::class, 'store'])->name('jadwal.store');
+    // Tampilkan semua jadwal
+    Route::get('/jadwal', [PanitiaJadwalController::class, 'index'])->name('jadwal.index');
+    // Tampilkan form upload
+    Route::get('/jadwal/import', [PanitiaJadwalController::class, 'importView'])->name('jadwal.import.view');
+    // Proses import
+    Route::post('/jadwal/import', [PanitiaJadwalController::class, 'importJadwal'])->name('jadwal.import');
+    // Tampilkan semua jadwal
+
 
 });

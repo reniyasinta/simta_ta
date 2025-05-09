@@ -1,24 +1,28 @@
-<div class="mb-4">
-    <h1 class="judul-simta">
-        <strong>Sistem Informasi Sidang Akhir (SIMTA)</strong><br>
-        <strong>Jurusan Teknik Elektro</strong><br>
-    </h1>
+<div class="mb-4 d-flex align-items-center justify-content-center gap-3 flex-wrap">
+    <img src="{{ asset('img/LogoPoliban.png') }}" alt="Logo Poliban" class="logo-poliban">
 </div>
 
 <style>
+.logo-poliban {
+    height: 100px;
+    width: auto;
+}
+
 .judul-simta {
-    color: black;
-    font-size: 2.3rem;
-    font-weight: bold;
-    text-shadow: none;
-    padding: 0;
-    border-radius: 0;
-    display: block;
-    line-height: 1;
-    text-align: left;
-    width: 100%;
-    white-space: nowrap;
-    margin-left: -120px;
-    margin-bottom: 40px;
+    color: #212529;
+    font-size: 2.2rem;
+    font-weight: 700;
+    line-height: 1.3;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .logo-poliban {
+        height: 60px;
+    }
+
+    .judul-simta {
+        font-size: 1.6rem;
+    }
 }
 </style>

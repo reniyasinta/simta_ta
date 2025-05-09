@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="{{ asset('library/bootstrap-social/bootstrap-social.css') }}">
     <style>
         body {
-            background: url("{{ asset('img/poliban.jpeg') }}") no-repeat center center fixed;
+            background: url("{{ asset('#') }}") no-repeat center center fixed;
             background-size: cover;
         }
 
@@ -41,15 +41,25 @@
             width: 100%;
             max-width: 400px;
         }
+
+        .card-header {
+            display: block;
+        }
     </style>
 @endpush
 
 @section('main')
     <div class="card card-primary">
-        <div class="card-header">
-            <h4>Sistem Informasi Tugas Akhir Simta</h4>
-            <h4>Login</h4>
+        <div class="card-header text-center d-block">
+            <div class="w-100">
+                <h4>Login</h4>
+                <p class="text-dark mt-2 mb-0" style="font-size: 14px;">
+                    Selamat datang di <strong>SIMTA</strong>, Sistem Informasi Manajemen Tugas Akhir Poliban.
+                    Silakan login untuk melanjutkan.
+                </p>
+            </div>
         </div>
+
 
         <div class="card-body">
             <form method="POST" action="{{ route('login') }}" class="needs-validation" novalidate>
