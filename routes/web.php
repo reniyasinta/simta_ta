@@ -47,7 +47,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/user', [UsersController::class, 'index'])->name('admin.users');
         Route::get('/admin/create', [UsersController::class, 'create'])->name('admin.create');
         Route::post('/admin', [UsersController::class, 'store'])->name('admin.store');
-
         Route::get('/admin/{id}/edit', [UsersController::class, 'edit'])->name('admin.edit');
         Route::put('/admin/{id}', [UsersController::class, 'update'])->name('admin.update');
         Route::delete('/admin/{id}', [UsersController::class, 'destroy'])->name('admin.destroy');
@@ -80,6 +79,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/kelompok', [KelompokController::class, 'index'])->name('kelompok.index');
         Route::get('/kelompok/create', [KelompokController::class, 'create'])->name('kelompok.create');
         Route::post('/kelompok', [KelompokController::class, 'store'])->name('kelompok.store');
+        Route::get('kelompok/fetch-nama', [KelompokController::class, 'fetchNama'])->name('mahasiswa.fetchNama');
+
     });
 
     // Upload Excel Jadwal

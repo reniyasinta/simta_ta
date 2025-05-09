@@ -23,6 +23,7 @@ class UsersTableSeeder extends Seeder
             'email' => 'admin@gmail.com',
             'password' => Hash::make('11'),
             'role_id' => $adminRole->id,
+            'nip' => 'ADM001',
         ]);
 
           // Panitia user
@@ -31,6 +32,7 @@ class UsersTableSeeder extends Seeder
             'email' => 'panitia@gmail.com',
             'password' => Hash::make('22'),
             'role_id' => $panitiaRole->id,
+            'nip' => 'PAN001',
         ]);
 
         // Dosen user
@@ -39,6 +41,7 @@ class UsersTableSeeder extends Seeder
             'email' => 'dosen@gmail.com',
             'password' => Hash::make('33'),
             'role_id' => $dosenRole->id,
+            'nip' => 'DOS001',
         ]);
 
         // Mahasiswa user
@@ -47,6 +50,7 @@ class UsersTableSeeder extends Seeder
             'email' => 'mahasiswa@gmail.com',
             'password' => Hash::make('44'),
             'role_id' => $mahasiswaRole->id,
+            'nim' => '220001',
         ]);
     }
 }

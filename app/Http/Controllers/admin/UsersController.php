@@ -8,6 +8,10 @@ use Illuminate\Http\Request;
 use App\Models\Role;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\UsersImport;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
+
+
 
 class UsersController extends Controller
 {
@@ -26,22 +30,33 @@ class UsersController extends Controller
 
 public function store(Request $request)
 {
+
     $request->validate([
-        'name' => 'required',
-        'email' => 'required|email|unique:users',
-        'password' => 'required|min:6',
-        'role_id' => 'required',
-    ]);
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email',
+        'password' => 'required|min:4',
+        'role_id' => 'required|in:1,2,3,4',
 
-    User::create([
-        'name' => $request->name,
-        'email' => $request->email,
-        'password' => bcrypt($request->password),
-        'role_id' => $request->role_id,
+        // Validasi dinamis berdasarkan role
+        'nim' => 'required_if:role_id,4|nullable|unique:users,nim',
+        'nip' => 'required_unless:role_id,4|nullable|unique:users,nip',
+    ], [
+        'nim.required_if' => 'NIM wajib diisi untuk mahasiswa.',
+        'nip.required_unless' => 'NIP wajib diisi untuk selain mahasiswa.',
     ]);
+        // Menambahkan pengguna baru
+        User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role_id' => $request->role_id,
+            'nim' => $request->nim,  // Jika ada NIM, akan disimpan
+            'nip' => $request->nip,  // Jika ada NIP, akan disimpan
+        ]);
 
-    return redirect()->route('admin.users')->with('success', 'User berhasil ditambahkan.');
-}
+        return redirect()->route('admin.users')->with('success', 'User created successfully');
+    }
+
 
 public function edit($id)
 {
@@ -49,29 +64,60 @@ public function edit($id)
     $roles = Role::all();
     return view('pages.admin.edit', compact('user', 'roles'));
 }
-
 public function update(Request $request, $id)
 {
+    // Ambil data user
+    $user = User::findOrFail($id);
+
+    // Validasi input
     $request->validate([
-        'name' => 'required',
-        'email' => 'required|email|unique:users,email,' . $id,
-        'role_id' => 'required',
+        'name' => 'required|string|max:255',
+        'email' => [
+            'required',
+            'email',
+            Rule::unique('users')->ignore($id),
+        ],
+        'role_id' => 'required|in:1,2,3,4',
+        'password' => 'nullable|min:8',
+        'nip' => [
+            'nullable',
+            Rule::unique('users')->ignore($id),
+            function ($attribute, $value, $fail) use ($request) {
+                if (in_array($request->role_id, [1, 2, 3]) && !$value) {
+                    $fail('NIP wajib diisi untuk peran Admin, Dosen, atau Panitia.');
+                }
+            }
+        ],
+        'nim' => [
+            'nullable',
+            Rule::unique('users')->ignore($id),
+            function ($attribute, $value, $fail) use ($request) {
+                if ((int)$request->role_id === 4 && !$value) {
+                    $fail('NIM wajib diisi untuk peran Mahasiswa.');
+                }
+            }
+        ],
     ]);
 
-    $user = User::findOrFail($id);
+    // Update data user
     $user->name = $request->name;
     $user->email = $request->email;
     $user->role_id = $request->role_id;
 
+    // Jika ada password baru
     if ($request->filled('password')) {
-        $request->validate(['password' => 'min:8']);
         $user->password = bcrypt($request->password);
     }
+
+    // Atur NIP dan NIM berdasarkan role
+    $user->nip = in_array($request->role_id, [1, 2, 3]) ? $request->nip : null;
+    $user->nim = $request->role_id == 4 ? $request->nim : null;
 
     $user->save();
 
     return redirect()->route('admin.users')->with('success', 'User berhasil diperbarui.');
 }
+
 
 public function destroy($id)
 {
@@ -99,3 +145,5 @@ public function importStore(Request $request)
 }
 
 }
+
+
