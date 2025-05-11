@@ -21,7 +21,10 @@
 
             <div class="card">
                 <div class="card-header">
-                    <a href="{{ route('jadwal.create') }}" class="btn btn-primary">+ Tambah Jadwal</a>
+                    <div class="text-end mt-3">
+                <a href="{{ route('jadwal.create') }}" class="btn btn-primary">Buat Jadwal</a>
+                 <a href="{{ route('jadwal.import') }}" class="btn btn-primary">Import Excel</a>
+            </div>
                 </div>
                 <div class="card-body table-responsive mb-4">
                     <table class="table table-bordered table-striped">
@@ -71,9 +74,7 @@
                 </div>
             </div>
 
-            <div class="text-end mt-3">
-                <a href="{{ route('jadwal.create') }}" class="btn btn-primary">Buat Jadwal</a>
-            </div>
+
         </section>
     </div>
 </div>

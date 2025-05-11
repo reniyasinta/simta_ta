@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('dosen', function (Blueprint $table) {
             $table->id('id_dosen');
-            $table->foreignId('id_users')->constrained('users');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('nip_dosen');
             $table->string('nama_dosen');
-            $table->string('topik');
-            $table->string('no_telp');
+            $table->string('topik')->nullable();
+            $table->string('no_telp')->nullable();
             $table->timestamps();
         });
     }

@@ -44,8 +44,6 @@
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-calendar"></i> <span>Jadwal</span></a>
                 <ul class="dropdown-menu">
                     <li><a class="nav-link" href="{{ route('jadwal.index') }}">Daftar Jadwal</a></li>
-                    <li><a class="nav-link" href="{{ route('jadwal.create') }}">Input Manual</a></li>
-                    <li><a class="nav-link" href="{{ route('jadwal.import.view') }}">Import Excel</a></li>
                 </ul>
             </li>
             <li class="menu-header">Pengajuan</li>
@@ -120,14 +118,20 @@
         @endif
         @endauth
 
-        @push('style')
-        <style>
-            .sidebar-menu .nav-link {
-                padding-top: 5px;
-                padding-bottom: 5px;
-            }
-        </style>
-        @endpush
+@push('style')
+<style>
+    .main-sidebar .sidebar-menu > li.menu-header {
+  margin-top: 20px; /* jarak ke atas */
+  margin-bottom: 8px; /* jarak ke item menu berikutnya */
+  font-size: 12px;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+</style>
+@endpush
+
 
     </aside>
 </div>

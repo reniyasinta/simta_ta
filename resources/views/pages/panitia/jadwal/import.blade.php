@@ -31,7 +31,8 @@
 
                     <div class="text-end">
                         <button type="submit" class="btn btn-primary">Upload</button>
-                        <a href="{{ route('jadwal.create') }}" class="btn btn-secondary">Input Manual</a>
+                        <a href="{{ route('jadwal.index') }}" class="btn btn-secondary">Kembali</a>
+
                     </div>
                 </form>
 

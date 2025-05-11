@@ -10,7 +10,9 @@ return new class extends Migration
     {
         Schema::create('kelompok', function (Blueprint $table) {
             $table->id('id_kelompok');
-            $table->string('nama_kelompok')->nullable();
+            $table->foreignId('anggota_1_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('anggota_2_id')->nullable()->constrained('users')->onDelete('cascade');
+            $table->foreignId('anggota_3_id')->nullable()->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

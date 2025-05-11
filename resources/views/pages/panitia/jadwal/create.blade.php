@@ -155,7 +155,7 @@
 
                     <div class="text-end">
                         <button type="submit" class="btn btn-primary">Simpan Jadwal</button>
-                        <a href="{{ route('jadwal.import') }}" class="btn btn-secondary">Import Excel</a>
+                        <a href="{{ route('jadwal.index') }}" class="btn btn-secondary">Kembali</a>
                     </div>
                 </form>
 

@@ -7,6 +7,8 @@ use App\Models\User;
 
 class Jadwal extends Model
 {
+    protected $table = 'jadwals';
+
     protected $fillable = [
         'tanggal_mulai',
         'tanggal_selesai',
@@ -17,6 +19,8 @@ class Jadwal extends Model
         'nama',
         'prodi',
         'kelas',
+        'id_mhs',
+        'id_dosen',
         'pembimbing_1',
         'pembimbing_2',
         'penguji_1_id',
@@ -24,20 +28,43 @@ class Jadwal extends Model
         'penguji_3_id',
     ];
 
+    /**
+     * Relasi ke mahasiswa (pemilik TA)
+     */
+    public function mahasiswa()
+    {
+        return $this->belongsTo(Mahasiswa::class, 'id_mhs', 'id_mhs');
+    }
+
+    /**
+     * Relasi ke dosen pembimbing utama
+     */
+    public function dosen()
+    {
+        return $this->belongsTo(User::class, 'id_dosen');
+    }
+
+    /**
+     * Relasi ke dosen penguji 1
+     */
     public function penguji1()
     {
         return $this->belongsTo(User::class, 'penguji_1_id');
     }
 
+    /**
+     * Relasi ke dosen penguji 2
+     */
     public function penguji2()
     {
         return $this->belongsTo(User::class, 'penguji_2_id');
     }
 
+    /**
+     * Relasi ke dosen penguji 3
+     */
     public function penguji3()
     {
         return $this->belongsTo(User::class, 'penguji_3_id');
     }
-
-
 }

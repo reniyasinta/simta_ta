@@ -17,8 +17,8 @@ class User extends Authenticatable
         'email',
         'password',
         'role_id',
-        'nip', // ← tambahan
-        'nim', // ← tambahan
+        'nip',
+        'nim',
     ];
 
     protected $hidden = [
@@ -33,15 +33,23 @@ class User extends Authenticatable
     ];
 
     /**
-     * Relasi ke tabel mahasiswa (jika user adalah mahasiswa).
+     * Relasi ke mahasiswa (jika user adalah mahasiswa).
      */
     public function mahasiswa()
     {
-        return $this->hasOne(Mahasiswa::class, 'user_id');
+        return $this->hasOne(Mahasiswa::class, 'user_id', 'id');
     }
 
     /**
-     * Relasi ke tabel roles.
+     * Relasi ke dosen (jika user adalah dosen).
+     */
+    public function dosen()
+    {
+        return $this->hasOne(Dosen::class, 'user_id', 'id');
+    }
+
+    /**
+     * Relasi ke roles.
      */
     public function role()
     {
@@ -49,7 +57,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Accessor untuk mendapatkan nama role dari role_id.
+     * Accessor nama role.
      */
     public function getRoleNameAttribute()
     {
@@ -63,7 +71,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Method untuk redirect otomatis sesuai role saat login.
+     * Redirect otomatis sesuai role.
      */
     public function redirectTo()
     {
@@ -76,8 +84,25 @@ class User extends Authenticatable
         };
     }
 
-        public function jadwals()
+    // 🔽 Relasi sebagai dosen pembimbing (id_dosen)
+    public function jadwalsSebagaiPembimbing()
     {
-        return $this->hasMany(Jadwal::class, 'penguji_1_id'); // Bisa diganti untuk penguji_2_id dan penguji_3_id sesuai kebutuhan
+        return $this->hasMany(Jadwal::class, 'id_dosen');
+    }
+
+    // 🔽 Relasi sebagai penguji
+    public function jadwalsSebagaiPenguji1()
+    {
+        return $this->hasMany(Jadwal::class, 'penguji_1_id');
+    }
+
+    public function jadwalsSebagaiPenguji2()
+    {
+        return $this->hasMany(Jadwal::class, 'penguji_2_id');
+    }
+
+    public function jadwalsSebagaiPenguji3()
+    {
+        return $this->hasMany(Jadwal::class, 'penguji_3_id');
     }
 }

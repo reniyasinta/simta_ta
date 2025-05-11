@@ -9,27 +9,43 @@ class Dosen extends Model
 {
     use HasFactory;
 
-    // Menentukan nama tabel yang sesuai dengan database
     protected $table = 'dosen';
+    protected $primaryKey = 'id_dosen';
 
-    // Menentukan kolom mana yang dapat diisi (mass assignable)
     protected $fillable = [
-        'id_users',
+        'user_id', // ganti dari 'id_users' jadi 'user_id'
         'nip_dosen',
         'nama_dosen',
         'topik',
         'no_telp',
     ];
 
-    // Jika kolom ID menggunakan nama selain 'id', kamu bisa menetapkan seperti berikut:
-    protected $primaryKey = 'id_dosen';
-
-    // Jika kamu tidak ingin menggunakan timestamp (created_at dan updated_at)
     public $timestamps = true;
 
-    // Mendefinisikan relasi dengan tabel 'users' (jika ada relasi)
     public function user()
     {
-        return $this->belongsTo(User::class, 'id_users', 'id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function pengujian1()
+    {
+        return $this->hasMany(Jadwal::class, 'penguji_1_id');
+    }
+
+    public function pengujian2()
+    {
+        return $this->hasMany(Jadwal::class, 'penguji_2_id');
+    }
+
+    public function pengujian3()
+    {
+        return $this->hasMany(Jadwal::class, 'penguji_3_id');
+    }
+
+    public function semuaPengujian()
+    {
+        return Jadwal::where('penguji_1_id', $this->id_dosen)
+            ->orWhere('penguji_2_id', $this->id_dosen)
+            ->orWhere('penguji_3_id', $this->id_dosen);
     }
 }

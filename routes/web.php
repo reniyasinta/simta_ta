@@ -5,7 +5,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\DosenController;
+use App\Http\Controllers\Dosen\DosenController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Panitia\PanitiaController;

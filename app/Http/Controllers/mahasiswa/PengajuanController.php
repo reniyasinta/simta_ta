@@ -1,59 +1,58 @@
 <?php
-
 namespace App\Http\Controllers\Mahasiswa;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\User;
 use App\Models\Dosen;
 use App\Models\Mahasiswa;
 use App\Models\PengajuanPembimbing;
-
+use Illuminate\Support\Facades\Storage;
 
 class PengajuanController extends Controller
 {
     public function index()
     {
-        $mahasiswa = Mahasiswa::where('user_id', auth()->id())->first();
+        $mahasiswa = auth()->user()->mahasiswa;
 
-        if (!$mahasiswa) {
-            return redirect()->route('mahasiswa.dashboard')->with('error', 'Data mahasiswa tidak ditemukan. Silakan lengkapi profil.');
+        if (!$mahasiswa || !$mahasiswa->kelompok) {
+            return redirect()->route('mahasiswa.dashboard')->with('error', 'Data kelompok belum ada.');
         }
 
         $pengajuan = PengajuanPembimbing::where('id_kelompok', $mahasiswa->id_kelompok)->get();
-        $dosenList = Dosen::all();
+        $dosenList = User::where('role_id', 3)->with('dosen')->get();
 
         return view('pages.mahasiswa.pengajuan.index', compact('pengajuan', 'dosenList'));
     }
 
-
     public function create()
     {
-        $mahasiswa = Mahasiswa::where('user_id', auth()->id())->first();
+        $mahasiswa = auth()->user()->mahasiswa;
 
-        // Cek apakah sudah ada pengajuan aktif
-        $existing = PengajuanPembimbing::where('id_kelompok', $mahasiswa->id_kelompok)
-            ->where('status', '!=', 'Ditolak')->first();
+        // Ambil semua pengguna yang memiliki role 'dosen'
+        $dosenList = User::whereHas('role', function ($query) {
+            $query->where('name', 'dosen');
+        })->get();
 
-        if ($existing) {
-            return redirect()->route('pengajuan.index')->with('error', 'Kelompok Anda sudah mengajukan pembimbing.');
-        }
-        $dosenList = Dosen::all();
-        return view('pages.mahasiswa.pengajuan.create', compact( 'dosenList', 'mahasiswa'));
+        return view('pages.mahasiswa.pengajuan.create', compact('dosenList', 'mahasiswa'));
     }
-
     public function store(Request $request)
     {
         $request->validate([
-            'id_dosen1' => 'required',
+            'id_dosen1' => 'required|exists:users,id',
             'judul_ta' => 'required|string|max:255',
             'proposal' => 'required|file|mimes:pdf|max:10240',
         ]);
 
-        $mahasiswa = Mahasiswa::where('user_id', auth()->id())->first();
+        $mahasiswa = auth()->user()->mahasiswa;
 
-        // Upload proposal
-        $fileName = time() . '_' . $request->file('proposal')->getClientOriginalName();
-        $request->file('proposal')->move(public_path('uploads/proposal'), $fileName);
+        if (!$mahasiswa || !$mahasiswa->kelompok) {
+            return redirect()->route('mahasiswa.dashboard')->with('error', 'Data kelompok tidak ditemukan.');
+        }
+
+        $file = $request->file('proposal');
+        $fileName = time() . '_' . $file->getClientOriginalName();
+        $file->storeAs('public/proposal', $fileName);
 
         PengajuanPembimbing::create([
             'id_kelompok' => $mahasiswa->id_kelompok,
@@ -65,9 +64,4 @@ class PengajuanController extends Controller
 
         return redirect()->route('pengajuan.index')->with('success', 'Pengajuan berhasil diajukan.');
     }
-
-
-
-
-
 }
