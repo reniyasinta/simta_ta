@@ -18,7 +18,7 @@ class UsersTableSeeder extends Seeder
         $mahasiswaRole = Role::where('name', 'mahasiswa')->first(); // <- fix typo
 
         // Admin user
-        User::create([
+User::firstOrCreate([
             'name' => 'Admin',
             'email' => 'admin@gmail.com',
             'password' => Hash::make('11'),
@@ -27,7 +27,7 @@ class UsersTableSeeder extends Seeder
         ]);
 
           // Panitia user
-          User::create([
+User::firstOrCreate([
             'name' => 'Panitia',
             'email' => 'panitia@gmail.com',
             'password' => Hash::make('22'),
@@ -36,7 +36,7 @@ class UsersTableSeeder extends Seeder
         ]);
 
         // Dosen user
-        User::create([
+User::firstOrCreate([
             'name' => 'Dosen',
             'email' => 'dosen@gmail.com',
             'password' => Hash::make('33'),
@@ -45,7 +45,7 @@ class UsersTableSeeder extends Seeder
         ]);
 
         // Mahasiswa user
-        User::create([
+User::firstOrCreate([
             'name' => 'Mahasiswa',
             'email' => 'mahasiswa@gmail.com',
             'password' => Hash::make('44'),

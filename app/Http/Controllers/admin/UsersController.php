@@ -54,7 +54,7 @@ public function store(Request $request)
             'nip' => $request->nip,  // Jika ada NIP, akan disimpan
         ]);
 
-        return redirect()->route('admin.users')->with('success', 'User created successfully');
+        return redirect()->route('admin.users')->with('success', 'User berhasil ditambahkan');
     }
 
 
@@ -141,7 +141,7 @@ public function importStore(Request $request)
 
     Excel::import(new UsersImport, $request->file('file_excel'));
 
-    return redirect()->route('admin.users')->with('success', 'Data pengguna berhasil diimport!');
+    return redirect()->route('admin.users')->with('success', 'Data user berhasil diimport!');
 }
 
 }

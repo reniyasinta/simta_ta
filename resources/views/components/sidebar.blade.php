@@ -46,8 +46,16 @@
                 </ul>
             </li>
             <li class="menu-header">Pengajuan</li>
-            <li><a class="nav-link" href="{{ route('panitia.pengajuan.index') }}"><i class="fas fa-file-signature"></i> <span>Pengajuan Dospem2</span></a></li>
+            <li><a class="nav-link" href="{{ route('panitia.pengajuan.index') }}"><i class="fas fa-file-signature"></i> <span>Pengajuan Dospem2</span></a>
+            </li>
 
+            <li class="menu-header">Berkas Persyaratan</li>
+            <li class="nav-item dropdown">
+                <a href="#" class="nav-link has-dropdown"><i class="fas fa-file-alt"></i> <span>Berkas Persyaratan</span></a>
+                <ul class="dropdown-menu">
+                    <li><a class="nav-link" href="{{ route('panitia.berkas.index') }}"><i class="fas fa-file-upload"></i> <span>Upload Berkas</span></a></li>
+                </ul>
+            </li>
 
             <li class="menu-header">Pengumuman</li>
             <li><a class="nav-link" href="{{ url('pengumuman') }}"><i class="fas fa-bullhorn"></i> <span>Pengumuman</span></a>
@@ -81,12 +89,9 @@
             </li>
 
             <li class="menu-header">Berkas Persyaratan</li>
-            <li class="nav-item dropdown">
-                <a href="#" class="nav-link has-dropdown"><i class="fas fa-file-alt"></i> <span>Berkas Persyaratan</span></a>
-                <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="#">Persyaratan Sempro</a></li>
-                    <li><a class="nav-link" href="#">Persyaratan Tugas Akhir</a></li>
-                </ul>
+            <li>
+                <a class="nav-link" href="{{ route('mahasiswa.berkas.index') }}"><i class="fas fa-file-upload">
+                    </i> <span>Berkas</span></a></li>
             </li>
 
             <li class="menu-header">Jadwal</li>

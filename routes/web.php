@@ -15,6 +15,7 @@ use App\Http\Controllers\Mahasiswa\MahasiswaController;
 use App\Http\Controllers\Mahasiswa\PengajuanController;
 use App\Http\Controllers\Mahasiswa\KelompokController;
 use App\Http\Controllers\Panitia\PanitiaPengajuanController;
+use App\Http\Controllers\Panitia\BerkasController;
 
 
 
@@ -61,6 +62,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/panitia/pengajuan', [PanitiaPengajuanController::class, 'index'])->name('panitia.pengajuan.index');
         Route::get('/panitia/pengajuan/{id}/edit', [PanitiaPengajuanController::class, 'edit'])->name('panitia.pengajuan.edit');
         Route::put('/panitia/pengajuan/{id}', [PanitiaPengajuanController::class, 'update'])->name('panitia.pengajuan.update');
+        Route::get('/berkas', [BerkasController::class, 'index'])->name('panitia.berkas.index');
+        Route::get('/berkas/create', [BerkasController::class, 'create'])->name('panitia.berkas.create');
+        Route::post('/berkas', [BerkasController::class, 'store'])->name('panitia.berkas.store');
+        Route::get('/berkas/{id}/edit', [BerkasController::class, 'edit'])->name('panitia.berkas.edit');
+        Route::put('/berkas/{id}', [BerkasController::class, 'update'])->name('panitia.berkas.update');
+        Route::delete('/berkas/{id}', [BerkasController::class, 'destroy'])->name('panitia.berkas.destroy');
+        Route::get('/berkas/download/{id}', [BerkasController::class, 'download'])->name('panitia.berkas.download');
     });
 
 
