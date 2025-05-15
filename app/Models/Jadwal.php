@@ -16,7 +16,7 @@ class Jadwal extends Model
         'jenis_acara',
         'judul_ta',
         'nim',
-        'nama',
+        'name',
         'prodi',
         'kelas',
         'id_mhs',

@@ -17,15 +17,11 @@
                 <div class="alert alert-success">{{ session('success') }}</div>
             @endif
 
-            <div class="clearfix mb-3"></div>
-
-            <div class="card">
-                <div class="card-header">
-                    <div class="text-end mt-3">
-                <a href="{{ route('jadwal.create') }}" class="btn btn-primary">Buat Jadwal</a>
-                 <a href="{{ route('jadwal.import') }}" class="btn btn-primary">Import Excel</a>
+                <div class="d-flex justify-content-end mb-3" style="gap: 10px;">
+                    <a href="{{ route('jadwal.create') }}" class="btn btn-primary">+ Tambah Jadwal</a>
+                <a href="{{ route('jadwal.import') }}" class="btn btn-primary">Import Jadwal</a>
+                    <a href="{{ route('template.jadwal') }}" class="btn btn-primary">Download Template Jadwal</a>
             </div>
-                </div>
                 <div class="card-body table-responsive mb-4">
                     <table class="table table-bordered table-striped">
                         <thead>

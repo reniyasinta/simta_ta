@@ -16,10 +16,12 @@
                 <div class="alert alert-success">{{ session('success') }}</div>
             @endif
 
-            <div class="d-flex justify-content-between mb-3">
+            <div class="d-flex justify-content-end mb-3" style="gap: 10px;">
                 <a href="{{ route('admin.create') }}" class="btn btn-primary">+ Tambah User</a>
-                <a href="{{ route('admin.import') }}" class="btn btn-success">Import User</a>
+                <a href="{{ route('admin.import') }}" class="btn btn-primary">Import User</a>
+                <a href="{{ route('template.user') }}" class="btn btn-primary">Download Template User</a>
             </div>
+
 
             <div class="table-responsive">
                 <table class="table table-bordered table-striped mt-3">
