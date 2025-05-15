@@ -17,15 +17,14 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
 
-            // Tambahan kolom untuk role dan identitas
-            $table->unsignedBigInteger('role_id');
+            $table->unsignedBigInteger('role_id')->default(4); // misalnya 4 = mahasiswa
             $table->string('nip')->nullable()->unique(); // untuk admin, dosen, panitia
             $table->string('nim')->nullable()->unique(); // untuk mahasiswa
 
             $table->timestamps();
 
-            // Optional: jika kamu ingin relasi ke tabel roles
-            // $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
+            // Foreign key relasi ke tabel roles
+            $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
         });
     }
 

@@ -5,18 +5,19 @@ namespace App\Imports;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class UsersImport implements ToModel
+class UsersImport implements ToModel, WithHeadingRow
 {
     public function model(array $row)
     {
         return new User([
-            'name' => $row[0],
-            'email' => $row[1],
-            'password' => Hash::make($row[2]), // pastikan file sudah hash atau plaintext
-            'role_id' => isset($row[3]) ? $row[3] : 1,
-            'nim' => ($row[3] == 4) ? $row[4] : null, // 4 = mahasiswa
-            'nip' => ($row[3] == 3) ? $row[4] : null, // 3 = dosen
+            'name' => $row['name'],
+            'email' => $row['email'],
+            'password' => Hash::make($row['password']),
+            'role_id' => $row['role_id'] ?? 1,
+            'nim' => ($row['role_id'] == 4) ? $row['nim_nip'] : null,
+            'nip' => ($row['role_id'] == 3) ? $row['nim_nip'] : null,
         ]);
     }
 }

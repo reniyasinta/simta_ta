@@ -1,7 +1,10 @@
 <div class="main-sidebar sidebar-style-2">
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
-            <a href="{{ url('/') }}">SIMTA</a>
+            <a href="{{ url('/') }}">
+                <img src="{{ asset('img/LogoPoliban.png') }}" alt="Logo" style="height: 45px; margin-bottom: 2px;">
+                <div style="line-height: 1; font-weight: bold;">SIMTA</div>
+            </a>
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
             <a href="{{ url('/') }}">ST</a>
@@ -40,9 +43,7 @@
             <li class="nav-item dropdown">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-calendar"></i> <span>Jadwal</span></a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="#">Jadwal Sempro</a></li>
-                    <li><a class="nav-link" href="#">Jadwal Sidang</a></li>
-                    <li><a class="nav-link" href="#">Jadwal Sosialisasi</a></li>
+                    <li><a class="nav-link" href="{{ route('jadwal.index') }}">Daftar Jadwal</a></li>
                 </ul>
             </li>
             <li class="menu-header">Pengajuan</li>
@@ -50,11 +51,7 @@
             </li>
 
             <li class="menu-header">Berkas Persyaratan</li>
-            <li class="nav-item dropdown">
-                <a href="#" class="nav-link has-dropdown"><i class="fas fa-file-alt"></i> <span>Berkas Persyaratan</span></a>
-                <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="{{ route('panitia.berkas.index') }}"><i class="fas fa-file-upload"></i> <span>Upload Berkas</span></a></li>
-                </ul>
+            <li><a class="nav-link" href="{{ route('pages.panitia.berkas.index') }}"><i class="fas fa-file-upload"></i> <span>Upload Berkas</span></a>
             </li>
 
             <li class="menu-header">Pengumuman</li>
@@ -121,5 +118,15 @@
         </ul>
         @endif
         @endauth
+
+        @push('style')
+        <style>
+            .sidebar-menu .nav-link {
+                padding-top: 5px;
+                padding-bottom: 5px;
+            }
+        </style>
+        @endpush
+
     </aside>
 </div>

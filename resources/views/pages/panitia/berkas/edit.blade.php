@@ -11,7 +11,7 @@
                 <h1>Edit Berkas</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="{{ route('dashboard') }}">Dashboard</a></div>
-                    <div class="breadcrumb-item"><a href="{{ route('panitia.berkas.index') }}">Upload Berkas</a></div>
+                    <div class="breadcrumb-item"><a href="{{ route('pages.panitia.berkas.index') }}">Upload Berkas</a></div>
                     <div class="breadcrumb-item">Edit</div>
                 </div>
             </div>
@@ -60,7 +60,7 @@
 
                                     <div class="text-end">
                                         <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-                                        <a href="{{ route('panitia.berkas.index') }}" class="btn btn-secondary">Batal</a>
+                                        <a href="{{ route('pages.panitia.berkas.index') }}" class="btn btn-secondary">Batal</a>
                                     </div>
                                 </form>
                             </div>

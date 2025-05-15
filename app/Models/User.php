@@ -75,4 +75,9 @@ class User extends Authenticatable
             default => '/',
         };
     }
+
+        public function jadwals()
+    {
+        return $this->hasMany(Jadwal::class, 'penguji_1_id'); // Bisa diganti untuk penguji_2_id dan penguji_3_id sesuai kebutuhan
+    }
 }

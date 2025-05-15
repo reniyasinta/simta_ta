@@ -11,9 +11,9 @@ use Illuminate\Support\Facades\Storage;
 
 class BerkasController extends Controller
 {
-     public function index()
+    public function index()
     {
-        $berkas = Berkas::all(); // ambil semua berkas
+        $berkas = Berkas::all();
         return view('pages.mahasiswa.berkas.index', compact('berkas'));
     }
 
@@ -27,5 +27,4 @@ class BerkasController extends Controller
 
         return redirect()->back()->with('error', 'File tidak ditemukan.');
     }
-
 }

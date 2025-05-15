@@ -1,34 +1,58 @@
 @extends('layouts.app')
 
-@section('content')
-<div class="container">
-    <h4>Daftar Berkas Persyaratan</h4>
-    
-    <table class="table">
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Nama Berkas</th>
-                <th>Kategori</th>
-                <th>Preview</th>
-                <th>Unduh</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($berkas as $i => $item)
-                <tr>
-                    <td>{{ $i + 1 }}</td>
-                    <td>{{ $item->nama_berkas }}</td>
-                    <td>{{ $item->kategori }}</td>
-                    <td>
-                        <a href="{{ asset('storage/' . $item->file_path) }}" target="_blank" class="btn btn-info btn-sm">Lihat</a>
-                    </td>
-                    <td>
-                        <a href="{{ route('mahasiswa.berkas.download', $item->id) }}" class="btn btn-success btn-sm">Download</a>
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-</div>
+@section('main')
+    <div class="container-fluid py-5">
+        <div class="main-content">
+            <section class="section">
+                <div class="section-header">
+                    <h1>Daftar Berkas Persyaratan</h1>
+                    <div class="section-header-breadcrumb">
+                        <div class="breadcrumb-item active"><a href="{{ url('home') }}">Dashboard</a></div>
+                        <div class="breadcrumb-item">Berkas</div>
+                    </div>
+                </div>
+
+                @if(session('success'))
+                    <div class="alert alert-success">{{ session('success') }}</div>
+                @endif
+
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nama Berkas</th>
+                                <th>Kategori</th>
+                                <th>Preview</th>
+                                <th>Download</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($berkas as $index => $item)
+                                <tr>
+                                    <td>{{ $index + 1 }}</td>
+                                    <td>{{ $item->nama_berkas }}</td>
+                                    <td>{{ ucfirst($item->kategori) }}</td>
+                                    <td>
+                                        @if(Storage::disk('public')->exists($item->file_path))
+                                            <a href="{{ Storage::url($item->file_path) }}" target="_blank" class="btn btn-info btn-sm">Lihat</a>
+                                        @else
+                                            <span class="text-danger">File tidak ditemukan</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <a href="{{ route('mahasiswa.berkas.download', $item->id_berkas) }}" class="btn btn-success btn-sm">Download</a>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="text-center">Belum ada berkas tersedia.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </div>
 @endsection

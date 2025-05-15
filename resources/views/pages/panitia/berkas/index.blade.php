@@ -17,7 +17,7 @@
                 @endif
 
                 <div class="mb-3 text-right">
-                    <a href="{{ route('panitia.berkas.create') }}" class="btn btn-success">+ Upload Berkas</a>
+                    <a href="{{ route('pages.panitia.berkas.create') }}" class="btn btn-success">+ Upload Berkas</a>
                 </div>
 
                 <div class="table-responsive">
@@ -41,7 +41,7 @@
                                         <a href="{{ asset('storage/' . $item->file_path) }}" target="_blank" class="btn btn-info btn-sm">Lihat</a>
                                     </td>
                                     <td>
-                                        <a href="{{ route('panitia.berkas.edit', $item->id_berkas) }}" class="btn btn-warning btn-sm">Edit</a>
+                                        <a href="{{ route('pages.panitia.berkas.edit', $item->id_berkas) }}" class="btn btn-warning btn-sm">Edit</a>
                                         <form action="{{ route('panitia.berkas.destroy', $item->id_berkas) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Yakin ingin menghapus berkas ini?')">
                                             @csrf
                                             @method('DELETE')

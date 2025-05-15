@@ -75,7 +75,7 @@ class BerkasController extends Controller
             'file_path' => $path,
         ]);
 
-        return redirect()->route('panitia.berkas.index')->with('success', 'Berkas berhasil diperbarui');
+        return redirect()->route('pages.panitia.berkas.index')->with('success', 'Berkas berhasil diperbarui');
     }
 
     public function destroy($id)
@@ -90,9 +90,9 @@ class BerkasController extends Controller
         return redirect()->route('pages.panitia.berkas.index')->with('success', 'Berkas berhasil dihapus');
     }
 
-    public function download($id)
-    {
-        $berkas = Berkas::findOrFail($id);
-        return Storage::disk('public')->download($berkas->file_path, $berkas->nama_berkas . '.pdf');
-    }
+        public function download($id)
+        {
+            $berkas = Berkas::findOrFail($id);
+            return Storage::disk('public')->download($berkas->file_path, $berkas->nama_berkas . '.pdf');
+        }
 }

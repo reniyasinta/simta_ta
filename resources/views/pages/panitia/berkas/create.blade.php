@@ -48,7 +48,7 @@
                             </div>
 
                             <div class="text-right">
-                                <a href="{{ route('panitia.berkas.index') }}" class="btn btn-secondary">Kembali</a>
+                                <a href="{{ route('pages.panitia.berkas.index') }}" class="btn btn-secondary">Kembali</a>
                                 <button type="submit" class="btn btn-primary">Unggah Berkas</button>
                             </div>
                         </form>
