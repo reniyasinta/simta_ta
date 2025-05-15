@@ -2,17 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
-<<<<<<< HEAD
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Dosen\DosenController;
-=======
-// use App\Http\Controllers\Auth\RegisterController;
-// use App\Http\Controllers\Auth\ForgotPasswordController;
-// use App\Http\Controllers\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\DosenController;
->>>>>>> e8596be6deed9015290427d1c5d3cf99315d95e1
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Panitia\PanitiaController;
@@ -28,21 +21,19 @@ use App\Exports\TemplateUserExport;
 use App\Exports\TemplateJadwalExport;
 use Maatwebsite\Excel\Facades\Excel;
 
-// Halaman login (GET)
+// Halaman login
 Route::get('/', function () {
     return view('pages.auth.auth-login', ['type_menu' => '']);
 })->name('auth.login');
 
-// Login
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login']);
-
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-// // Password reset & register (akses sebelum login)
-// Route::get('password/request', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
-// Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-// Route::post('register', [RegisterController::class, 'register']);
+// Optional auth route
+Route::get('password/request', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('register', [RegisterController::class, 'register']);
 
 // Setelah login
 Route::middleware(['auth'])->group(function () {
@@ -51,6 +42,7 @@ Route::middleware(['auth'])->group(function () {
         return 'Dashboard untuk semua pengguna';
     })->name('dashboard');
 
+    // ADMIN
     Route::middleware(['role:admin'])->group(function () {
         Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
         Route::get('/user', [UsersController::class, 'index'])->name('admin.users');
@@ -61,18 +53,18 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/admin/{id}', [UsersController::class, 'destroy'])->name('admin.destroy');
         Route::get('/admin/import', [UsersController::class, 'importForm'])->name('admin.import');
         Route::post('/admin/import', [UsersController::class, 'importStore'])->name('admin.import.store');
-
     });
 
+    // PANITIA
     Route::middleware(['role:panitia'])->group(function () {
         Route::get('/panitia/dashboard', [PanitiaController::class, 'index'])->name('panitia.dashboard');
 
-        // Gunakan prefix URL panitia
+        // Pengajuan
         Route::get('/panitia/pengajuan', [PanitiaPengajuanController::class, 'index'])->name('panitia.pengajuan.index');
         Route::get('/panitia/pengajuan/{id}/edit', [PanitiaPengajuanController::class, 'edit'])->name('panitia.pengajuan.edit');
         Route::put('/panitia/pengajuan/{id}', [PanitiaPengajuanController::class, 'update'])->name('panitia.pengajuan.update');
-      // Berkas
 
+        // Berkas
         Route::get('/berkas', [PanitiaBerkasController::class, 'index'])->name('pages.panitia.berkas.index');
         Route::get('/berkas/create', [PanitiaBerkasController::class, 'create'])->name('pages.panitia.berkas.create');
         Route::post('/berkas', [PanitiaBerkasController::class, 'store'])->name('panitia.berkas.store');
@@ -80,38 +72,28 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/berkas/{id}', [PanitiaBerkasController::class, 'update'])->name('panitia.berkas.update');
         Route::delete('/berkas/{id}', [PanitiaBerkasController::class, 'destroy'])->name('panitia.berkas.destroy');
 
-          // Upload Excel Jadwal
-        Route::post('/jadwal/import', [PanitiaJadwalController::class, 'importJadwal'])->name('jadwal.import');
-        Route::get('/jadwal/import', [PanitiaJadwalController::class, 'importForm'])->name('jadwal.import.form');
-        // Input satu-satu
+        // Jadwal
+        Route::get('/jadwal', [PanitiaJadwalController::class, 'index'])->name('jadwal.index');
         Route::get('/jadwal/create', [PanitiaJadwalController::class, 'create'])->name('jadwal.create');
         Route::post('/jadwal', [PanitiaJadwalController::class, 'store'])->name('jadwal.store');
-        // Tampilkan semua jadwal
-        Route::get('/jadwal', [PanitiaJadwalController::class, 'index'])->name('jadwal.index');
-        // Tampilkan form upload
-        Route::get('/jadwal/import', [PanitiaJadwalController::class, 'importView'])->name('jadwal.import.view');
-        // Proses import
+        Route::get('/jadwal/import', [PanitiaJadwalController::class, 'importForm'])->name('jadwal.import.form');
         Route::post('/jadwal/import', [PanitiaJadwalController::class, 'importJadwal'])->name('jadwal.import');
-        // Tampilkan semua jadwal
-        Route::get('/template/jadwal', [SomeController::class, 'someMethod'])->name('template.jadwal.view');
 
-        Route::middleware(['auth', 'role:panitia'])->group(function () {
-    Route::get('/jadwal/template/download', function () {
-        return Excel::download(new TemplateJadwalExport, 'template_jadwal.xlsx');
-    })->name('template.jadwal');
-});
-
+        Route::get('/jadwal/template/download', function () {
+            return Excel::download(new TemplateJadwalExport, 'template_jadwal.xlsx');
+        })->name('template.jadwal');
     });
 
-
-
+    // DOSEN
     Route::middleware(['role:dosen'])->group(function () {
         Route::get('/dosen/dashboard', [DosenController::class, 'index'])->name('dosen.dashboard');
     });
 
+    // MAHASISWA
     Route::middleware(['role:mahasiswa'])->group(function () {
         Route::get('/mahasiswa/dashboard', [MahasiswaController::class, 'index'])->name('mahasiswa.dashboard');
-          // Berkas
+
+        // Berkas
         Route::get('/mahasiswa/berkas', [BerkasController::class, 'index'])->name('mahasiswa.berkas.index');
         Route::get('/mahasiswa/berkas/create', [BerkasController::class, 'create'])->name('mahasiswa.berkas.create');
         Route::post('/mahasiswa/berkas', [BerkasController::class, 'store'])->name('mahasiswa.berkas.store');
@@ -124,19 +106,16 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/pengajuan', [PengajuanController::class, 'index'])->name('pengajuan.index');
         Route::get('/pengajuan/create', [PengajuanController::class, 'create'])->name('pengajuan.create');
         Route::post('/pengajuan', [PengajuanController::class, 'store'])->name('pengajuan.store');
+
+        // Kelompok
         Route::get('/kelompok', [KelompokController::class, 'index'])->name('kelompok.index');
         Route::get('/kelompok/create', [KelompokController::class, 'create'])->name('kelompok.create');
         Route::post('/kelompok', [KelompokController::class, 'store'])->name('kelompok.store');
-        Route::get('kelompok/fetch-nama', [KelompokController::class, 'fetchNama'])->name('mahasiswa.fetchNama');
-
+        Route::get('/kelompok/fetch-nama', [KelompokController::class, 'fetchNama'])->name('mahasiswa.fetchNama');
     });
 
-
+    // Template user
     Route::get('/template-user', function () {
         return Excel::download(new TemplateUserExport, 'template_user.xlsx');
     })->name('template.user');
-
-
-
 });
-
