@@ -48,10 +48,16 @@
                     Belum ada kelompok yang dibuat.
                 </div>
             @endforelse
-            <div class="text-right mt-3">
-            <a href="{{ route('kelompok.create') }}" class="btn btn-primary">Buat Kelompok</a>
-        </div>
-    </div>
+               {{-- Cek apakah mahasiswa sudah tergabung dalam kelompok --}}
+            @php
+                $mahasiswa = auth()->user()->mahasiswa;
+            @endphp
+
+            @if(!$mahasiswa || !$mahasiswa->kelompok)
+                <div class="text-right mt-3">
+                    <a href="{{ route('kelompok.create') }}" class="btn btn-primary">Buat Kelompok</a>
+                </div>
+            @endif
         </section>
     </div>
 </div>

@@ -19,11 +19,18 @@ class PengajuanController extends Controller
             return redirect()->route('mahasiswa.dashboard')->with('error', 'Data kelompok belum ada.');
         }
 
-        $pengajuan = PengajuanPembimbing::where('id_kelompok', $mahasiswa->id_kelompok)->get();
+        $pengajuan = PengajuanPembimbing::with([
+            'kelompok.anggota1.mahasiswa',
+            'kelompok.anggota2.mahasiswa',
+            'kelompok.anggota3.mahasiswa',
+            'dosen1'
+        ])->where('id_kelompok', $mahasiswa->id_kelompok)->get();
+
         $dosenList = User::where('role_id', 3)->with('dosen')->get();
 
         return view('pages.mahasiswa.pengajuan.index', compact('pengajuan', 'dosenList'));
     }
+
 
     public function create()
     {
