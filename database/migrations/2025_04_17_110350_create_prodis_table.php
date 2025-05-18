@@ -9,12 +9,11 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
-        Schema::create('panitia', function (Blueprint $table) {
-            $table->id('id_panitia');
-            $table->foreignId('id_users')->constrained('users');
-            $table->string('prodi');
+        Schema::create('prodis', function (Blueprint $table) {
+            $table->id();
+            $table->string('nama_prodi');
             $table->timestamps();
         });
     }
@@ -24,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('panitia');
+        Schema::dropIfExists('prodis');
     }
 };

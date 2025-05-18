@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Role;
 use App\Models\Mahasiswa;
 use App\Models\Dosen;
+use App\Models\Prodi;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\UsersImport;
@@ -15,16 +16,39 @@ use Illuminate\Validation\Rule;
 
 class UsersController extends Controller
 {
-    public function index()
-    {
-        $users = User::with('role')->get();
-        return view('pages.admin.users', compact('users'));
+public function index(Request $request)
+{
+    $query = User::with('role', 'prodi');
+
+    if ($request->filled('prodi_id')) {
+        $query->where('id_prodi', $request->prodi_id);
     }
+
+    if ($request->filled('tahun')) {
+        $query->whereYear('created_at', $request->tahun);
+    }
+
+    if ($request->filled('search')) {
+        $keyword = $request->search;
+        $query->where(function ($q) use ($keyword) {
+            $q->where('name', 'like', "%$keyword%")
+              ->orWhere('email', 'like', "%$keyword%")
+              ->orWhere('nim', 'like', "%$keyword%");
+        });
+    }
+
+    $users = $query->paginate(20);
+    $prodis = Prodi::all();
+    $tahunList = User::selectRaw('YEAR(created_at) as tahun')->groupBy('tahun')->pluck('tahun');
+
+    return view('pages.admin.users', compact('users', 'prodis', 'tahunList'));
+}
 
     public function create()
     {
         $roles = Role::all();
-        return view('pages.admin.create', compact('roles'));
+        $prodis = Prodi::all();
+        return view('pages.admin.create', compact('roles', 'prodis'));
     }
 
     public function store(Request $request)
@@ -36,12 +60,12 @@ class UsersController extends Controller
             'role_id' => 'required|in:1,2,3,4',
             'nim' => 'required_if:role_id,4|nullable|unique:users,nim',
             'nip' => 'required_unless:role_id,4|nullable|unique:users,nip',
+            'id_prodi' => 'nullable|exists:prodis,id',
         ], [
             'nim.required_if' => 'NIM wajib diisi untuk mahasiswa.',
             'nip.required_unless' => 'NIP wajib diisi untuk selain mahasiswa.',
         ]);
 
-        // Tambah user baru
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -49,34 +73,36 @@ class UsersController extends Controller
             'role_id' => $request->role_id,
             'nim' => $request->nim,
             'nip' => $request->nip,
+            'id_prodi' => $request->id_prodi,
         ]);
 
-        // Jika role adalah mahasiswa
         if ($request->role_id == 4) {
             Mahasiswa::create([
                 'user_id' => $user->id,
                 'nim_mhs' => $request->nim,
                 'nama_mhs' => $request->name,
+                'id_prodi' => $request->id_prodi,
             ]);
         }
 
-        // Jika role adalah dosen
         if ($request->role_id == 3) {
             Dosen::create([
                 'user_id' => $user->id,
                 'nip_dosen' => $request->nip,
                 'nama_dosen' => $request->name,
+                'id_prodi' => $request->id_prodi,
             ]);
         }
 
-        return redirect()->route('admin.users')->with('success', 'User created successfully');
+        return redirect()->route('admin.users')->with('success', 'User berhasil ditambahkan.');
     }
 
     public function edit($id)
     {
         $user = User::findOrFail($id);
         $roles = Role::all();
-        return view('pages.admin.edit', compact('user', 'roles'));
+        $prodis = Prodi::all();
+        return view('pages.admin.edit', compact('user', 'roles', 'prodis'));
     }
 
     public function update(Request $request, $id)
@@ -91,7 +117,8 @@ class UsersController extends Controller
                 Rule::unique('users')->ignore($id),
             ],
             'role_id' => 'required|in:1,2,3,4',
-            'password' => 'nullable|min:8',
+            'password' => 'nullable|min:4',
+            'id_prodi' => 'nullable|exists:prodis,id',
             'nip' => [
                 'nullable',
                 Rule::unique('users')->ignore($id),
@@ -112,9 +139,11 @@ class UsersController extends Controller
             ],
         ]);
 
+        // Update data user
         $user->name = $request->name;
         $user->email = $request->email;
         $user->role_id = $request->role_id;
+        $user->id_prodi = $request->id_prodi;
 
         if ($request->filled('password')) {
             $user->password = bcrypt($request->password);
@@ -125,8 +154,48 @@ class UsersController extends Controller
 
         $user->save();
 
-        return redirect()->route('admin.users')->with('success', 'User berhasil diperbarui.');
+        // Sinkronkan dengan data mahasiswa
+        if ($user->role_id == 4) {
+            if ($user->mahasiswa) {
+                $user->mahasiswa->update([
+                    'nama_mhs' => $request->name,
+                    'nim_mhs' => $request->nim,
+                    'id_prodi' => $request->id_prodi,
+                ]);
+            } else {
+                // Jika belum ada entri mahasiswa, buat baru
+                \App\Models\Mahasiswa::create([
+                    'user_id' => $user->id,
+                    'nama_mhs' => $request->name,
+                    'nim_mhs' => $request->nim,
+                    'id_prodi' => $request->id_prodi,
+                ]);
+            }
+        }
+
+        // Sinkronkan dengan data dosen
+        if ($user->role_id == 3) {
+            if ($user->dosen) {
+                $user->dosen->update([
+                    'nama_dosen' => $request->name,
+                    'nip_dosen' => $request->nip,
+                    'id_prodi' => $request->id_prodi,
+                ]);
+            } else {
+                // Jika belum ada entri dosen, buat baru
+                \App\Models\Dosen::create([
+                    'user_id' => $user->id,
+                    'nama_dosen' => $request->name,
+                    'nip_dosen' => $request->nip,
+                    'id_prodi' => $request->id_prodi,
+                ]);
+            }
+        }
+
+        return redirect()->route('admin.users')->with('success', 'User & data terkait berhasil diperbarui.');
     }
+
+
 
     public function destroy($id)
     {

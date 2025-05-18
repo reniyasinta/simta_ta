@@ -48,4 +48,17 @@ class Dosen extends Model
             ->orWhere('penguji_2_id', $this->id_dosen)
             ->orWhere('penguji_3_id', $this->id_dosen);
     }
+
+    // User.php
+    public function prodi()
+    {
+        return $this->belongsTo(Prodi::class, 'id_prodi');
+    }
+
+    public function prodis()
+    {
+        return $this->belongsToMany(Prodi::class, 'dosen_prodi', 'id_dosen', 'id_prodi');
+    }
+
+
 }
