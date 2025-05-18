@@ -18,8 +18,9 @@ return new class extends Migration
             $table->string('nama_dosen');
             $table->unsignedBigInteger('id_prodi')->nullable();
             $table->foreign('id_prodi')->references('id')->on('prodis')->onDelete('set null');
-            $table->string('topik')->nullable();
+            $table->string('keahlian')->nullable();
             $table->string('no_telp')->nullable();
+            $table->string('foto')->nullable();
             $table->timestamps();
         });
     }

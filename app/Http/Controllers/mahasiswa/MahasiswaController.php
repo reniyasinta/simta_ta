@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Mahasiswa;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Jadwal;
+use App\Models\Dosen;
 
 class MahasiswaController extends Controller
 {
@@ -18,8 +19,8 @@ class MahasiswaController extends Controller
         }
 
         $jadwals = Jadwal::where('id_mhs', $mahasiswa->id_mhs)->get();
+        $dosens = Dosen::with('user', 'prodi')->get();
 
-        return view('pages.mahasiswa.dashboard', compact('jadwals'));
+        return view('pages.mahasiswa.dashboard', compact('jadwals', 'dosens'));
     }
 }
-

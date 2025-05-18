@@ -73,6 +73,9 @@
 
             {{-- Tabel --}}
             <div class="table-responsive">
+                <div class="d-flex justify-content-end mb-3">
+                    {{ $users->withQueryString()->links() }}
+                </div>
                 <table class="table table-bordered table-striped">
                     <thead>
                         <tr>
@@ -124,10 +127,6 @@
                         @endforelse
                     </tbody>
                 </table>
-
-                <div class="mt-3">
-                    {{ $users->withQueryString()->links() }}
-                </div>
             </div>
         </section>
     </div>

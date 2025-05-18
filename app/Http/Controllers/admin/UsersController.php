@@ -37,7 +37,7 @@ public function index(Request $request)
         });
     }
 
-    $users = $query->paginate(20);
+    $users = $query->paginate(10);
     $prodis = Prodi::all();
     $tahunList = User::selectRaw('YEAR(created_at) as tahun')->groupBy('tahun')->pluck('tahun');
 

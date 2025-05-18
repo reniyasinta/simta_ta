@@ -16,8 +16,9 @@ class Dosen extends Model
         'user_id', // ganti dari 'id_users' jadi 'user_id'
         'nip_dosen',
         'nama_dosen',
-        'topik',
+        'keahlian',
         'no_telp',
+        'foto',
     ];
 
     public $timestamps = true;
