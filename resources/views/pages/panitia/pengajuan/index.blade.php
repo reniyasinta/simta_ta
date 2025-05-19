@@ -40,12 +40,10 @@
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $p->kelompok->nama ?? '-' }}</td>
                                     <td>{{ $p->judul_ta }}</td>
-                                    <td>{{ $p->dosen1->nama ?? '-' }}</td>
-                                    <td>{{ $p->dosen2->nama ?? 'Belum ditetapkan' }}</td>
+                                    <td>{{ $p->dosen1->dosen->nama_dosen ?? '-' }}</td>
+                                    <td>{{ $p->dosen2->dosen->nama_dosen ?? 'Belum ditetapkan' }}</td>
                                     <td>
-                                        <a href="" class="btn btn-sm btn-primary">
-                                            Tentukan Dosen 2
-                                        </a>
+                                        <a href="{{ route('panitia.pengajuan.edit', $p->id_ajuan) }}" class="btn btn-sm btn-primary">Tentukan Dosen 2</a>
                                     </td>
                                 </tr>
                             @empty
