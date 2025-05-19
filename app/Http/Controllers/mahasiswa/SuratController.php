@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Mahasiswa;
 use App\Models\Surat;
+use Illuminate\Support\Facades\Storage;
 
 class SuratController extends Controller
 {
@@ -25,6 +26,7 @@ class SuratController extends Controller
     {
         $request->validate([
             'judul_ta' => 'required',
+            'perihal' => 'required',
             'dosen_pembimbing' => 'required',
             'tujuan' => 'required',
         ]);
@@ -34,11 +36,23 @@ class SuratController extends Controller
         Surat::create([
             'id_mhs' => $mahasiswa->id_mhs,
             'judul_ta' => $request->judul_ta,
+            'perihal' => $request->perihal,
             'dosen_pembimbing' => $request->dosen_pembimbing,
             'tujuan' => $request->tujuan,
             'status' => 'menunggu',
         ]);
 
         return redirect()->route('mahasiswa.surat.index')->with('success', 'Pengajuan surat berhasil.');
+    }
+
+    public function download($id)
+    {
+        $surat = Surat::findOrFail($id);
+
+        if (!$surat->file_surat || !Storage::disk('public')->exists($surat->file_surat)) {
+            return redirect()->back()->with('error', 'File tidak ditemukan.');
+        }
+
+        return Storage::disk('public')->download($surat->file_surat);
     }
 }

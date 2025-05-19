@@ -60,7 +60,8 @@ Route::middleware(['auth'])->group(function () {
         // Pengelolaan Surat Penelitian
         Route::get('/admin/surat', [AdminSuratController::class, 'index'])->name('admin.surat.index');
         Route::get('/admin/surat/{id}/edit', [AdminSuratController::class, 'edit'])->name('admin.surat.edit');
-        Route::post('/admin/surat/{id}/update', [AdminSuratController::class, 'update'])->name('admin.surat.update');
+        Route::put('/admin/surat/{id}/update', [AdminSuratController::class, 'update'])->name('admin.surat.update');
+        Route::get('/admin/surat/download/{id}', [AdminSuratController::class, 'download'])->name('admin.surat.download');
     });
 
     // PANITIA
@@ -127,6 +128,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/mahasiswa/surat', [MahasiswaSuratController::class, 'index'])->name('mahasiswa.surat.index');
         Route::get('/mahasiswa/surat/create', [MahasiswaSuratController::class, 'create'])->name('mahasiswa.surat.create');
         Route::post('/mahasiswa/surat', [MahasiswaSuratController::class, 'store'])->name('mahasiswa.surat.store');
+        Route::get('/mahasiswa/surat/download/{id}', [MahasiswaSuratController::class, 'download'])->name('mahasiswa.surat.download');
+
     });
 
     // Template user

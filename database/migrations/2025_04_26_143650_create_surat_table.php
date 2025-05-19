@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id('id_surat');
             $table->unsignedBigInteger('id_mhs');
             $table->foreign('id_mhs')->references('id_mhs')->on('mahasiswa')->onDelete('cascade');
+            $table->string('perihal');
             $table->string('tujuan');
             $table->string('judul_ta')->nullable();
             $table->string('dosen_pembimbing')->nullable();

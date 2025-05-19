@@ -28,8 +28,8 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Dosen Pembimbing</label>
-                            <input type="text" name="dosen_pembimbing" class="form-control" required>
+                            <label class="form-label">Perihal</label>
+                            <input type="text" name="perihal" class="form-control" required>
                         </div>
 
                         <div class="mb-3">
@@ -37,9 +37,15 @@
                             <input type="text" name="tujuan" class="form-control" required>
                         </div>
 
-                        <button type="submit" class="btn btn-primary">
-                            Ajukan Surat
-                        </button>
+                        <div class="mb-3">
+                            <label class="form-label">Dosen Pembimbing</label>
+                            <input type="text" name="dosen_pembimbing" class="form-control" required>
+                        </div>
+
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-primary">Ajukan Surat</button>
+                            <a href="{{ route('mahasiswa.surat.index') }}" class="btn btn-secondary">Kembali</a>
+                        </div>
                     </form>
                 </div>
             </div>

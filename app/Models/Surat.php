@@ -8,7 +8,7 @@ class Surat extends Model
 {
     protected $table = 'surat';
     protected $primaryKey = 'id_surat';
-    protected $fillable = ['id_mhs', 'tujuan', 'judul_ta', 'dosen_pembimbing', 'status', 'file_surat'];
+    protected $fillable = ['id_mhs', 'tujuan', 'perihal', 'judul_ta', 'dosen_pembimbing', 'status', 'file_surat'];
 
     public function mahasiswa()
     {

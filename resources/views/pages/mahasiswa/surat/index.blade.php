@@ -26,6 +26,7 @@
                         <tr>
                             <th>Judul TA</th>
                             <th>Tujuan</th>
+                            <th>Perihal</th>
                             <th>Dosen Pembimbing</th>
                             <th>Status</th>
                             <th>Surat</th>
@@ -36,11 +37,12 @@
                             <tr>
                                 <td>{{ $surat->judul_ta }}</td>
                                 <td>{{ $surat->tujuan }}</td>
+                                <td>{{ $surat->perihal }}</td>
                                 <td>{{ $surat->dosen_pembimbing }}</td>
                                 <td class="text-capitalize">{{ $surat->status }}</td>
                                 <td>
                                     @if($surat->file_surat)
-                                        <a href="{{ Storage::url($surat->file_surat) }}" target="_blank" class="text-success">Download</a>
+                                    <a href="{{ route('mahasiswa.surat.download', $surat->id_surat) }}" class="text-success">Download</a>
                                     @else
                                         <span class="text-muted">Belum tersedia</span>
                                     @endif
@@ -48,10 +50,11 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="text-center">Belum ada pengajuan surat</td>
+                                <td colspan="6" class="text-center">Belum ada pengajuan surat</td>
                             </tr>
                         @endforelse
                     </tbody>
+
                 </table>
             </div>
         </section>

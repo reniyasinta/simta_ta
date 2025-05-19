@@ -72,8 +72,6 @@
                                     @endforeach
                                 </select>
                             </div>
-
-
                                 <div class="text-end">
                                     <button type="submit" class="btn btn-primary">Kirim Pengajuan</button>
                                     <a href="{{ route('pengajuan.index') }}" class="btn btn-secondary">Kembali</a>

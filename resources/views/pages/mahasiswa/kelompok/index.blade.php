@@ -17,9 +17,8 @@
             @endif
 
             <div class="clearfix mb-3"></div>
-
             @forelse ($kelompok as $k)
-                <h5>Kelompok #{{ $k->id_kelompok }}</h5>
+                <h5>Kelompok</h5>
                 <div class="table-responsive mb-4">
                     <table class="table">
                         <thead>

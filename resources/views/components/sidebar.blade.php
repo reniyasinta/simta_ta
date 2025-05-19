@@ -21,15 +21,9 @@
             </li>
 
             <li class="menu-header">Surat</li>
-<<<<<<< HEAD
-            <li><a class="nav-link" href="{{ route('admin.surat.index') }}"><i class="fas fa-file-alt"></i><span>Approval Penelitian</span></a></li>
-
-            <li class="menu-header">Profil</li>
-=======
-            <li><a class="nav-link" href="{{ url('profil') }}"><i class="fas fa-file"></i> <span>Approval Penelitian</span></a></li>
+            <li><a class="nav-link" href="{{ route('admin.surat.index') }}"><i class="fas fa-file"></i> <span>Approval Penelitian</span></a></li>
 
             <li class="menu-header">User Account</li>
->>>>>>> 063a998a14f8cf193e469420526a3f145e0654c6
             <li><a class="nav-link" href="{{ url('profil') }}"><i class="fas fa-user"></i> <span>Profil</span></a></li>
 
             <li><a class="nav-link" href="{{ route('admin.users') }}"><i class="fas fa-user"></i> <span>Manage User</span></a></li>

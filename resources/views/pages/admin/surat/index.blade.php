@@ -22,8 +22,11 @@
                         <tr>
                             <th>Mahasiswa</th>
                             <th>Judul TA</th>
+                            <th>Tujuan</th>
+                            <th>Perihal</th>
                             <th>Dosen Pembimbing</th>
                             <th>Status</th>
+                            <th>Preview</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -32,18 +35,24 @@
                             <tr>
                                 <td>{{ $surat->mahasiswa?->nama_mhs ?? '-' }}</td>
                                 <td>{{ $surat->judul_ta }}</td>
-                                <td>{{ $surat->dosen?->nama_dosen ?? '-' }}</td>
+                                <td>{{ $surat->tujuan }}</td>
+                                <td>{{ $surat->perihal }}</td>
+                                <td>{{ $surat->dosen?->nama_dosen ?? $surat->dosen_pembimbing }}</td>
                                 <td class="text-capitalize">{{ $surat->status ?? '-' }}</td>
                                 <td>
-                                    <a href="{{ route('admin.surat.edit', $surat->id_surat) }}" class="btn btn-sm btn-primary">Proses</a>
                                     @if($surat->file_surat)
-                                        <a href="{{ Storage::url($surat->file_surat) }}" target="_blank" class="btn btn-sm btn-success">Download</a>
+                                    <a href="{{ Storage::url($surat->file_surat) }}" target="_blank" class="text-success">Lihat</a>
+                                    @else
+                                        <span class="text-muted">Belum tersedia</span>
                                     @endif
+                                </td>
+                                <td>
+                                    <a href="{{ route('admin.surat.edit', $surat->id_surat) }}" class="btn btn-sm btn-primary">Upload File</a>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="text-center">Belum ada pengajuan surat.</td>
+                                <td colspan="8" class="text-center">Belum ada pengajuan surat.</td>
                             </tr>
                         @endforelse
                     </tbody>
