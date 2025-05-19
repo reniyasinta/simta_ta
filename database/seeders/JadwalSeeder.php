@@ -8,9 +8,7 @@ use App\Models\User;
 
 class JadwalSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
+
     public function run(): void
     {
         // Ambil user dosen yang sudah dibuat di UsersTableSeeder

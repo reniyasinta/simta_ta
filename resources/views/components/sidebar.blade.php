@@ -22,8 +22,7 @@
             </li>
 
             <li class="menu-header">Surat</li>
-            <li><a class="nav-link" href="{{ url('profil') }}"><i class="fas fa-file"></i> <span>Approval Penelitian</span></a></li>
-
+            <li><a class="nav-link" href="{{ route('admin.surat.index') }}"><i class="fas fa-file-alt"></i><span>Approval Penelitian</span></a></li>
 
             <li class="menu-header">Profil</li>
             <li><a class="nav-link" href="{{ url('profil') }}"><i class="fas fa-user"></i> <span>Profil</span></a></li>
@@ -106,6 +105,9 @@
 
             <li class="menu-header">Pengajuan</li>
             <li><a class="nav-link" href="{{ route('pengajuan.index') }}"><i class="fas fa-file-signature"></i> <span>Pengajuan Dospem1</span></a></li>
+
+            <li class="menu-header">Surat Penelitian</li>
+            <li><a class="nav-link" href="{{ route('mahasiswa.surat.index') }}"><i class="fas fa-file-alt"></i> <span>Surat</span></a></li>
 
             <li class="menu-header">Seminar Proposal</li>
             <li><a class="nav-link" href="{{ url('seminar') }}"><i class="fas fa-file-alt"></i> <span>Usulan Tugas Akhir</span></a></li>

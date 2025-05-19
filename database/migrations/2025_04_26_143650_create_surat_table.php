@@ -13,11 +13,16 @@ return new class extends Migration
     {
         Schema::create('surat', function (Blueprint $table) {
             $table->id('id_surat');
-            $table->foreignId('id_ajuan')->constrained('pengajuan_pembimbing','id_ajuan');
+            $table->unsignedBigInteger('id_mhs');
+            $table->foreign('id_mhs')->references('id_mhs')->on('mahasiswa')->onDelete('cascade');
             $table->string('tujuan');
-            $table->string('hasil_surat');
+            $table->string('judul_ta')->nullable();
+            $table->string('dosen_pembimbing')->nullable();
+            $table->enum('status', ['menunggu', 'diproses', 'selesai'])->default('menunggu');
+            $table->string('file_surat')->nullable();
             $table->timestamps();
         });
+
     }
 
     /**

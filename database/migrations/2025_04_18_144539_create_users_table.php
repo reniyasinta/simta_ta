@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-
             $table->unsignedBigInteger('role_id')->default(4); // misalnya 4 = mahasiswa
             $table->string('nip')->nullable()->unique(); // untuk admin, dosen, panitia
             $table->string('nim')->nullable()->unique(); // untuk mahasiswa
