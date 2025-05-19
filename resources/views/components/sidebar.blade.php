@@ -64,12 +64,38 @@
         @elseif($roleId == 3)
         <ul class="sidebar-menu">
             <li class="menu-header">Dashboard</li>
-            <li class="nav-item dropdown {{ ($type_menu ?? '') === 'dashboard' ? 'active' : '' }}">
-                <a href="{{ route('dosen.dashboard') }}" class="nav-link"><i class="fas fa-fire"></i><span>Dashboard</span></a>
+            <li class="{{ ($type_menu ?? '') === 'dashboard' ? 'active' : '' }}">
+                <a href="{{ route('dosen.dashboard') }}" class="nav-link">
+                    <i class="fas fa-fire"></i> <span>Dashboard</span>
+                </a>
             </li>
 
-            <li class="menu-header">Pengumuman</li>
-            <li><a class="nav-link" href="{{ url('pengumuman') }}"><i class="fas fa-bullhorn"></i> <span>Pengumuman</span></a></li>
+            <li class="menu-header">Pembimbingan TA</li>
+
+            <li>
+                <a class="nav-link {{ request()->routeIs('dosen.validasi') ? 'active' : '' }}" href="{{ route('dosen.validasi') }}">
+                    <i class="fas fa-check-circle"></i> <span>Validasi Pengajuan</span>
+                </a>
+            </li>
+
+            <li>
+                <a class="nav-link {{ request()->routeIs('dosen.bimbingan') ? 'active' : '' }}" href="{{ route('dosen.profile') }}">
+                    <i class="fas fa-comments"></i> <span>Data Bimbingan</span>
+                </a>
+            </li>
+
+
+            <li class="menu-header">Data Pengujian TA</li>
+            <li>
+                <a class="nav-link {{ request()->is('dosen/seminar-proposal') ? 'active' : '' }}" href="{{ route('dosen.profile') }}">
+                    <i class="fas fa-chalkboard-teacher"></i> <span>Seminar Proposal</span>
+                </a>
+            </li>
+            <li>
+                <a class="nav-link {{ request()->is('dosen/sidang-ta') ? 'active' : '' }}" href="{{ route('dosen.profile') }}">
+                    <i class="fas fa-gavel"></i> <span>Sidang TA</span>
+                </a>
+            </li>
 
             <li class="menu-header">Profil</li>
             <li>
@@ -77,6 +103,8 @@
                     <i class="fas fa-user"></i> <span>Profil</span>
                 </a>
             </li>
+        </ul>
+
 
 
         {{-- ================= Mahasiswa (role_id = 4) ================= --}}

@@ -25,6 +25,11 @@ class PengajuanPembimbing extends Model
 
     public function dosen1()
     {
-        return $this->belongsTo(Dosen::class, 'id_dosen1', 'id_dosen');
+        return $this->belongsTo(User::class, 'id_dosen1'); // GANTI ke User karena foreign key ke users.id
+    }
+
+    public function dosen2()
+    {
+        return $this->belongsTo(User::class, 'id_dosen2');
     }
 }

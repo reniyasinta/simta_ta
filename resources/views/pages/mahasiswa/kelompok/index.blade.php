@@ -1,11 +1,16 @@
 @extends('layouts.app')
 
+@section('title', 'Kelompok Saya')
+
+@push('style')
+<link rel="stylesheet" href="{{ asset('library/summernote/dist/summernote-bs4.css') }}">
+@endpush
+
 @section('main') {{-- ganti ke @section('content') kalau layout-nya pakai itu --}}
-<div class="container-fluid py-5">
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h2>Kelompok Saya</h2>
+                <h1>Kelompok Saya</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="{{ url('home') }}">Dashboard</a></div>
                     <div class="breadcrumb-item">Kelompok</div>
@@ -59,5 +64,4 @@
             @endif
         </section>
     </div>
-</div>
 @endsection

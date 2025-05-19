@@ -23,6 +23,7 @@ use App\Exports\TemplateUserExport;
 use App\Exports\TemplateJadwalExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\Dosen\ProfileController;
+use App\Http\Controllers\Dosen\ValidasiPengajuanController;
 
 // Halaman login
 Route::get('/', function () {
@@ -94,14 +95,18 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // DOSEN
-    Route::middleware(['role:dosen'])->group(function () {
+    Route::middleware(['role:dosen'])->prefix('dosen')->group(function () {
         Route::get('/dosen/dashboard', [DosenController::class, 'index'])->name('dosen.dashboard');
         Route::get('/dosen/profile', [ProfileController::class, 'index'])->name('dosen.profile');
         Route::post('/dosen/profile', [ProfileController::class, 'update'])->name('dosen.profile.update');
+
+        // validasi pengajuan pembimbing 1
+        Route::get('/validasi-pengajuan', [\App\Http\Controllers\Dosen\ValidasiPengajuanController::class, 'index'])->name('dosen.validasi');
+        Route::post('/validasi-pengajuan/{id}', [\App\Http\Controllers\Dosen\ValidasiPengajuanController::class, 'validasi'])->name('dosen.validasi.submit');
     });
 
     // MAHASISWA
-    Route::middleware(['role:mahasiswa'])->group(function () {
+    Route::middleware(['role:mahasiswa'])->prefix('mahasiswa')->group(function () {
         Route::get('/mahasiswa/dashboard', [MahasiswaController::class, 'index'])->name('mahasiswa.dashboard');
 
         // Berkas
