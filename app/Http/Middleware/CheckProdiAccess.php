@@ -21,7 +21,7 @@ class CheckProdiAccess
         }
 
         // Jika panitia prodi, batasi akses hanya ke prodi miliknya
-        $targetProdiId = $request->route('prodi_id') ?? $request->input('prodi_id');
+        $targetProdiId = $request->route('id_prodi') ?? $request->input('id_prodi');
 
         if ($targetProdiId && $user->id_prodi != $targetProdiId) {
             abort(403, 'Akses ditolak: Anda hanya dapat mengakses data prodi Anda sendiri.');

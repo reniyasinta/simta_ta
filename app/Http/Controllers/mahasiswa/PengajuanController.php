@@ -43,13 +43,17 @@ class PengajuanController extends Controller
     {
         $mahasiswa = auth()->user()->mahasiswa;
 
-        // Ambil semua pengguna yang memiliki role 'dosen'
-        $dosenList = User::whereHas('role', function ($query) {
-            $query->where('name', 'dosen');
-        })->get();
+        // Ambil id_prodi dari mahasiswa
+        $idProdi = auth()->user()->id_prodi;
+
+        // Ambil semua dosen yang memiliki id_prodi yang sama
+        $dosenList = User::where('role_id', 3) // 3 = dosen
+                        ->where('id_prodi', $idProdi)
+                        ->get();
 
         return view('pages.mahasiswa.pengajuan.create', compact('dosenList', 'mahasiswa'));
     }
+
     public function store(Request $request)
     {
         $request->validate([

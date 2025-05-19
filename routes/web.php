@@ -8,12 +8,14 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Dosen\DosenController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\UsersController;
+use App\Http\Controllers\Admin\SuratController as AdminSuratController;
 use App\Http\Controllers\Panitia\PanitiaController;
 use App\Http\Controllers\LogsController;
 use App\Http\Controllers\Mahasiswa\MahasiswaController;
 use App\Http\Controllers\Mahasiswa\PengajuanController;
 use App\Http\Controllers\Mahasiswa\KelompokController;
 use App\Http\Controllers\Mahasiswa\BerkasController;
+use App\Http\Controllers\Mahasiswa\SuratController as MahasiswaSuratController;
 use App\Http\Controllers\Panitia\PanitiaPengajuanController;
 use App\Http\Controllers\Panitia\BerkasController as PanitiaBerkasController;
 use App\Http\Controllers\Panitia\PanitiaJadwalController;
@@ -55,6 +57,12 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/admin/{id}', [UsersController::class, 'destroy'])->name('admin.destroy');
         Route::get('/admin/import', [UsersController::class, 'importForm'])->name('admin.import');
         Route::post('/admin/import', [UsersController::class, 'importStore'])->name('admin.import.store');
+
+        // Pengelolaan Surat Penelitian
+        Route::get('/admin/surat', [AdminSuratController::class, 'index'])->name('admin.surat.index');
+        Route::get('/admin/surat/{id}/edit', [AdminSuratController::class, 'edit'])->name('admin.surat.edit');
+        Route::put('/admin/surat/{id}/update', [AdminSuratController::class, 'update'])->name('admin.surat.update');
+        Route::get('/admin/surat/download/{id}', [AdminSuratController::class, 'download'])->name('admin.surat.download');
     });
 
     // PANITIA
@@ -121,6 +129,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/kelompok/create', [KelompokController::class, 'create'])->name('kelompok.create');
         Route::post('/kelompok', [KelompokController::class, 'store'])->name('kelompok.store');
         Route::get('/kelompok/fetch-nama', [KelompokController::class, 'fetchNama'])->name('mahasiswa.fetchNama');
+
+        // Surat Penelitian Mahasiswa
+        Route::get('/mahasiswa/surat', [MahasiswaSuratController::class, 'index'])->name('mahasiswa.surat.index');
+        Route::get('/mahasiswa/surat/create', [MahasiswaSuratController::class, 'create'])->name('mahasiswa.surat.create');
+        Route::post('/mahasiswa/surat', [MahasiswaSuratController::class, 'store'])->name('mahasiswa.surat.store');
+        Route::get('/mahasiswa/surat/download/{id}', [MahasiswaSuratController::class, 'download'])->name('mahasiswa.surat.download');
+
     });
 
     // Template user
