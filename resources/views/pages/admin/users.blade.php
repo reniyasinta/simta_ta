@@ -39,11 +39,11 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <label for="prodi_id" class="form-label">Prodi</label>
-                                <select name="prodi_id" class="form-control">
+                                <label for="id_prodi" class="form-label">Prodi</label>
+                                <select name="id_prodi" class="form-control">
                                     <option value="">-- Semua Prodi --</option>
                                     @foreach($prodis as $prodi)
-                                        <option value="{{ $prodi->id }}" {{ request('prodi_id') == $prodi->id ? 'selected' : '' }}>
+                                        <option value="{{ $prodi->id }}" {{ request('id_prodi') == $prodi->id ? 'selected' : '' }}>
                                             {{ $prodi->nama_prodi }}
                                         </option>
                                     @endforeach

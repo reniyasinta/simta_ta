@@ -20,8 +20,8 @@ public function index(Request $request)
 {
     $query = User::with('role', 'prodi');
 
-    if ($request->filled('prodi_id')) {
-        $query->where('id_prodi', $request->prodi_id);
+    if ($request->filled('id_prodi')) {
+        $query->where('id_prodi', $request->id_prodi);
     }
 
     if ($request->filled('tahun')) {
