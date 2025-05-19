@@ -11,25 +11,32 @@ use Illuminate\Support\Facades\Storage;
 
 class PengajuanController extends Controller
 {
-    public function index()
+        public function index()
     {
         $mahasiswa = auth()->user()->mahasiswa;
 
+        // Jika belum ada data mahasiswa atau belum memiliki kelompok
         if (!$mahasiswa || !$mahasiswa->kelompok) {
-            return redirect()->route('mahasiswa.dashboard')->with('error', 'Data kelompok belum ada.');
+            $pengajuan = collect(); // Kosongkan data untuk view
+            $dosenList = collect();
+            $error = 'Anda belum memiliki data kelompok. Bagi mahasiswa yang mengajukan TA perorangan harap tetap mendaftarkan namanya di fitur kelompok.';
+            return view('pages.mahasiswa.pengajuan.index', compact('pengajuan', 'dosenList', 'error'));
         }
 
+        // Jika sudah ada
         $pengajuan = PengajuanPembimbing::with([
             'kelompok.anggota1.mahasiswa',
             'kelompok.anggota2.mahasiswa',
             'kelompok.anggota3.mahasiswa',
-            'dosen1'
+            'dosen1',
         ])->where('id_kelompok', $mahasiswa->id_kelompok)->get();
 
         $dosenList = User::where('role_id', 3)->with('dosen')->get();
 
         return view('pages.mahasiswa.pengajuan.index', compact('pengajuan', 'dosenList'));
     }
+
+
 
 
     public function create()

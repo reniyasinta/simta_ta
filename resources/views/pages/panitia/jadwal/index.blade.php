@@ -1,7 +1,12 @@
 @extends('layouts.app')
 
+@section('title', 'Daftar Jadwal Seminar')
+
+@push('style')
+<link rel="stylesheet" href="{{ asset('library/summernote/dist/summernote-bs4.css') }}">
+@endpush
+
 @section('main')
-<div class="container-fluid py-5">
     <div class="main-content">
         <section class="section">
             <div class="section-header">
@@ -73,5 +78,4 @@
 
         </section>
     </div>
-</div>
 @endsection

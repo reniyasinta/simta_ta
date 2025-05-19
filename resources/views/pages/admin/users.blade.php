@@ -1,11 +1,17 @@
 @extends('layouts.app')
 
+@section('title', 'Manage User')
+
+@push('style')
+<link rel="stylesheet" href="{{ asset('library/summernote/dist/summernote-bs4.css') }}">
+@endpush
+
 @section('main')
-<div class="container-fluid py-5">
+
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h2>Daftar Pengguna</h2>
+                <h1>Daftar Pengguna</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="{{ url('home') }}">Dashboard</a></div>
                     <div class="breadcrumb-item">Semua User</div>
@@ -130,5 +136,5 @@
             </div>
         </section>
     </div>
-</div>
+
 @endsection

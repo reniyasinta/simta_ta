@@ -44,7 +44,7 @@ class Kelompok extends Model
         return $this->hasOne(PengajuanPembimbing::class, 'id_kelompok');
     }
 
-     public function getAnggotaAttribute()
+    public function getAnggotaAttribute()
     {
         $anggota = [];
 
@@ -58,8 +58,9 @@ class Kelompok extends Model
             $anggota[] = $this->anggota3->mahasiswa;
         }
 
-        return collect($anggota)->filter();
+        return collect($anggota)->filter(); // Buang null
     }
+
 
     public function prodi()
     {
