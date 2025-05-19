@@ -25,4 +25,11 @@ class Mahasiswa extends Model
     {
         return $this->hasMany(Jadwal::class, 'id_mhs', 'id_mhs');
     }
+
+    // User.php
+    public function prodi()
+    {
+        return $this->belongsTo(Prodi::class, 'id_prodi');
+    }
+
 }

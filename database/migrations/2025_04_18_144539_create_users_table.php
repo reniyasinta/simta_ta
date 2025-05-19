@@ -20,10 +20,16 @@ return new class extends Migration
             $table->string('nip')->nullable()->unique(); // untuk admin, dosen, panitia
             $table->string('nim')->nullable()->unique(); // untuk mahasiswa
 
+            // ✅ Tambahkan kolom id_prodi
+            $table->unsignedBigInteger('id_prodi')->nullable();
+
             $table->timestamps();
 
             // Foreign key relasi ke tabel roles
             $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
+
+            // Foreign key relasi ke tabel prodis
+            $table->foreign('id_prodi')->references('id')->on('prodis')->onDelete('set null');
         });
     }
 

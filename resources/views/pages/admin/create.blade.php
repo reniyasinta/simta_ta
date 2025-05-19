@@ -35,7 +35,10 @@
                     <select name="role_id" id="roleSelect" class="form-control" required>
                         <option value="">-- Pilih Role --</option>
                         @foreach ($roles as $role)
-                            <option value="{{ (int) $role->id }}">{{ ucfirst($role->name) }}</option>
+                            <option value="{{ (int) $role->id }}"
+                                {{ old('role_id') == $role->id ? 'selected' : '' }}>
+                                {{ ucfirst($role->name) }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
@@ -48,6 +51,19 @@
                 <div class="form-group" id="nim-group" style="display: none;">
                     <label for="nim">NIM (Mahasiswa)</label>
                     <input type="text" name="nim" id="nim" class="form-control" placeholder="Masukkan NIM" value="{{ old('nim') }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="id_prodi">Program Studi</label>
+                    <select name="id_prodi" class="form-control">
+                        <option value="">-- Pilih Prodi --</option>
+                        @foreach ($prodis as $prodi)
+                            <option value="{{ $prodi->id }}"
+                                {{ old('id_prodi') == $prodi->id ? 'selected' : '' }}>
+                                {{ $prodi->nama_prodi }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <button type="submit" class="btn btn-primary">Simpan</button>
@@ -66,7 +82,6 @@
         const nipGroup = document.getElementById('nip-group');
         const nimGroup = document.getElementById('nim-group');
 
-        // Default: semua sembunyi
         nipGroup.style.display = 'none';
         nimGroup.style.display = 'none';
 

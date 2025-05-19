@@ -22,6 +22,7 @@ use App\Http\Controllers\Panitia\PanitiaJadwalController;
 use App\Exports\TemplateUserExport;
 use App\Exports\TemplateJadwalExport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Controllers\Dosen\ProfileController;
 
 // Halaman login
 Route::get('/', function () {
@@ -94,6 +95,8 @@ Route::middleware(['auth'])->group(function () {
     // DOSEN
     Route::middleware(['role:dosen'])->group(function () {
         Route::get('/dosen/dashboard', [DosenController::class, 'index'])->name('dosen.dashboard');
+        Route::get('/dosen/profile', [ProfileController::class, 'index'])->name('dosen.profile');
+        Route::post('/dosen/profile', [ProfileController::class, 'update'])->name('dosen.profile.update');
     });
 
     // MAHASISWA

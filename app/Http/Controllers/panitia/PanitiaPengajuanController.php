@@ -11,19 +11,41 @@ class PanitiaPengajuanController extends Controller
 {
     public function index()
     {
+        $user = auth()->user();
+
         $pengajuanList = PengajuanPembimbing::with(['kelompok', 'dosen1', 'dosen2'])->get();
-        $dosenList = Dosen::all();
+
+        // Filtering dosen berdasarkan prodi panitia (many-to-many)
+        if ($user->role->name === 'panitia' && $user->id_prodi !== null) {
+            $dosenList = Dosen::whereHas('prodis', function ($q) use ($user) {
+                $q->where('id', $user->id_prodi);
+            })->get();
+        } else {
+            // Panitia jurusan atau lainnya → tampilkan semua
+            $dosenList = Dosen::all();
+        }
 
         return view('pages.panitia.pengajuan.index', compact('pengajuanList', 'dosenList'));
     }
 
+
     public function edit($id)
     {
+        $user = auth()->user();
+
         $pengajuan = PengajuanPembimbing::with(['kelompok', 'dosen1', 'dosen2'])->findOrFail($id);
-        $dosenList = Dosen::all();
+
+        if ($user->role->name === 'panitia' && $user->id_prodi !== null) {
+            $dosenList = Dosen::whereHas('prodis', function ($q) use ($user) {
+                $q->where('id', $user->id_prodi);
+            })->get();
+        } else {
+            $dosenList = Dosen::all();
+        }
 
         return view('pages.panitia.pengajuan.edit', compact('pengajuan', 'dosenList'));
     }
+
 
     public function update(Request $request, $id)
     {

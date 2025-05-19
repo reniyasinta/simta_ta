@@ -8,8 +8,12 @@
                     <h1>Buat Kelompok</h1>
                     <div class="section-header-breadcrumb">
                         <div class="breadcrumb-item active"><a href="{{ url('home') }}">Dashboard</a></div>
+<<<<<<< HEAD
                         <div class="breadcrumb-item"><a href="{{ route('kelompok.index') }}">Kelompok</a></div>
                         <div class="breadcrumb-item">Buat kelompok</div>
+=======
+                        <div class="breadcrumb-item">Kelompok</div>
+>>>>>>> 063a998a14f8cf193e469420526a3f145e0654c6
                     </div>
                 </div>
 

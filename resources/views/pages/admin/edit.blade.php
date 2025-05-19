@@ -69,6 +69,19 @@
                            value="{{ old('nim', $user->nim) }}">
                 </div>
 
+                <div class="form-group">
+                    <label for="id_prodi">Program Studi</label>
+                    <select name="id_prodi" class="form-control">
+                        <option value="">-- Pilih Prodi --</option>
+                        @foreach ($prodis as $prodi)
+                            <option value="{{ $prodi->id }}"
+                                {{ old('id_prodi', $user->id_prodi) == $prodi->id ? 'selected' : '' }}>
+                                {{ $prodi->nama_prodi }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
                 <div class="form-group mt-3">
                     <a href="{{ route('admin.users') }}" class="btn btn-secondary">Kembali</a>
                     <button type="submit" class="btn btn-primary">Simpan Perubahan</button>

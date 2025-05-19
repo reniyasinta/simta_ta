@@ -19,6 +19,7 @@ class User extends Authenticatable
         'role_id',
         'nip',
         'nim',
+        'id_prodi',
     ];
 
     protected $hidden = [
@@ -55,6 +56,12 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class, 'role_id');
     }
+
+    public function prodi()
+    {
+        return $this->belongsTo(Prodi::class, 'id_prodi');
+    }
+
 
     /**
      * Accessor nama role.

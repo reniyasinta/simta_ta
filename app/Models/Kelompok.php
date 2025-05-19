@@ -60,4 +60,10 @@ class Kelompok extends Model
 
         return collect($anggota)->filter();
     }
+
+    public function prodi()
+    {
+        return $this->belongsTo(Prodi::class, 'id_prodi');
+    }
+
 }
