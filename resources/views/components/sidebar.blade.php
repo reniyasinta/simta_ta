@@ -132,7 +132,7 @@
             <li><a class="nav-link" href="{{ url('sidang') }}"><i class="fas fa-file-alt"></i> <span>Hasil Sidang</span></a></li>
 
             <li class="menu-header">Profil</li>
-            <li><a class="nav-link" href="{{ url('profil') }}"><i class="fas fa-user"></i> <span>Profil</span></a></li>
+            <li><a class="nav-link" href="{{ route('mahasiswa.profile') }}"><i class="fas fa-user"></i> <span>Profil</span></a></li>
         </ul>
         @endif
         @endauth

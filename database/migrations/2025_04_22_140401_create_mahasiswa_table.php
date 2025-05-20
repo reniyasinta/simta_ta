@@ -21,6 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('id_prodi')->nullable();
             $table->foreign('id_prodi')->references('id')->on('prodis')->onDelete('set null');
             $table->string('semester')->nullable();
+            $table->string('foto')->nullable();
             $table->timestamps();
         });
     }
