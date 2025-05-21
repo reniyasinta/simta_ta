@@ -20,8 +20,8 @@
 
             <div class="row mt-sm-4">
                 <!-- Kolom Kiri: Tampilan Profil -->
-                <div class="col-12 col-md-12 col-lg-5">
-                    <div class="card profile-widget">
+                <div class="col-12 col-md-6 mb-4 d-flex">
+                    <div class="card profile-widget w-100 ">
                         <div class="profile-widget-header">
                             <img alt="image"
                                  src="{{ $dosen->foto ? asset('uploads/foto_dosen/' . $dosen->foto) : asset('img/avatar/avatar-1.png') }}"
@@ -38,7 +38,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="profile-widget-description">
+                        <div class="profile-widget-description px-4 pb-4">
                             <h5 class="mb-2 font-weight-bold">{{ $dosen->nama_dosen }}</h5>
                             <table class="table table-sm table-borderless mb-0">
                                 <tr>
@@ -67,14 +67,14 @@
                 </div>
 
                 <!-- Kolom Kanan: Form Edit Profil -->
-                <div class="col-12 col-md-12 col-lg-7">
-                    <div class="card">
-                        <form method="post" action="{{ route('dosen.profile.update') }}" enctype="multipart/form-data" class="needs-validation" novalidate>
+                <div class="col-12 col-md-6 mb-4 d-flex">
+                      <div class="card w-100 mt-4">
+                        <form method="post" action="{{ route('dosen.profile.update') }}" enctype="multipart/form-data" class="needs-validation h-100 d-flex flex-column" novalidate>
                             @csrf
                             <div class="card-header">
                                 <h4>Edit Profile</h4>
                             </div>
-                            <div class="card-body">
+                            <div class="card-body flex-grow-1">
                                 <div class="row">
                                     <div class="form-group col-md-6 col-12">
                                         <label>Nama</label>

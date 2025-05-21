@@ -13,8 +13,9 @@ class Dosen extends Model
     protected $primaryKey = 'id_dosen';
 
     protected $fillable = [
-        'user_id', // ganti dari 'id_users' jadi 'user_id'
+        'user_id',
         'nip_dosen',
+        'id_prodi',
         'nama_dosen',
         'keahlian',
         'no_telp',

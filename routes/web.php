@@ -109,6 +109,10 @@ Route::middleware(['auth'])->group(function () {
     // MAHASISWA
     Route::middleware(['role:mahasiswa'])->prefix('mahasiswa')->group(function () {
         Route::get('/mahasiswa/dashboard', [MahasiswaController::class, 'index'])->name('mahasiswa.dashboard');
+        Route::get('/mahasiswa/profile', [MahasiswaController::class, 'profile'])->name('mahasiswa.profile');
+        Route::post('/mahasiswa/profile/update', [MahasiswaController::class, 'updateProfile'])->name('mahasiswa.profile.update');
+        Route::get('/profile/edit', [MahasiswaController::class, 'editProfile'])->name('mahasiswa.profile_edit'); 
+
 
         // Berkas
         Route::get('/mahasiswa/berkas', [BerkasController::class, 'index'])->name('mahasiswa.berkas.index');

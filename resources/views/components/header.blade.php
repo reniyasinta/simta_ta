@@ -16,20 +16,25 @@
     </form>
 
     @php
+        use Illuminate\Support\Facades\Auth;
+
         $user = Auth::user();
-        $foto = 'img/avatar/avatar-1.png'; // default avatar
+        $foto = asset('img/avatar/avatar-1.png'); // default avatar
 
         if ($user->role->name === 'dosen' && $user->dosen && $user->dosen->foto) {
-            $foto = 'uploads/foto_dosen/' . $user->dosen->foto;
+            $foto = asset($user->dosen->foto); // sudah termasuk storage/
         } elseif ($user->role->name === 'mahasiswa' && $user->mahasiswa && $user->mahasiswa->foto) {
-            $foto = 'uploads/foto_mahasiswa/' . $user->mahasiswa->foto;
+            $foto = asset($user->mahasiswa->foto); // gunakan path lengkap dari DB
         }
     @endphp
 
     <ul class="navbar-nav navbar-right">
         <li class="dropdown">
             <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-                <img alt="image" src="{{ asset($foto) }}" class="rounded-circle mr-1" width="35">
+            <img alt="image"
+                src="{{ $foto }}"
+                class="rounded-circle mr-1"
+                style="width: 35px; height: 35px; object-fit: cover;">
                 <div class="d-sm-none d-lg-inline-block">
                     {{ $user->name }}
                 </div>

@@ -9,7 +9,7 @@ class Mahasiswa extends Model
     protected $table = 'mahasiswa';
     protected $primaryKey = 'id_mhs';
 
-    protected $fillable = ['nim_mhs', 'nama_mhs', 'user_id', 'id_kelompok'];
+    protected $fillable = ['nim_mhs', 'nama_mhs', 'semester', 'foto', 'user_id', 'id_kelompok','id_prodi'];
 
     public function kelompok()
     {
@@ -31,5 +31,8 @@ class Mahasiswa extends Model
     {
         return $this->belongsTo(Prodi::class, 'id_prodi');
     }
+
+    
+
 
 }
