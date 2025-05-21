@@ -1,11 +1,16 @@
 @extends('layouts.app')
 
+@section('title', 'Edit Surat Penelitian')
+
+@push('style')
+<link rel="stylesheet" href="{{ asset('library/summernote/dist/summernote-bs4.css') }}">
+@endpush
+
 @section('main')
-<div class="container-fluid py-5">
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h2>Proses Surat Penelitian</h2>
+                <h1>Proses Surat Penelitian</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item"><a href="{{ route('admin.users') }}">Daftar Surat</a></div>
                     <div class="breadcrumb-item active">Upload Surat</div>
