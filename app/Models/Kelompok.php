@@ -44,6 +44,11 @@ class Kelompok extends Model
         return $this->hasOne(PengajuanPembimbing::class, 'id_kelompok');
     }
 
+    public function anggota()
+    {
+        return $this->hasMany(Mahasiswa::class, 'id_kelompok');
+    }
+
     public function getAnggotaAttribute()
     {
         $anggota = [];

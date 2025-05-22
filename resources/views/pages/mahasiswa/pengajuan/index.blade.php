@@ -32,7 +32,8 @@
                     <tr>
                         <th>No</th>
                         <th>Anggota Kelompok</th>
-                        <th>Dosen Pembimbing</th>
+                        <th>Dosen Pembimbing 1</th>
+                        <th>Dosen Pembimbing 2</th>
                         <th>Judul TA</th>
                         <th>Proposal</th>
                         <th>Status</th>
@@ -50,7 +51,9 @@
                                     @endforeach
                                 </ul>
                             </td>
-                            <<td>{{ $item->dosen1->dosen->nama_dosen ?? '-' }}</td>
+                            <td>{{ $item->dosen1->dosen->nama_dosen ?? '-' }}</td>
+                            <td>{{ $item->dosen2->dosen->nama_dosen ?? '-' }}</td>
+                            {{-- Judul TA --}}
                             <td>{{ $item->judul_ta }}</td>
                             <td>
                                 <a href="{{ asset('storage/proposal/' . $item->proposal) }}" target="_blank" class="btn btn-sm btn-link">Lihat</a>

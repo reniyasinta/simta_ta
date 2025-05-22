@@ -19,6 +19,7 @@ class ValidasiPengajuanController extends Controller
             'kelompok.anggota3.mahasiswa'
         ])
         ->where('id_dosen1', $userId)
+        ->orderBy('created_at', 'desc')
         ->get();
 
         return view('pages.dosen.validasi.index', compact('pengajuan'));

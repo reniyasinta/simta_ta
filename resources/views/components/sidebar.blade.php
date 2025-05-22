@@ -33,32 +33,55 @@
         @elseif($roleId == 2)
         <ul class="sidebar-menu">
             <li class="menu-header">Dashboard</li>
-            <li class="nav-item dropdown {{ ($type_menu ?? '') === 'dashboard' ? 'active' : '' }}">
-                <a href="{{ route('panitia.dashboard') }}" class="nav-link"><i class="fas fa-fire"></i><span>Dashboard</span></a>
+            <li class="nav-item {{ ($type_menu ?? '') === 'dashboard' ? 'active' : '' }}">
+                <a href="{{ route('panitia.dashboard') }}" class="nav-link">
+                    <i class="fas fa-fire"></i> <span>Dashboard</span>
+                </a>
             </li>
 
-            <li class="menu-header">Jadwal</li>
-            <li class="nav-item dropdown">
-                <a href="#" class="nav-link has-dropdown"><i class="fas fa-calendar"></i> <span>Jadwal</span></a>
+            <li class="menu-header">General</li>
+
+            <li class="nav-item {{ ($type_menu ?? '') === 'berkas' ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('pages.panitia.berkas.index') }}">
+                    <i class="fas fa-file-upload"></i> <span>Upload Berkas</span>
+                </a>
+            </li>
+
+            <li class="nav-item dropdown {{ request()->is('panitia/jadwal*') ? 'active' : '' }}">
+                <a href="#" class="nav-link has-dropdown"><i class="fas fa-calendar-alt"></i> <span>Daftar Jadwal</span></a>
                 <ul class="dropdown-menu">
-                    <li><a class="nav-link" href="{{ route('jadwal.index') }}">Daftar Jadwal</a></li>
+                    <li class="{{ request()->is('panitia/jadwal/sosialisasi*') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('jadwal.index', ['jenis' => 'sosialisasi']) }}">Sosialisasi</a>
+                    </li>
+                    <li class="{{ request()->is('panitia/jadwal/seminar*') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('jadwal.index', ['jenis' => 'seminar']) }}">Seminar Proposal</a>
+                    </li>
+                    <li class="{{ request()->is('panitia/jadwal/sidang*') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('jadwal.index', ['jenis' => 'sidang']) }}">Sidang TA</a>
+                    </li>
                 </ul>
             </li>
-            <li class="menu-header">Pengajuan</li>
-            <li><a class="nav-link" href="{{ route('panitia.pengajuan.index') }}"><i class="fas fa-file-signature"></i> <span>Pengajuan Dospem2</span></a>
+
+            <li class="nav-item {{ ($type_menu ?? '') === 'pengajuan' ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('panitia.pengajuan.index') }}">
+                    <i class="fas fa-file-signature"></i> <span>Pengajuan Dospem 2</span>
+                </a>
             </li>
 
-            <li class="menu-header">Berkas Persyaratan</li>
-            <li><a class="nav-link" href="{{ route('pages.panitia.berkas.index') }}"><i class="fas fa-file-upload"></i> <span>Upload Berkas</span></a>
-            </li>
-
-            <li class="menu-header">Pengumuman</li>
-            <li><a class="nav-link" href="{{ url('pengumuman') }}"><i class="fas fa-bullhorn"></i> <span>Pengumuman</span></a>
+            <li class="nav-item {{ ($type_menu ?? '') === 'kuota' ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('panitia.kuota.index') }}">
+                    <i class="fas fa-user-cog"></i> <span>Manajemen Kuota Dosen</span>
+                </a>
             </li>
 
             <li class="menu-header">Profil</li>
-            <li><a class="nav-link" href="{{ url('profil') }}"><i class="fas fa-user"></i> <span>Profil</span></a></li>
+            <li class="nav-item {{ ($type_menu ?? '') === 'profil' ? 'active' : '' }}">
+                <a class="nav-link" href="{{ url('profil') }}">
+                    <i class="fas fa-user"></i> <span>Profil</span>
+                </a>
+            </li>
         </ul>
+
 
         {{-- ================= Dosen (role_id = 3) ================= --}}
         @elseif($roleId == 3)
@@ -79,7 +102,7 @@
             </li>
 
             <li>
-                <a class="nav-link {{ request()->routeIs('dosen.bimbingan') ? 'active' : '' }}" href="{{ route('dosen.profile') }}">
+                <a class="nav-link {{ request()->routeIs('dosen.bimbingan') ? 'active' : '' }}" href="{{ route('dosen.bimbingan') }}">
                     <i class="fas fa-comments"></i> <span>Data Bimbingan</span>
                 </a>
             </li>
@@ -87,12 +110,12 @@
 
             <li class="menu-header">Data Pengujian TA</li>
             <li>
-                <a class="nav-link {{ request()->is('dosen/seminar-proposal') ? 'active' : '' }}" href="{{ route('dosen.profile') }}">
+                <a class="nav-link {{ request()->is('dosen/seminar-proposal') ? 'active' : '' }}" href="{{ url('seminar proposal') }}">
                     <i class="fas fa-chalkboard-teacher"></i> <span>Seminar Proposal</span>
                 </a>
             </li>
             <li>
-                <a class="nav-link {{ request()->is('dosen/sidang-ta') ? 'active' : '' }}" href="{{ route('dosen.profile') }}">
+                <a class="nav-link {{ request()->is('dosen/sidang-ta') ? 'active' : '' }}" href="{{ url('seminar proposal') }}">
                     <i class="fas fa-gavel"></i> <span>Sidang TA</span>
                 </a>
             </li>
@@ -118,14 +141,15 @@
                 <a class="nav-link" href="{{ route('mahasiswa.berkas.index') }}"><i class="fas fa-file-upload">
                     </i> <span>Berkas Persyaratan</span></a></li>
             </li>
+
+            <li><a class="nav-link" href="{{ route('mahasiswa.surat.index') }}"><i class="fas fa-file-alt"></i> <span>Surat Penelitian</span></a></li>
+
+            <li class="menu-header">Seminar Proposal</li>
+
             <li><a class="nav-link" href="{{ route('kelompok.index') }}"><i class="fas fa-users"></i> <span>Kelompok</span></a></li>
 
             <li><a class="nav-link" href="{{ route('pengajuan.index') }}"><i class="fas fa-file-signature"></i> <span>Pengajuan Dospem1</span></a></li>
 
-            <li class="menu-header">Surat Penelitian</li>
-            <li><a class="nav-link" href="{{ route('mahasiswa.surat.index') }}"><i class="fas fa-file-alt"></i> <span>Surat</span></a></li>
-
-            <li class="menu-header">Seminar Proposal</li>
             <li><a class="nav-link" href="{{ url('seminar') }}"><i class="fas fa-file-alt"></i> <span>Usulan Tugas Akhir</span></a></li>
 
             <li class="menu-header">Sidang TA</li>

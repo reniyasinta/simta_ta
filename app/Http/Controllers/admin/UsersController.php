@@ -16,33 +16,34 @@ use Illuminate\Validation\Rule;
 
 class UsersController extends Controller
 {
-public function index(Request $request)
-{
-    $query = User::with('role', 'prodi');
+    public function index(Request $request)
+    {
+        $query = User::with('role', 'prodi');
 
-    if ($request->filled('id_prodi')) {
-        $query->where('id_prodi', $request->id_prodi);
+        if ($request->filled('id_prodi')) {
+            $query->where('id_prodi', $request->id_prodi);
+        }
+
+        if ($request->filled('tahun')) {
+            $query->whereYear('created_at', $request->tahun);
+        }
+
+        if ($request->filled('search')) {
+            $keyword = $request->search;
+            $query->where(function ($q) use ($keyword) {
+                $q->where('name', 'like', "%$keyword%")
+                  ->orWhere('email', 'like', "%$keyword%")
+                  ->orWhere('nim', 'like', "%$keyword%");
+            });
+        }
+
+        // ✅ Tambahkan orderBy di sini untuk urutkan berdasarkan yang terbaru
+        $users = $query->orderBy('created_at', 'desc')->paginate(10);
+        $prodis = Prodi::all();
+        $tahunList = User::selectRaw('YEAR(created_at) as tahun')->groupBy('tahun')->pluck('tahun');
+
+        return view('pages.admin.users', compact('users', 'prodis', 'tahunList'));
     }
-
-    if ($request->filled('tahun')) {
-        $query->whereYear('created_at', $request->tahun);
-    }
-
-    if ($request->filled('search')) {
-        $keyword = $request->search;
-        $query->where(function ($q) use ($keyword) {
-            $q->where('name', 'like', "%$keyword%")
-              ->orWhere('email', 'like', "%$keyword%")
-              ->orWhere('nim', 'like', "%$keyword%");
-        });
-    }
-
-    $users = $query->paginate(10);
-    $prodis = Prodi::all();
-    $tahunList = User::selectRaw('YEAR(created_at) as tahun')->groupBy('tahun')->pluck('tahun');
-
-    return view('pages.admin.users', compact('users', 'prodis', 'tahunList'));
-}
 
     public function create()
     {
@@ -139,7 +140,6 @@ public function index(Request $request)
             ],
         ]);
 
-        // Update data user
         $user->name = $request->name;
         $user->email = $request->email;
         $user->role_id = $request->role_id;
@@ -154,7 +154,6 @@ public function index(Request $request)
 
         $user->save();
 
-        // Sinkronkan dengan data mahasiswa
         if ($user->role_id == 4) {
             if ($user->mahasiswa) {
                 $user->mahasiswa->update([
@@ -163,8 +162,7 @@ public function index(Request $request)
                     'id_prodi' => $request->id_prodi,
                 ]);
             } else {
-                // Jika belum ada entri mahasiswa, buat baru
-                \App\Models\Mahasiswa::create([
+                Mahasiswa::create([
                     'user_id' => $user->id,
                     'nama_mhs' => $request->name,
                     'nim_mhs' => $request->nim,
@@ -173,7 +171,6 @@ public function index(Request $request)
             }
         }
 
-        // Sinkronkan dengan data dosen
         if ($user->role_id == 3) {
             if ($user->dosen) {
                 $user->dosen->update([
@@ -182,8 +179,7 @@ public function index(Request $request)
                     'id_prodi' => $request->id_prodi,
                 ]);
             } else {
-                // Jika belum ada entri dosen, buat baru
-                \App\Models\Dosen::create([
+                Dosen::create([
                     'user_id' => $user->id,
                     'nama_dosen' => $request->name,
                     'nip_dosen' => $request->nip,
@@ -194,8 +190,6 @@ public function index(Request $request)
 
         return redirect()->route('admin.users')->with('success', 'User & data terkait berhasil diperbarui.');
     }
-
-
 
     public function destroy($id)
     {

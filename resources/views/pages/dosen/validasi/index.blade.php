@@ -55,21 +55,30 @@
                                         <span class="badge bg-warning text-dark">Menunggu</span>
                                     @endif
                                 </td>
-                                <td>{{ $item->keterangan ?? '-' }}</td>
+
+                                {{-- KETERANGAN --}}
                                 <td>
                                     @if($item->status === 'Menunggu')
-                                    <form action="{{ route('dosen.validasi.submit', $item->id_ajuan) }}" method="POST">
-                                        @csrf
-                                        <div class="form-group">
-                                            <select name="status" class="form-control form-control-sm mb-2" required>
-                                                <option value="">-- Pilih Status --</option>
-                                                <option value="Diterima">Diterima</option>
-                                                <option value="Ditolak">Ditolak</option>
-                                            </select>
-                                            <textarea name="keterangan" class="form-control form-control-sm mb-2" rows="2" placeholder="Keterangan (opsional)"></textarea>
-                                            <button type="submit" class="btn btn-sm btn-primary">Kirim</button>
+                                        <form action="{{ route('dosen.validasi.submit', $item->id_ajuan) }}" method="POST" id="form-{{ $item->id_ajuan }}">
+                                            @csrf
+                                            <textarea name="keterangan" class="form-control form-control-sm" rows="2" placeholder="Isi keterangan (opsional)"></textarea>
+                                        </form>
+                                    @else
+                                        {{ $item->keterangan ?? '-' }}
+                                    @endif
+                                </td>
+
+                                {{-- AKSI --}}
+                                <td>
+                                    @if($item->status === 'Menunggu')
+                                        <div class="d-flex gap-2">
+                                            <button form="form-{{ $item->id_ajuan }}" type="submit" name="status" value="Diterima" class="btn btn-sm btn-success">
+                                                Setujui
+                                            </button>
+                                            <button form="form-{{ $item->id_ajuan }}" type="submit" name="status" value="Ditolak" class="btn btn-sm btn-danger">
+                                                Tolak
+                                            </button>
                                         </div>
-                                    </form>
                                     @else
                                         <span class="text-muted">Sudah divalidasi</span>
                                     @endif

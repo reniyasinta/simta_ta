@@ -1,11 +1,12 @@
 @extends('layouts.app')
 
+@section('title', 'Surat Penelitian Mahasiswa')
+
 @section('main')
-<div class="container-fluid py-5">
     <div class="main-content">
         <section class="section">
             <div class="section-header">
-                <h2>Riwayat Pengajuan Surat Penelitian</h2>
+                <h1>Riwayat Pengajuan Surat Penelitian</h1>
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item active"><a href="{{ url('home') }}">Dashboard</a></div>
                     <div class="breadcrumb-item">Surat</div>
