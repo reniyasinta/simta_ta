@@ -31,7 +31,6 @@
                             <tr>
                                 <th>No</th>
                                 <th>Nama Berkas</th>
-                                <th>Kategori</th>
                                 <th>Preview</th>
                                 <th>Aksi</th>
                             </tr>
@@ -41,7 +40,6 @@
                                 <tr>
                                     <td>{{ $index + 1 }}</td>
                                     <td>{{ $item->nama_berkas }}</td>
-                                    <td>{{ ucfirst($item->kategori) }}</td>
                                     <td>
                                         <a href="{{ asset('storage/' . $item->file_path) }}" target="_blank" class="btn btn-info btn-sm">Lihat</a>
                                     </td>

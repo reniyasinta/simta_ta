@@ -23,7 +23,6 @@ class BerkasController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'kategori' => 'required|in:sempro,ta,buku_pedoman',
             'nama_berkas' => 'required|string',
             'file' => 'required|mimes:pdf|max:20480',
         ]);
@@ -36,7 +35,6 @@ class BerkasController extends Controller
 }
         Berkas::create([
             'nama_berkas' => $request->nama_berkas,
-            'kategori' => $request->kategori,
             'file_path' => $path,
         ]);
 
@@ -52,7 +50,6 @@ class BerkasController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'kategori' => 'required|in:sempro,ta,buku_pedoman',
             'nama_berkas' => 'required|string',
             'file' => 'nullable|mimes:pdf|max:20480',
         ]);
@@ -71,7 +68,6 @@ class BerkasController extends Controller
 
         $berkas->update([
             'nama_berkas' => $request->nama_berkas,
-            'kategori' => $request->kategori,
             'file_path' => $path,
         ]);
 

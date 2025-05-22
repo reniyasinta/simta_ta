@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('berkas', function (Blueprint $table) {
             $table->id('id_berkas');
             $table->string('nama_berkas');
-            $table->enum('kategori', ['sempro', 'tugas_akhir', 'buku_pedoman']);
             $table->string('file_path'); // Nama/path file PDF
             $table->timestamps();
         });

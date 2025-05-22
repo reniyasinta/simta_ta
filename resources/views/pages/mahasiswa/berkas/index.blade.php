@@ -27,7 +27,6 @@
                             <tr>
                                 <th>No</th>
                                 <th>Nama Berkas</th>
-                                <th>Kategori</th>
                                 <th>Preview</th>
                                 <th>Download</th>
                             </tr>
@@ -37,7 +36,6 @@
                                 <tr>
                                     <td>{{ $index + 1 }}</td>
                                     <td>{{ $item->nama_berkas }}</td>
-                                    <td>{{ ucfirst($item->kategori) }}</td>
                                     <td>
                                         @if(Storage::disk('public')->exists($item->file_path))
                                             <a href="{{ Storage::url($item->file_path) }}" target="_blank" class="btn btn-info btn-sm">Lihat</a>

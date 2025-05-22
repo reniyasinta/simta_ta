@@ -10,6 +10,6 @@ class Berkas extends Model
     protected $primaryKey = 'id_berkas';
 
     protected $fillable = [
-        'nama_berkas', 'kategori', 'file_path',
+        'nama_berkas', 'file_path',
     ];
 }

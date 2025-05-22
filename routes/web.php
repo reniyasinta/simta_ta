@@ -95,9 +95,10 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // DOSEN
-    Route::middleware(['role:dosen'])->prefix('dosen')->group(function () {
+        Route::middleware(['role:dosen'])->prefix('dosen')->group(function () {
         Route::get('/dosen/dashboard', [DosenController::class, 'index'])->name('dosen.dashboard');
         Route::get('/dosen/profile', [ProfileController::class, 'index'])->name('dosen.profile');
+        Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('dosen.profile_edit');
         Route::post('/dosen/profile', [ProfileController::class, 'update'])->name('dosen.profile.update');
 
         // validasi pengajuan pembimbing 1
@@ -110,7 +111,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/mahasiswa/dashboard', [MahasiswaController::class, 'index'])->name('mahasiswa.dashboard');
         Route::get('/mahasiswa/profile', [MahasiswaController::class, 'profile'])->name('mahasiswa.profile');
         Route::post('/mahasiswa/profile/update', [MahasiswaController::class, 'updateProfile'])->name('mahasiswa.profile.update');
-        Route::get('/profile/edit', [MahasiswaController::class, 'editProfile'])->name('mahasiswa.profile_edit'); 
+        Route::get('/profile/edit', [MahasiswaController::class, 'editProfile'])->name('mahasiswa.profile_edit');
 
 
         // Berkas

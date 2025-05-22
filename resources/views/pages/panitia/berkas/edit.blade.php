@@ -43,16 +43,6 @@
                                         <label for="nama_berkas" class="fw-semibold">Nama Berkas</label>
                                         <input type="text" name="nama_berkas" id="nama_berkas" class="form-control" value="{{ old('nama_berkas', $berkas->nama_berkas) }}" required>
                                     </div>
-
-                                    <div class="form-group mb-3">
-                                        <label for="kategori" class="fw-semibold">Kategori Berkas</label>
-                                        <select name="kategori" id="kategori" class="form-control selectric" required>
-                                            <option value="sempro" {{ $berkas->kategori == 'sempro' ? 'selected' : '' }}>Seminar Proposal</option>
-                                            <option value="ta" {{ $berkas->kategori == 'ta' ? 'selected' : '' }}>Tugas Akhir</option>
-                                            <option value="buku_pedoman" {{ $berkas->kategori == 'buku_pedoman' ? 'selected' : '' }}>Buku Pedoman</option>
-                                        </select>
-                                    </div>
-
                                     <div class="form-group mb-4">
                                         <label for="file" class="fw-semibold">File PDF (kosongkan jika tidak ingin mengubah)</label>
                                         <input type="file" name="file" id="file" class="form-control" accept="application/pdf">

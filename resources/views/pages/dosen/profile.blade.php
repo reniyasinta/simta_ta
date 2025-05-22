@@ -1,46 +1,33 @@
 @extends('layouts.app')
-
-@section('title', 'Profile Dosen')
-
-@push('style')
-<link rel="stylesheet" href="{{ asset('library/summernote/dist/summernote-bs4.css') }}">
-@endpush
+@section('title', 'Profile Mahasiswa')
 
 @section('main')
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>Profile Dosen</h1>
+            <h1>Profil Dosen</h1>
         </div>
 
         <div class="section-body">
             @if (session('success'))
-                <div class="alert alert-success">{{ session('success') }}</div>
+                <div class="alert alert-success text-center">{{ session('success') }}</div>
             @endif
 
-            <div class="row mt-sm-4">
-                <!-- Kolom Kiri: Tampilan Profil -->
-                <div class="col-12 col-md-6 mb-4 d-flex">
-                    <div class="card profile-widget w-100 ">
-                        <div class="profile-widget-header">
-                            <img alt="image"
-                                 src="{{ $dosen->foto ? asset('uploads/foto_dosen/' . $dosen->foto) : asset('img/avatar/avatar-1.png') }}"
-                                 class="rounded-circle profile-widget-picture"
-                                 style="object-fit: cover; width: 100px; height: 100px;">
-                            <div class="profile-widget-items">
-                                <div class="profile-widget-item">
-                                    <div class="profile-widget-item-label">Kuota Bimbingan TI</div>
-                                    <div class="profile-widget-item-value">0/12</div>
-                                </div>
-                                <div class="profile-widget-item">
-                                    <div class="profile-widget-item-label">Kuota Bimbingan SIKC</div>
-                                    <div class="profile-widget-item-value">0/3</div>
-                                </div>
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-8 col-lg-6">
+                    <div class="card profile-widget text-center shadow">
+                        <div class="card-body">
+                            <div class="profile-widget-header d-flex justify-content-center mb-3">
+                                <img alt="Foto {{ $dosen->nama_dosen }}"
+                                     src="{{ $dosen->foto ? asset('uploads/foto_dosen/' . $dosen->foto) : asset('img/avatar/avatar-1.png') }}"
+                                     class="rounded-circle"
+                                     style="width: 120px; height: 120px; object-fit: cover; border: 3px solid #6777ef;">
                             </div>
-                        </div>
-                        <div class="profile-widget-description px-4 pb-4">
-                            <h5 class="mb-2 font-weight-bold">{{ $dosen->nama_dosen }}</h5>
-                            <table class="table table-sm table-borderless mb-0">
+
+                            <h4 class="font-weight-bold mb-2">{{ $dosen->nama_dosen }}</h4>
+                            <p class="text-muted mb-4">Dosen - {{ $dosen->prodi->nama_prodi ?? '-' }}</p>
+
+                            <table class="table table-sm table-borderless text-left mx-auto" style="width: 80%;">
                                 <tr>
                                     <th style="width: 120px;">NIP</th>
                                     <td>: {{ $dosen->nip_dosen }}</td>
@@ -51,7 +38,7 @@
                                 </tr>
                                 <tr>
                                     <th>Email</th>
-                                    <td>: {{ $user->email }}</td>
+                                    <td>: {{ $user->email ?? '-' }}</td>
                                 </tr>
                                 <tr>
                                     <th>No HP</th>
@@ -61,56 +48,22 @@
                                     <th>Prodi</th>
                                     <td>: {{ $dosen->prodi->nama_prodi ?? '-' }}</td>
                                 </tr>
+                                <tr>
+                                    <th>Kuota TI</th>
+                                    <td>: 0 / 12</td>
+                                </tr>
+                                <tr>
+                                    <th>Kuota SIKC</th>
+                                    <td>: 0 / 3</td>
+                                </tr>
                             </table>
                         </div>
-                    </div>
-                </div>
 
-                <!-- Kolom Kanan: Form Edit Profil -->
-                <div class="col-12 col-md-6 mb-4 d-flex">
-                      <div class="card w-100 mt-4">
-                        <form method="post" action="{{ route('dosen.profile.update') }}" enctype="multipart/form-data" class="needs-validation h-100 d-flex flex-column" novalidate>
-                            @csrf
-                            <div class="card-header">
-                                <h4>Edit Profile</h4>
-                            </div>
-                            <div class="card-body flex-grow-1">
-                                <div class="row">
-                                    <div class="form-group col-md-6 col-12">
-                                        <label>Nama</label>
-                                        <input type="text" name="nama_dosen" class="form-control" value="{{ old('nama_dosen', $dosen->nama_dosen) }}" required>
-                                    </div>
-                                    <div class="form-group col-md-6 col-12">
-                                        <label>NIP</label>
-                                        <input type="text" name="nip_dosen" class="form-control" value="{{ old('nip_dosen', $dosen->nip_dosen) }}" required>
-                                    </div>
-                                    <div class="form-group col-md-6 col-12">
-                                        <label>Bidang Keahlian</label>
-                                        <input type="text" name="keahlian" class="form-control" value="{{ old('keahlian', $dosen->keahlian) }}" required>
-                                    </div>
-                                    <div class="form-group col-md-6 col-12">
-                                        <label>Foto Profil</label>
-                                        <input type="file" name="foto" class="form-control-file">
-                                        @if ($dosen->foto)
-                                            <small class="form-text text-muted">Foto saat ini: {{ $dosen->foto }}</small>
-                                        @endif
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="form-group col-md-7 col-12">
-                                        <label>Email</label>
-                                        <input type="email" name="email" class="form-control" value="{{ old('email', $user->email) }}" required>
-                                    </div>
-                                    <div class="form-group col-md-5 col-12">
-                                        <label>No HP</label>
-                                        <input type="tel" name="no_telp" class="form-control" value="{{ old('no_telp', $dosen->no_telp) }}">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-footer text-right">
-                                <button class="btn btn-primary">Simpan Perubahan</button>
-                            </div>
-                        </form>
+                        <div class="card-footer text-center bg-whitesmoke">
+                            <a href="{{ route('dosen.profile_edit') }}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-edit mr-1"></i> Edit Profil
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>

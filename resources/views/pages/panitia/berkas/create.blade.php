@@ -26,17 +26,6 @@
                     <div class="card-body">
                         <form action="{{ route('panitia.berkas.store') }}" method="POST" enctype="multipart/form-data">
                             @csrf
-
-                            <div class="form-group">
-                                <label for="kategori">Kategori Berkas</label>
-                                <select name="kategori" id="kategori" class="form-control" required>
-                                    <option value="">-- Pilih Kategori --</option>
-                                    <option value="sempro">Seminar Proposal</option>
-                                    <option value="ta">Tugas Akhir</option>
-                                    <option value="buku_pedoman">Buku Pedoman</option>
-                                </select>
-                            </div>
-
                             <div class="form-group">
                                 <label for="nama_berkas">Nama Berkas</label>
                                 <input type="text" name="nama_berkas" id="nama_berkas" class="form-control" required>
