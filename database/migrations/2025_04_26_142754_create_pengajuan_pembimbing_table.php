@@ -17,7 +17,7 @@ return new class extends Migration
         $table->foreignId('id_dosen1')->constrained('users', 'id'); // Merujuk ke tabel users
         $table->foreignId('id_dosen2')->nullable()->constrained('users', 'id');  // Merujuk ke tabel users
         $table->string('judul_ta');
-        $table->string('proposal');
+        $table->string('proposal')->nullable();
         $table->enum('status', ['Menunggu', 'Diterima', 'Ditolak'])->default('Menunggu');
         $table->text('keterangan')->nullable();
         $table->timestamps();

@@ -21,7 +21,7 @@
             </li>
 
             <li class="menu-header">Surat</li>
-            <li><a class="nav-link" href="{{ route('admin.surat.index') }}"><i class="fas fa-file"></i> <span>Approval Penelitian</span></a></li>
+            <li><a class="nav-link" href="{{ route('admin.surat.index') }}"><i class="fas fa-file"></i> <span>Approval Surat</span></a></li>
 
             <li class="menu-header">User Account</li>
             <li><a class="nav-link" href="{{ url('profil') }}"><i class="fas fa-user"></i> <span>Profil</span></a></li>
@@ -142,7 +142,7 @@
                     </i> <span>Berkas Persyaratan</span></a></li>
             </li>
 
-            <li><a class="nav-link" href="{{ route('mahasiswa.surat.index') }}"><i class="fas fa-file-alt"></i> <span>Surat Penelitian</span></a></li>
+            <li><a class="nav-link" href="{{ route('mahasiswa.surat.index') }}"><i class="fas fa-file-alt"></i> <span>Surat Pendukung</span></a></li>
 
             <li class="menu-header">Seminar Proposal</li>
 

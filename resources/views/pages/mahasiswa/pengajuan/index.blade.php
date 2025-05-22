@@ -56,7 +56,11 @@
                             {{-- Judul TA --}}
                             <td>{{ $item->judul_ta }}</td>
                             <td>
-                                <a href="{{ asset('storage/proposal/' . $item->proposal) }}" target="_blank" class="btn btn-sm btn-link">Lihat</a>
+                                @if ($item->proposal)
+                                    <a href="{{ asset('storage/proposal/' . $item->proposal) }}" target="_blank" class="btn btn-sm btn-link">Lihat</a>
+                                @else
+                                    <span class="text-muted">-</span>
+                                @endif
                             </td>
                             <td>
                                 @if($item->status == 'Diterima')

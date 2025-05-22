@@ -73,7 +73,7 @@ class PengajuanController extends Controller
         $request->validate([
             'id_dosen1' => 'required|exists:users,id',
             'judul_ta' => 'required|string|max:255',
-            'proposal' => 'required|file|mimes:pdf|max:10240',
+            'proposal' => 'nullable|file|mimes:pdf|max:10240',
         ]);
 
         $mahasiswa = auth()->user()->mahasiswa;
@@ -81,11 +81,16 @@ class PengajuanController extends Controller
         if (!$mahasiswa || !$mahasiswa->kelompok) {
             return redirect()->route('mahasiswa.dashboard')->with('error', 'Data kelompok tidak ditemukan.');
         }
+    // Inisialisasi default kosong
+    $fileName = null;
 
+    // Hanya proses jika ada file
+    if ($request->hasFile('proposal')) {
         $file = $request->file('proposal');
         $fileName = time() . '_' . $file->getClientOriginalName();
         $file->storeAs('public/proposal', $fileName);
-
+    }
+    
         PengajuanPembimbing::create([
             'id_kelompok' => $mahasiswa->id_kelompok,
             'id_dosen1' => $request->id_dosen1,

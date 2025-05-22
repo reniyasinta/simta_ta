@@ -45,23 +45,24 @@
                             @endif
 
                             <form action="{{ route('pengajuan.store') }}" method="POST" enctype="multipart/form-data">
-                                @csrf
-                                <div class="mb-3">
-                                    <label>Nama Anggota Kelompok</label>
-                                    @foreach($mahasiswa->kelompok->anggota as $mhs)
-                                        <input type="text" class="form-control mb-2" value="{{ $mhs->nama_mhs }}" readonly>
-                                    @endforeach
-                                </div>
+                            @csrf
 
-                                <div class="form-group mb-3">
-                                    <label for="judul_ta">Judul Tugas Akhir</label>
-                                    <input type="text" name="judul_ta" class="form-control" required>
-                                </div>
+                            <div class="mb-3">
+                                <label>Nama Anggota Kelompok</label>
+                                @foreach($mahasiswa->kelompok->anggota as $mhs)
+                                    <input type="text" class="form-control mb-2" value="{{ $mhs->nama_mhs }}" readonly>
+                                @endforeach
+                            </div>
 
-                                <div class="form-group mb-3">
-                                    <label for="proposal">Proposal (PDF)</label>
-                                    <input type="file" name="proposal" class="form-control" accept="application/pdf" required>
-                                </div>
+                            <div class="form-group mb-3">
+                                <label for="judul_ta">Judul Tugas Akhir</label>
+                                <input type="text" name="judul_ta" class="form-control" required>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="proposal">Proposal (PDF) <span class="text-muted">(Opsional)</span></label>
+                                <input type="file" name="proposal" class="form-control" accept="application/pdf">
+                            </div>
 
                             <div class="form-group mb-4">
                                 <label for="id_dosen1">Pilih Dosen Pembimbing</label>
@@ -72,11 +73,13 @@
                                     @endforeach
                                 </select>
                             </div>
-                                <div class="text-end">
-                                    <button type="submit" class="btn btn-primary">Kirim Pengajuan</button>
-                                    <a href="{{ route('pengajuan.index') }}" class="btn btn-secondary">Kembali</a>
-                                </div>
-                            </form>
+
+                            <div class="text-end">
+                                <button type="submit" class="btn btn-primary">Kirim Pengajuan</button>
+                                <a href="{{ route('pengajuan.index') }}" class="btn btn-secondary">Kembali</a>
+                            </div>
+                        </form>
+
                         </div>
                     </div>
                 </div>
