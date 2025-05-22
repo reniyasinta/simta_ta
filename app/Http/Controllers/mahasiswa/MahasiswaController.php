@@ -49,34 +49,38 @@ class MahasiswaController extends Controller
 
         $request->validate([
             'nama_mhs' => 'required|string|max:255',
-            'nim_mhs' => 'required|string|max:255',
+            'nim_mhs' => 'required|string|max:255|unique:users,nim,' . $user->id,
             'semester' => 'required|integer',
-            'email' => 'required|email',
-            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:20480',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        // Update user email
+        // === Sinkron ke tabel users ===
         $user->email = $request->email;
+        $user->name = $request->nama_mhs;
+        $user->nim = $request->nim_mhs;
         $user->save();
 
-        // Handle foto
+        // === Handle upload foto baru ===
         if ($request->hasFile('foto')) {
-            if ($mahasiswa->foto && Storage::exists($mahasiswa->foto)) {
-                Storage::delete($mahasiswa->foto);
+            if ($mahasiswa->foto && Storage::exists(str_replace('storage/', '', $mahasiswa->foto))) {
+                Storage::delete(str_replace('storage/', '', $mahasiswa->foto));
             }
+
             $path = $request->file('foto')->store('uploads/foto_mahasiswa', 'public');
             $mahasiswa->foto = 'storage/' . $path;
         }
 
-        // Update data mahasiswa
+        // === Update tabel mahasiswa ===
         $mahasiswa->nama_mhs = $request->nama_mhs;
         $mahasiswa->nim_mhs = $request->nim_mhs;
         $mahasiswa->semester = $request->semester;
-        $mahasiswa->id_prodi = $user->id_prodi; // <-- otomatis ikut dari user
+        $mahasiswa->id_prodi = $user->id_prodi;
         $mahasiswa->save();
 
         return redirect()->route('mahasiswa.profile')->with('success', 'Profil berhasil diperbarui.');
     }
+
 
 
 }
