@@ -25,10 +25,21 @@
             <div class="card">
                 <div class="card-header"><h4>Form Pemilihan Dosen 2</h4></div>
                 <div class="card-body">
+                    <div class="form-group">
+                        <label>Kelompok</label>
+                        <div class="form-control" readonly>
+                            {{ $pengajuan->kelompok->anggota->pluck('nama_mhs')->implode(', ') ?? '-' }}
+                        </div>
+                    </div>
 
                     <div class="form-group">
                         <label>Judul TA</label>
                         <input type="text" class="form-control" value="{{ $pengajuan->judul_ta }}" readonly>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Dosen Pembimbing 1</label>
+                        <input type="text" class="form-control" value="{{ $pengajuan->dosen1->dosen->nama_dosen ?? '-' }}" readonly>
                     </div>
 
                     <div class="form-group">

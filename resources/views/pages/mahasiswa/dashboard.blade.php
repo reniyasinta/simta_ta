@@ -117,50 +117,46 @@
                 <div class="row">
                     @foreach ($dosens as $dosen)
                         <div class="col-12 col-md-6 col-lg-4 mb-4">
-                            <div class="card profile-widget">
-                                <div class="profile-widget-header">
-                                    <img alt="image"
-                                         src="{{ $dosen->foto ? asset('uploads/foto_dosen/' . $dosen->foto) : asset('img/avatar/avatar-1.png') }}"
-                                         class="rounded-circle profile-widget-picture"
-                                         style="object-fit: cover; width: 100px; height: 100px;">
-                                    <div class="profile-widget-items">
-                                        <div class="profile-widget-item">
-                                            <div class="profile-widget-item-label">Kuota Bimbingan TI</div>
-                                            <div class="profile-widget-item-value">0/12</div>
-                                        </div>
-                                        <div class="profile-widget-item">
-                                            <div class="profile-widget-item-label">Kuota Bimbingan SIKC</div>
-                                            <div class="profile-widget-item-value">0/3</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="profile-widget-description">
-                                    <h5 class="mb-2 font-weight-bold">{{ $dosen->nama_dosen }}</h5>
-                                    <table class="table table-sm table-borderless mb-0">
-                                        <tr>
-                                            <th style="width: 120px;">NIP</th>
-                                            <td>: {{ $dosen->nip_dosen }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Keahlian</th>
-                                            <td>: {{ $dosen->keahlian ?? '-' }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Email</th>
-                                            <td>: {{ $dosen->user->email ?? '-' }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>No HP</th>
-                                            <td>: {{ $dosen->no_telp ?? '-' }}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Prodi</th>
-                                            <td>: {{ $dosen->prodi->nama_prodi ?? '-' }}</td>
-                                        </tr>
-                                    </table>
+                        <div class="card profile-widget">
+                            <div class="profile-widget-header d-flex flex-column align-items-center p-4">
+                                <img alt="image"
+                                    src="{{ $dosen->foto ? asset('uploads/foto_dosen/' . $dosen->foto) : asset('img/avatar/avatar-1.png') }}"
+                                    class="rounded-circle"
+                                    style="object-fit: cover; width: 100px; height: 100px;">
+
+                                <div class="mt-3 text-center">
+                                    <div class="text-muted small">Kuota Bimbingan</div>
+                                    <div class="h6 font-weight-bold">{{ $dosen->kuota_terpakai }}/{{ $dosen->kuota_total ?? '-' }}</div>
                                 </div>
                             </div>
+
+                            <div class="profile-widget-description">
+                                <h5 class="mb-2 font-weight-bold text-center">{{ $dosen->nama_dosen }}</h5>
+                                <table class="table table-sm table-borderless mb-0">
+                                    <tr>
+                                        <th style="width: 120px;">NIP</th>
+                                        <td>: {{ $dosen->nip_dosen }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Keahlian</th>
+                                        <td>: {{ $dosen->keahlian ?? '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Email</th>
+                                        <td>: {{ $dosen->user->email ?? '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>No HP</th>
+                                        <td>: {{ $dosen->no_telp ?? '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Prodi</th>
+                                        <td>: {{ $dosen->prodi->nama_prodi ?? '-' }}</td>
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
+                    </div>
                     @endforeach
                 </div>
             @else

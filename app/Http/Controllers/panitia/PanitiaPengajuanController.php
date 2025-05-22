@@ -20,7 +20,7 @@ class PanitiaPengajuanController extends Controller
         // Filtering dosen berdasarkan prodi panitia (many-to-many)
         if ($user->role->name === 'panitia' && $user->id_prodi !== null) {
             $dosenList = Dosen::whereHas('prodis', function ($q) use ($user) {
-                $q->where('id', $user->id_prodi);
+                 $q->where('prodis.id', $user->id_prodi);
             })->get();
         } else {
             // Panitia jurusan atau lainnya → tampilkan semua
@@ -39,7 +39,7 @@ class PanitiaPengajuanController extends Controller
 
         if ($user->role->name === 'panitia' && $user->id_prodi !== null) {
             $dosenList = Dosen::whereHas('prodis', function ($q) use ($user) {
-                $q->where('id', $user->id_prodi);
+                 $q->where('prodis.id', $user->id_prodi);
             })->get();
         } else {
             $dosenList = Dosen::all();

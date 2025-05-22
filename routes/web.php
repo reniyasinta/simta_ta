@@ -24,6 +24,8 @@ use App\Exports\TemplateJadwalExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\Dosen\ProfileController;
 use App\Http\Controllers\Dosen\ValidasiPengajuanController;
+use App\Http\Controllers\Panitia\DosenKuotaController;
+use App\Http\Controllers\Dosen\BimbinganController;
 
 // Halaman login
 Route::get('/', function () {
@@ -66,14 +68,14 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // PANITIA
-    Route::middleware(['role:panitia'])->group(function () {
+    Route::middleware(['role:panitia'])->prefix('panitia')->group(function () {
         Route::get('/panitia/dashboard', [PanitiaController::class, 'index'])->name('panitia.dashboard');
 
         // Pengajuan
         Route::get('/panitia/pengajuan', [PanitiaPengajuanController::class, 'index'])->name('panitia.pengajuan.index');
         Route::get('/panitia/pengajuan/{id}/edit', [PanitiaPengajuanController::class, 'edit'])->name('panitia.pengajuan.edit');
         Route::put('/panitia/pengajuan/{id}', [PanitiaPengajuanController::class, 'update'])->name('panitia.pengajuan.update');
-        
+
 
         // Berkas
         Route::get('/berkas', [PanitiaBerkasController::class, 'index'])->name('pages.panitia.berkas.index');
@@ -90,6 +92,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/jadwal/import', [PanitiaJadwalController::class, 'importForm'])->name('jadwal.import.form');
         Route::post('/jadwal/import', [PanitiaJadwalController::class, 'importJadwal'])->name('jadwal.import');
 
+        // kuota dosen management
+        Route::get('/kuota-dosen', [DosenKuotaController::class, 'index'])->name('panitia.kuota.index');
+        Route::post('/kuota-dosen/{id}', [DosenKuotaController::class, 'update'])->name('panitia.kuota.update');
+
         Route::get('/jadwal/template/download', function () {
             return Excel::download(new TemplateJadwalExport, 'template_jadwal.xlsx');
         })->name('template.jadwal');
@@ -104,6 +110,10 @@ Route::middleware(['auth'])->group(function () {
         // validasi pengajuan pembimbing 1
         Route::get('/validasi-pengajuan', [\App\Http\Controllers\Dosen\ValidasiPengajuanController::class, 'index'])->name('dosen.validasi');
         Route::post('/validasi-pengajuan/{id}', [\App\Http\Controllers\Dosen\ValidasiPengajuanController::class, 'validasi'])->name('dosen.validasi.submit');
+
+        // bimbingan mahasiswa
+        Route::get('/bimbingan', [DosenController::class, 'bimbingan'])->name('dosen.bimbingan');
+
     });
 
     // MAHASISWA
@@ -111,7 +121,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/mahasiswa/dashboard', [MahasiswaController::class, 'index'])->name('mahasiswa.dashboard');
         Route::get('/mahasiswa/profile', [MahasiswaController::class, 'profile'])->name('mahasiswa.profile');
         Route::post('/mahasiswa/profile/update', [MahasiswaController::class, 'updateProfile'])->name('mahasiswa.profile.update');
-        Route::get('/profile/edit', [MahasiswaController::class, 'editProfile'])->name('mahasiswa.profile_edit'); 
+        Route::get('/profile/edit', [MahasiswaController::class, 'editProfile'])->name('mahasiswa.profile_edit');
 
 
         // Berkas

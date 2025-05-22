@@ -1,10 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Suart Penelitian Mahasiswa')
-
-@push('style')
-    <!-- CSS Libraries -->
-@endpush
+@section('title', 'Surat Penelitian Mahasiswa')
 
 @section('main')
     <div class="main-content">

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Mahasiswa;
 
 use App\Http\Controllers\Controller;
@@ -11,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
 
 class PengajuanController extends Controller
 {
-        public function index()
+    public function index()
     {
         $mahasiswa = auth()->user()->mahasiswa;
 
@@ -23,33 +24,46 @@ class PengajuanController extends Controller
             return view('pages.mahasiswa.pengajuan.index', compact('pengajuan', 'dosenList', 'error'));
         }
 
-        // Jika sudah ada
+        // Ambil data pengajuan kelompok mahasiswa
         $pengajuan = PengajuanPembimbing::with([
             'kelompok.anggota1.mahasiswa',
             'kelompok.anggota2.mahasiswa',
             'kelompok.anggota3.mahasiswa',
-            'dosen1',
+            'dosen1.dosen',
+            'dosen2.dosen',
         ])->where('id_kelompok', $mahasiswa->id_kelompok)->get();
 
-        $dosenList = User::where('role_id', 3)->with('dosen')->get();
+        // Ambil semua dosen (tanpa batasan prodi) beserta relasi user
+        $dosenList = Dosen::with('user')->get();
+
+        // Hitung kuota bimbingan terpakai untuk masing-masing dosen
+        foreach ($dosenList as $dosen) {
+            $kuota = $dosen->kuota_bimbingan ?? 0;
+
+            $jumlahSebagai1 = PengajuanPembimbing::where('id_dosen1', $dosen->user_id)
+                ->where('status', 'Diterima')
+                ->count();
+
+            $jumlahSebagai2 = PengajuanPembimbing::where('id_dosen2', $dosen->user_id)
+                ->where('status', 'Diterima')
+                ->count();
+
+            $dosen->kuota_terpakai = $jumlahSebagai1 + $jumlahSebagai2;
+            $dosen->kuota_total = $kuota;
+        }
 
         return view('pages.mahasiswa.pengajuan.index', compact('pengajuan', 'dosenList'));
     }
 
-
-
-
     public function create()
     {
         $mahasiswa = auth()->user()->mahasiswa;
-
-        // Ambil id_prodi dari mahasiswa
         $idProdi = auth()->user()->id_prodi;
 
-        // Ambil semua dosen yang memiliki id_prodi yang sama
-        $dosenList = User::where('role_id', 3) // 3 = dosen
-                        ->where('id_prodi', $idProdi)
-                        ->get();
+        // Ambil dosen sesuai prodi mahasiswa
+        $dosenList = User::where('role_id', 3)
+            ->where('id_prodi', $idProdi)
+            ->get();
 
         return view('pages.mahasiswa.pengajuan.create', compact('dosenList', 'mahasiswa'));
     }

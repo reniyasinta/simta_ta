@@ -47,16 +47,30 @@
                 </a>
             </li>
 
-            <li class="nav-item {{ ($type_menu ?? '') === 'jadwal' ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('jadwal.index') }}">
-                    <i class="fas fa-calendar-alt"></i> <span>Daftar Jadwal</span>
-                </a>
+            <li class="nav-item dropdown {{ request()->is('panitia/jadwal*') ? 'active' : '' }}">
+                <a href="#" class="nav-link has-dropdown"><i class="fas fa-calendar-alt"></i> <span>Daftar Jadwal</span></a>
+                <ul class="dropdown-menu">
+                    <li class="{{ request()->is('panitia/jadwal/sosialisasi*') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('jadwal.index', ['jenis' => 'sosialisasi']) }}">Sosialisasi</a>
+                    </li>
+                    <li class="{{ request()->is('panitia/jadwal/seminar*') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('jadwal.index', ['jenis' => 'seminar']) }}">Seminar Proposal</a>
+                    </li>
+                    <li class="{{ request()->is('panitia/jadwal/sidang*') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('jadwal.index', ['jenis' => 'sidang']) }}">Sidang TA</a>
+                    </li>
+                </ul>
             </li>
-
 
             <li class="nav-item {{ ($type_menu ?? '') === 'pengajuan' ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('panitia.pengajuan.index') }}">
                     <i class="fas fa-file-signature"></i> <span>Pengajuan Dospem 2</span>
+                </a>
+            </li>
+
+            <li class="nav-item {{ ($type_menu ?? '') === 'kuota' ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('panitia.kuota.index') }}">
+                    <i class="fas fa-user-cog"></i> <span>Manajemen Kuota Dosen</span>
                 </a>
             </li>
 
@@ -88,7 +102,7 @@
             </li>
 
             <li>
-                <a class="nav-link {{ request()->routeIs('dosen.bimbingan') ? 'active' : '' }}" href="{{ url('Data Bimbingan') }}">
+                <a class="nav-link {{ request()->routeIs('dosen.bimbingan') ? 'active' : '' }}" href="{{ route('dosen.bimbingan') }}">
                     <i class="fas fa-comments"></i> <span>Data Bimbingan</span>
                 </a>
             </li>
