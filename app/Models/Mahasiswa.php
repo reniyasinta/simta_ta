@@ -9,7 +9,7 @@ class Mahasiswa extends Model
     protected $table = 'mahasiswa';
     protected $primaryKey = 'id_mhs';
 
-    protected $fillable = ['nim_mhs', 'nama_mhs', 'semester', 'foto', 'user_id', 'id_kelompok','id_prodi'];
+    protected $fillable = ['nim_mhs', 'nama_mhs', 'semester', 'foto', 'user_id', 'id_kelompok','id_prodi', 'no_telp'];
 
     public function kelompok()
     {
@@ -32,7 +32,12 @@ class Mahasiswa extends Model
         return $this->belongsTo(Prodi::class, 'id_prodi');
     }
 
-    
+    public function pengajuanDiterima()
+    {
+        return $this->hasOne(PengajuanPembimbing::class, 'id_kelompok', 'id_kelompok')
+                    ->where('status', 'Diterima');
+    }
+
 
 
 }

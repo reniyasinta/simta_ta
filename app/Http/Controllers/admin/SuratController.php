@@ -10,11 +10,19 @@ use Illuminate\Support\Facades\Storage;
 
 class SuratController extends Controller
 {
-    public function index()
+public function index(Request $request)
     {
-        $daftarSurat = Surat::with('mahasiswa')->get();
+        $query = Surat::with(['mahasiswa.kelompok.anggota']);
+
+        if ($request->filled('perihal')) {
+            $query->where('perihal', $request->perihal);
+        }
+
+        $daftarSurat = $query->latest()->get();
+
         return view('pages.admin.surat.index', compact('daftarSurat'));
     }
+
 
     public function edit($id)
     {

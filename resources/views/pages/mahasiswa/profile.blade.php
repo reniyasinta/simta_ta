@@ -44,6 +44,10 @@
                                     <th>Semester</th>
                                     <td>: {{ $mahasiswa->semester ?? '-' }}</td>
                                 </tr>
+                                <tr>
+                                    <th>No Telepon</th>
+                                    <td>: {{ $mahasiswa->no_telp ?? '-' }}</td>
+                                </tr>
                             </table>
                         </div>
                         <div class="card-footer text-center bg-whitesmoke">

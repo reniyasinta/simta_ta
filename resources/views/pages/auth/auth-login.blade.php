@@ -53,11 +53,11 @@
         <div class="card-header text-center d-block">
             <div class="w-100">
                 <h4>Login</h4>
-                    <p class="text-dark mt-2 mb-0" style="font-size: 14px;">
-                        Selamat datang di <strong>SIMTA</strong><br>
-                        Sistem Informasi Tugas Akhir Poliban<br>
-                        Silakan login untuk melanjutkan
-                    </p>
+                <p class="text-dark mt-2 mb-0" style="font-size: 14px;">
+                <strong>Selamat Datang di SIMTA</strong><br>
+                Sistem Informasi Tugas Akhir<br>
+                Politeknik Negeri Banjarmasin
+            </p>
             </div>
         </div>
 

@@ -64,14 +64,13 @@
                             </td>
                             <td>
                                 @if($item->status == 'Diterima')
-                                    <span class="badge bg-success">ACC</span>
+                                    <span class="badge bg-success text-white">ACC</span>
                                 @elseif($item->status == 'Ditolak')
-                                    <span class="badge bg-danger">Ditolak</span>
+                                    <span class="badge bg-danger text-white">Ditolak</span>
                                 @else
                                     <span class="badge bg-warning text-dark">Menunggu</span>
                                 @endif
                             </td>
-                            <td>{{ $item->keterangan ?? '-' }}</td>
                         </tr>
                     @empty
                         <tr>
@@ -81,11 +80,12 @@
                 </tbody>
             </table>
 
-            @if(!isset($error))
+            @if(!isset($error) && $pengajuan->where('status', 'Diterima')->isEmpty())
                 <div class="text-right mt-3">
                     <a href="{{ route('pengajuan.create') }}" class="btn btn-primary">Pengajuan Dospem1</a>
                 </div>
             @endif
+
         </div>
     </section>
 </div>

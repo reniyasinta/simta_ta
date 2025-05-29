@@ -6,20 +6,42 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Mahasiswa;
 use App\Models\Surat;
+use App\Models\PengajuanPembimbing;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
+
 
 class SuratController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $mahasiswa = Mahasiswa::where('user_id', auth()->id())->first();
-        $suratList = Surat::where('id_mhs', $mahasiswa->id_mhs)->latest()->get();
+
+        $query = Surat::where('id_mhs', $mahasiswa->id_mhs);
+
+        if ($request->filled('perihal')) {
+            $query->where('perihal', $request->perihal);
+        }
+
+        $suratList = $query->latest()->get();
 
         return view('pages.mahasiswa.surat.index', compact('suratList'));
     }
+
     public function create()
     {
-        return view('pages.mahasiswa.surat.create');
+        $mahasiswa = Mahasiswa::where('user_id', Auth::id())->firstOrFail();
+
+        // Ambil pengajuan pembimbing yang sudah diterima
+        $pengajuan = PengajuanPembimbing::whereHas('kelompok', function ($q) use ($mahasiswa) {
+            $q->whereHas('anggota', function ($qq) use ($mahasiswa) {
+                $qq->where('id_mhs', $mahasiswa->id_mhs);
+            });
+        })->where('status', 'Diterima')->latest()->first();
+
+        $dospem1 = $pengajuan->dosen1->dosen->nama_dosen ?? 'Belum Ditentukan';
+
+        return view('pages.mahasiswa.surat.create', compact('mahasiswa', 'dospem1'));
     }
 
     public function store(Request $request)
@@ -27,17 +49,25 @@ class SuratController extends Controller
         $request->validate([
             'judul_ta' => 'required',
             'perihal' => 'required',
-            'dosen_pembimbing' => 'required',
             'tujuan' => 'required',
         ]);
 
         $mahasiswa = Mahasiswa::where('user_id', auth()->id())->first();
 
+
+        // Ambil dospem dari pengajuan
+        $pengajuan = PengajuanPembimbing::whereHas('kelompok', function ($q) use ($mahasiswa) {
+            $q->whereHas('anggota', function ($qq) use ($mahasiswa) {
+                $qq->where('id_mhs', $mahasiswa->id_mhs);
+            });
+        })->where('status', 'Diterima')->latest()->first();
+
+        $dospem1 = $pengajuan->dosen1->dosen->nama_dosen ?? 'Belum Ditentukan';
+
         Surat::create([
             'id_mhs' => $mahasiswa->id_mhs,
             'judul_ta' => $request->judul_ta,
             'perihal' => $request->perihal,
-            'dosen_pembimbing' => $request->dosen_pembimbing,
             'tujuan' => $request->tujuan,
             'status' => 'menunggu',
         ]);

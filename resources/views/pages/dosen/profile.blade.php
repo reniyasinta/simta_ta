@@ -49,13 +49,10 @@
                                     <td>: {{ $dosen->prodi->nama_prodi ?? '-' }}</td>
                                 </tr>
                                 <tr>
-                                    <th>Kuota TI</th>
-                                    <td>: 0 / 12</td>
+                                    <th>Kuota Terisi</th>
+                                    <td>: {{ $dosen->kuota_terpakai ?? 0 }} / {{ $dosen->kuota_bimbingan ?? 0 }}</td>
                                 </tr>
-                                <tr>
-                                    <th>Kuota SIKC</th>
-                                    <td>: 0 / 3</td>
-                                </tr>
+
                             </table>
                         </div>
 

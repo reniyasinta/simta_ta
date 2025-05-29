@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('no_telp')->nullable();
             $table->string('foto')->nullable();
             $table->integer('kuota_bimbingan')->nullable()->default(0);
+            $table->integer('kuota_p2')->nullable()->default(0);
             $table->timestamps();
         });
     }

@@ -22,6 +22,7 @@ return new class extends Migration
             $table->foreign('id_prodi')->references('id')->on('prodis')->onDelete('set null');
             $table->string('semester')->nullable();
             $table->string('foto')->nullable();
+            $table->string('no_telp')->nullable();
             $table->timestamps();
         });
     }

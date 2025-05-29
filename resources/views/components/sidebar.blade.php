@@ -142,7 +142,11 @@
                     </i> <span>Berkas Persyaratan</span></a></li>
             </li>
 
-            <li><a class="nav-link" href="{{ route('mahasiswa.surat.index') }}"><i class="fas fa-file-alt"></i> <span>Surat Pendukung</span></a></li>
+            <li>
+                <a class="nav-link" href="{{ route('mahasiswa.surat.index') }}">
+                    <i class="fas fa-file-alt"></i> <span>Surat Pendukung</span></a>
+            </li>
+
 
             <li class="menu-header">Seminar Proposal</li>
 
