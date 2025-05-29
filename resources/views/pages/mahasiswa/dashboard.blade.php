@@ -22,89 +22,85 @@
                     <li><i class="fas fa-check-circle text-success me-2"></i> Harap selalu memeriksa jadwal secara berkala demi kelancaran TA Anda.</li>
                 </ul>
             <div class="row">
-                {{-- Jadwal Sosialisasi --}}
-                <div class="col-lg-4 col-md-4 col-sm-12">
-                    <div class="card card-statistic-2">
-                        <div class="card-icon shadow-primary bg-primary">
-                            <i class="fas fa-calendar-alt"></i>
-                        </div>
-                        <div class="card-wrap">
-                            <div class="card-header">
-                                <h4 class="text-dark">Jadwal Sosialisasi</h4>
-                            </div>
-                            <div class="card-body">
-                                @php $sosialisasi = $jadwals->where('jenis_acara', 'sosialisasi'); @endphp
-                                @forelse($sosialisasi as $item)
-                                    <div class="alert alert-info">
-                                        <strong>{{ strtoupper($item->jenis_acara) }}</strong><br>
-                                        Tanggal: {{ \Carbon\Carbon::parse($item->tanggal_mulai)->format('d M Y H:i') }}<br>
-                                        Tempat: {{ $item->tempat }}<br>
-                                        Judul: {{ $item->judul_ta }}
-                                    </div>
-                                @empty
-                                    <p class="mb-0 text-muted small">Jadwal belum ditentukan.</p>
-                                @endforelse
-                            </div>
-                        </div>
-                    </div>
+        {{-- Jadwal Seminar --}}
+        <div class="col-lg-4 col-md-4 col-sm-12">
+            <div class="card card-statistic-2">
+                <div class="card-icon shadow-primary bg-info">
+                    <i class="fas fa-chalkboard-teacher"></i>
                 </div>
-
-                {{-- Jadwal Seminar --}}
-                <div class="col-lg-4 col-md-4 col-sm-12">
-                    <div class="card card-statistic-2">
-                        <div class="card-icon shadow-primary bg-primary">
-                            <i class="fas fa-calendar-alt"></i>
-                        </div>
-                        <div class="card-wrap">
-                            <div class="card-header">
-                                <h4 class="text-dark">Jadwal Seminar</h4>
-                            </div>
-                            <div class="card-body">
-                                @php $seminar = $jadwals->where('jenis_acara', 'seminar'); @endphp
-                                @forelse($seminar as $item)
-                                    <div class="alert alert-info">
-                                        <strong>{{ strtoupper($item->jenis_acara) }}</strong><br>
-                                        Tanggal: {{ \Carbon\Carbon::parse($item->tanggal_mulai)->format('d M Y H:i') }}<br>
-                                        Tempat: {{ $item->tempat }}<br>
-                                        Judul: {{ $item->judul_ta }}
-                                    </div>
-                                @empty
-                                    <p class="mb-0 text-muted small">Jadwal belum ditentukan.</p>
-                                @endforelse
-                            </div>
-                        </div>
+                <div class="card-wrap">
+                    <div class="card-header">
+                        <h4 class="text-dark">Jadwal Seminar</h4>
                     </div>
-                </div>
-
-                {{-- Jadwal Sidang --}}
-                <div class="col-lg-4 col-md-4 col-sm-12">
-                    <div class="card card-statistic-2">
-                        <div class="card-icon shadow-primary bg-primary">
-                            <i class="fas fa-calendar-alt"></i>
-                        </div>
-                        <div class="card-wrap">
-                            <div class="card-header">
-                                <h4 class="text-dark">Jadwal Sidang</h4>
+                    <div class="card-body">
+                        @php
+                            $seminar = $jadwals->where('jenis_acara', 'seminar')->sortByDesc('tanggal')->first();
+                        @endphp
+                        @if ($seminar)
+                            <div class="small text-dark">
+                                <strong>Tanggal :</strong> {{ \Carbon\Carbon::parse($seminar->tanggal)->translatedFormat('d M Y') }}
                             </div>
-                            <div class="card-body">
-                                @php $sidang = $jadwals->where('jenis_acara', 'sidang'); @endphp
-                                @forelse($sidang as $item)
-                                    <div class="alert alert-info">
-                                        <strong>{{ strtoupper($item->jenis_acara) }}</strong><br>
-                                        Tanggal: {{ \Carbon\Carbon::parse($item->tanggal_mulai)->format('d M Y H:i') }}<br>
-                                        Tempat: {{ $item->tempat }}<br>
-                                        Judul: {{ $item->judul_ta }}
-                                    </div>
-                                @empty
-                                    <p class="mb-0 text-muted small">Jadwal belum ditentukan.</p>
-                                @endforelse
-                            </div>
-                        </div>
+                        @else
+                            <p class="mb-0 small text-dark">Jadwal belum tersedia.</p>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
 
+        {{-- Jadwal Sidang --}}
+        <div class="col-lg-4 col-md-4 col-sm-12">
+            <div class="card card-statistic-2">
+                <div class="card-icon shadow-primary bg-warning">
+                    <i class="fas fa-balance-scale"></i>
+                </div>
+                <div class="card-wrap">
+                    <div class="card-header">
+                        <h4 class="text-dark">Jadwal Sidang</h4>
+                    </div>
+                    <div class="card-body">
+                        @php
+                            $sidang = $jadwals->where('jenis_acara', 'sidang')->sortByDesc('tanggal')->first();
+                        @endphp
+                        @if ($sidang)
+                            <div class="small text-dark">
+                                <strong>Tanggal :</strong> {{ \Carbon\Carbon::parse($sidang->tanggal)->translatedFormat('d M Y') }}
+                            </div>
+                        @else
+                            <p class="mb-0 small text-dark">Jadwal belum tersedia.</p>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Jadwal Yudisium --}}
+        <div class="col-lg-4 col-md-4 col-sm-12">
+            <div class="card card-statistic-2">
+                <div class="card-icon shadow-primary bg-primary">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="card-wrap">
+                    <div class="card-header">
+                        <h4 class="text-dark">Jadwal Yudisium</h4>
+                    </div>
+                    <div class="card-body">
+                        @php
+                            $yudisium = $jadwals->where('jenis_acara', 'yudisium')->sortByDesc('tanggal')->first();
+                        @endphp
+                        @if ($yudisium)
+                            <div class="small text-dark">
+                                <strong>Tanggal :</strong> {{ \Carbon\Carbon::parse($yudisium->tanggal)->translatedFormat('d M Y') }}
+                            </div>
+                        @else
+                            <p class="mb-0 small text-dark">Jadwal belum tersedia.</p>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+            </div>
+        </div>
         {{-- === PROFIL DOSEN === --}}
         <div class="section-body">
             <h2 class="section-title">Profil Dosen dan Kuota Bimbingan</h2>

@@ -32,7 +32,7 @@ class Mahasiswa extends Model
         return $this->belongsTo(Prodi::class, 'id_prodi');
     }
 
-    
+
 
 
 }

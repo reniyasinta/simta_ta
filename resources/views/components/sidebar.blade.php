@@ -50,15 +50,14 @@
             <li class="nav-item dropdown {{ request()->is('panitia/jadwal*') ? 'active' : '' }}">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-calendar-alt"></i> <span>Daftar Jadwal</span></a>
                 <ul class="dropdown-menu">
-                    <li class="{{ request()->is('panitia/jadwal/sosialisasi*') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('jadwal.index', ['jenis' => 'sosialisasi']) }}">Sosialisasi</a>
-                    </li>
                     <li class="{{ request()->is('panitia/jadwal/seminar*') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('jadwal.index', ['jenis' => 'seminar']) }}">Seminar Proposal</a>
+                        <a class="nav-link" href="{{ route('jadwal.seminar.index') }}">Seminar Proposal</a>
                     </li>
                     <li class="{{ request()->is('panitia/jadwal/sidang*') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('jadwal.index', ['jenis' => 'sidang']) }}">Sidang TA</a>
+                        <a class="nav-link" href="{{ route('jadwal.sidang.index') }}">Sidang TA</a>
                     </li>
+                    <li class="{{ request()->is('panitia/jadwal/yudisium*') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('jadwal.yudisium.index') }}">Yudisium</a>
                 </ul>
             </li>
 
@@ -137,6 +136,12 @@
                 <a href="{{ route('mahasiswa.dashboard') }}" class="nav-link"><i class="fas fa-fire"></i><span>Dashboard</span></a>
             </li>
             <li class="menu-header">General</li>
+
+            <li>
+                <a class="nav-link" href="{{ route('mahasiswa.jadwal.index') }}"><i class="fas fa-calendar-alt">
+                    </i> <span>Jadwal Saya</span></a></li>
+            </li>
+
             <li>
                 <a class="nav-link" href="{{ route('mahasiswa.berkas.index') }}"><i class="fas fa-file-upload">
                     </i> <span>Berkas Persyaratan</span></a></li>

@@ -32,4 +32,10 @@ class PengajuanPembimbing extends Model
     {
         return $this->belongsTo(User::class, 'id_dosen2');
     }
+
+    public function mahasiswa()
+    {
+        return $this->belongsTo(Mahasiswa::class, 'id_mhs', 'id_mhs');
+    }
+
 }

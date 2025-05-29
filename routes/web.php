@@ -69,13 +69,12 @@ Route::middleware(['auth'])->group(function () {
 
     // PANITIA
     Route::middleware(['role:panitia'])->prefix('panitia')->group(function () {
-        Route::get('/panitia/dashboard', [PanitiaController::class, 'index'])->name('panitia.dashboard');
+        Route::get('/dashboard', [PanitiaController::class, 'index'])->name('panitia.dashboard');
 
         // Pengajuan
-        Route::get('/panitia/pengajuan', [PanitiaPengajuanController::class, 'index'])->name('panitia.pengajuan.index');
-        Route::get('/panitia/pengajuan/{id}/edit', [PanitiaPengajuanController::class, 'edit'])->name('panitia.pengajuan.edit');
-        Route::put('/panitia/pengajuan/{id}', [PanitiaPengajuanController::class, 'update'])->name('panitia.pengajuan.update');
-
+        Route::get('/pengajuan', [PanitiaPengajuanController::class, 'index'])->name('panitia.pengajuan.index');
+        Route::get('/pengajuan/{id}/edit', [PanitiaPengajuanController::class, 'edit'])->name('panitia.pengajuan.edit');
+        Route::put('/pengajuan/{id}', [PanitiaPengajuanController::class, 'update'])->name('panitia.pengajuan.update');
 
         // Berkas
         Route::get('/berkas', [PanitiaBerkasController::class, 'index'])->name('pages.panitia.berkas.index');
@@ -85,24 +84,42 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/berkas/{id}', [PanitiaBerkasController::class, 'update'])->name('panitia.berkas.update');
         Route::delete('/berkas/{id}', [PanitiaBerkasController::class, 'destroy'])->name('panitia.berkas.destroy');
 
-        // Jadwal
-        Route::get('/jadwal', [PanitiaJadwalController::class, 'index'])->name('jadwal.index');
-        Route::get('/jadwal/create', [PanitiaJadwalController::class, 'create'])->name('jadwal.create');
-        Route::post('/jadwal', [PanitiaJadwalController::class, 'store'])->name('jadwal.store');
-        Route::get('/jadwal/import', [PanitiaJadwalController::class, 'importForm'])->name('jadwal.import.form');
-        Route::post('/jadwal/import', [PanitiaJadwalController::class, 'importJadwal'])->name('jadwal.import');
+        // JADWAL
+    Route::prefix('jadwal')->name('jadwal.')->group(function () {
+        Route::get('/', [PanitiaJadwalController::class, 'index'])->name('index');
 
-        // kuota dosen management
+        Route::get('/seminar', [PanitiaJadwalController::class, 'seminar'])->name('seminar.index');
+        Route::get('/sidang', [PanitiaJadwalController::class, 'sidang'])->name('sidang.index');
+        Route::get('/yudisium', [PanitiaJadwalController::class, 'yudisium'])->name('yudisium.index');
+
+        // Tambah
+        Route::get('/create', [PanitiaJadwalController::class, 'create'])->name('create'); // gunakan ?jenis=seminar
+        Route::post('/', [PanitiaJadwalController::class, 'store'])->name('store');
+
+        // Edit dan Hapus dinamis
+        Route::get('/{id}/edit', [PanitiaJadwalController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [PanitiaJadwalController::class, 'update'])->name('update');
+        Route::delete('/{id}', [PanitiaJadwalController::class, 'destroy'])->name('destroy');
+
+        // Import
+        Route::get('/import', [PanitiaJadwalController::class, 'importForm'])->name('import.form');
+        Route::post('/import', [PanitiaJadwalController::class, 'importJadwal'])->name('import');
+
+        // Template
+        Route::get('/template/download', function (Request $request) {
+            $jenis = $request->get('jenis', 'seminar');
+            $filename = 'template_jadwal_' . $jenis . '.xlsx';
+            return Excel::download(new TemplateJadwalExport, $filename);
+        })->name('template');
+    });
+
+        // Kuota Dosen Management
         Route::get('/kuota-dosen', [DosenKuotaController::class, 'index'])->name('panitia.kuota.index');
         Route::post('/kuota-dosen/{id}', [DosenKuotaController::class, 'update'])->name('panitia.kuota.update');
-
-        Route::get('/jadwal/template/download', function () {
-            return Excel::download(new TemplateJadwalExport, 'template_jadwal.xlsx');
-        })->name('template.jadwal');
     });
 
     // DOSEN
-        Route::middleware(['role:dosen'])->prefix('dosen')->group(function () {
+    Route::middleware(['role:dosen'])->prefix('dosen')->group(function () {
         Route::get('/dosen/dashboard', [DosenController::class, 'index'])->name('dosen.dashboard');
         Route::get('/dosen/profile', [ProfileController::class, 'index'])->name('dosen.profile');
         Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('dosen.profile_edit');
@@ -150,6 +167,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/mahasiswa/surat/create', [MahasiswaSuratController::class, 'create'])->name('mahasiswa.surat.create');
         Route::post('/mahasiswa/surat', [MahasiswaSuratController::class, 'store'])->name('mahasiswa.surat.store');
         Route::get('/mahasiswa/surat/download/{id}', [MahasiswaSuratController::class, 'download'])->name('mahasiswa.surat.download');
+
+        // jadwal mahasiswa
+        Route::get('/jadwal', [MahasiswaController::class, 'jadwal'])->name('mahasiswa.jadwal.index');
 
     });
 
