@@ -35,8 +35,14 @@
                                     <label>Email</label>
                                     <input type="email" name="email" class="form-control" value="{{ old('email', $user->email) }}" required>
                                 </div>
-
-                               <div class="form-group col-md-6">
+                                <div class="form-group">
+                                    <label>No. Telepon</label>
+                                    <input type="text" name="no_telp" class="form-control @error('no_telp') is-invalid @enderror" value="{{ old('no_telp', $mahasiswa->no_telp) }}">
+                                    @error('no_telp')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                                    <div class="form-group col-md-6">
                                     <label>Upload Foto</label>
                                     <input type="file" name="foto" class="form-control-file">
                                     @if ($mahasiswa->foto)

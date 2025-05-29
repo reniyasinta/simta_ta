@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Dosen;
 use App\Models\User;
+use App\Models\Kelompok;
 
 class DosenKuotaController extends Controller
 {
@@ -15,17 +16,33 @@ class DosenKuotaController extends Controller
         $dosenList = Dosen::with('user', 'prodi')->get();
 
         // Hitung jumlah bimbingan masing-masing dosen
-        foreach ($dosenList as $dosen) {
-            $jumlahSebagai1 = \App\Models\PengajuanPembimbing::where('id_dosen1', $dosen->user_id)
-                ->where('status', 'Diterima')
-                ->count();
+foreach ($dosenList as $dosen) {
+    $jumlah = 0;
 
-            $jumlahSebagai2 = \App\Models\PengajuanPembimbing::where('id_dosen2', $dosen->user_id)
-                ->where('status', 'Diterima')
-                ->count();
+    // Ambil semua pengajuan di mana dosen sebagai pembimbing 1
+    $pengajuan1 = \App\Models\PengajuanPembimbing::where('id_dosen1', $dosen->user_id)
+        ->where('status', 'Diterima')
+        ->with('kelompok')
+        ->get();
 
-            $dosen->bimbingan_terpakai = $jumlahSebagai1 + $jumlahSebagai2;
-        }
+    // Ambil semua pengajuan di mana dosen sebagai pembimbing 2
+    $pengajuan2 = \App\Models\PengajuanPembimbing::where('id_dosen2', $dosen->user_id)
+        ->where('status', 'Diterima')
+        ->with('kelompok')
+        ->get();
+
+    // Hitung jumlah mahasiswa di setiap kelompok
+    foreach ($pengajuan1 as $pengajuan) {
+        $jumlah += $pengajuan->kelompok?->jumlah_anggota ?? 0;
+    }
+
+    foreach ($pengajuan2 as $pengajuan) {
+        $jumlah += $pengajuan->kelompok?->jumlah_anggota ?? 0;
+    }
+
+    $dosen->bimbingan_terpakai = $jumlah;
+}
+
 
         return view('pages.panitia.kuota.index', compact('dosenList'));
     }
@@ -39,6 +56,7 @@ class DosenKuotaController extends Controller
 
         $dosen = Dosen::findOrFail($id);
         $dosen->kuota_bimbingan = $request->kuota_bimbingan;
+        $dosen->kuota_p2 = $request->kuota_p2;
         $dosen->save();
 
         return redirect()->route('panitia.kuota.index')->with('success', 'Kuota berhasil diperbarui.');

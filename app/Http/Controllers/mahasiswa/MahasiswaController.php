@@ -38,7 +38,11 @@ class MahasiswaController extends Controller
         foreach ($dosens as $dosen) {
             $jumlahSebagai1 = PengajuanPembimbing::where('id_dosen1', $dosen->user_id)
                 ->where('status', 'Diterima')
-                ->count();
+                ->with('kelompok')
+                ->get()
+                ->sum(function ($pengajuan) {
+                    return $pengajuan->kelompok?->anggota->count() ?? 0;
+                });
 
             $jumlahSebagai2 = PengajuanPembimbing::where('id_dosen2', $dosen->user_id)
                 ->where('status', 'Diterima')
@@ -72,13 +76,14 @@ class MahasiswaController extends Controller
         $user = Auth::user();
         $mahasiswa = Mahasiswa::where('user_id', $user->id)->firstOrFail();
 
-        $request->validate([
-            'nama_mhs' => 'required|string|max:255',
-            'nim_mhs' => 'required|string|max:255|unique:users,nim,' . $user->id,
-            'semester' => 'required|integer',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        ]);
+    $request->validate([
+        'nama_mhs' => 'required|string|max:255',
+        'nim_mhs' => 'required|string|max:255|unique:users,nim,' . $user->id,
+        'semester' => 'required|integer',
+        'email' => 'required|email|unique:users,email,' . $user->id,
+        'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        'no_telp' => 'required|string|max:20',
+    ]);
 
         // === Sinkron ke tabel users ===
         $user->email = $request->email;
@@ -101,6 +106,7 @@ class MahasiswaController extends Controller
         $mahasiswa->nim_mhs = $request->nim_mhs;
         $mahasiswa->semester = $request->semester;
         $mahasiswa->id_prodi = $user->id_prodi;
+        $mahasiswa->no_telp = $request->no_telp;
         $mahasiswa->save();
 
         return redirect()->route('mahasiswa.profile')->with('success', 'Profil berhasil diperbarui.');

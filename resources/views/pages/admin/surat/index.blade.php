@@ -20,6 +20,18 @@
             @if(session('success'))
                 <div class="alert alert-success">{{ session('success') }}</div>
             @endif
+            <form method="GET" action="{{ route('admin.surat.index') }}">
+                <div class="form-group row">
+                    <div class="col-sm-3">
+                        <select name="perihal" id="perihal" class="form-control" onchange="this.form.submit()">
+                            <option value="">-- Semua Perihal --</option>
+                            <option value="Studi Pendahuluan" {{ request('perihal') == 'Studi Pendahuluan' ? 'selected' : '' }}>Studi Pendahuluan</option>
+                            <option value="Pengantar Penelitian" {{ request('perihal') == 'Pengantar Penelitian' ? 'selected' : '' }}>Pengantar Penelitian</option>
+                            <option value="Permintaan Data" {{ request('perihal') == 'Permintaan Data' ? 'selected' : '' }}>Permintaan Data</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
 
             <div class="table-responsive">
                 <table class="table table-bordered table-striped mt-3">
@@ -38,11 +50,27 @@
                     <tbody>
                         @forelse($daftarSurat as $surat)
                             <tr>
-                                <td>{{ $surat->mahasiswa?->nama_mhs ?? '-' }}</td>
+                                <td>
+                                    @if($surat->mahasiswa && $surat->mahasiswa->kelompok)
+                                        <ul class="mb-0">
+                                            @foreach($surat->mahasiswa->kelompok->anggota as $anggota)
+                                                <li>{{ $anggota->nama_mhs }} - {{ $anggota->nim_mhs }}</li>
+                                            @endforeach
+                                        </ul>
+                                    @else
+                                        <em>Tidak ada kelompok</em>
+                                    @endif
+                                </td>
                                 <td>{{ $surat->judul_ta }}</td>
                                 <td>{{ $surat->tujuan }}</td>
                                 <td>{{ $surat->perihal }}</td>
-                                <td>{{ $surat->dosen?->nama_dosen ?? $surat->dosen_pembimbing }}</td>
+                                <td>
+                                    @php
+                                        $pengajuan = $surat->mahasiswa?->pengajuanDiterima;
+                                        $dospem1 = $pengajuan?->dosen1?->dosen?->nama_dosen;
+                                    @endphp
+                                    {{ $dospem1 ?? '-' }}
+                                </td>
                                 <td class="text-capitalize">{{ $surat->status ?? '-' }}</td>
                                 <td>
                                     @if($surat->file_surat)

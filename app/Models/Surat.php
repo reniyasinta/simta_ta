@@ -8,7 +8,7 @@ class Surat extends Model
 {
     protected $table = 'surat';
     protected $primaryKey = 'id_surat';
-    protected $fillable = ['id_mhs', 'tujuan', 'perihal', 'judul_ta', 'dosen_pembimbing', 'status', 'file_surat'];
+    protected $fillable = ['id_mhs', 'id_kelompok', 'tujuan', 'perihal', 'judul_ta', 'dosen_pembimbing', 'status', 'file_surat'];
 
     public function mahasiswa()
     {
@@ -18,4 +18,9 @@ class Surat extends Model
     {
         return $this->belongsTo(Dosen::class, 'id_dosen', 'id_dosen');
     }
+    public function kelompok()
+    {
+        return $this->belongsTo(Kelompok::class, 'id_kelompok', 'id_kelompok');
+    }
+
 }

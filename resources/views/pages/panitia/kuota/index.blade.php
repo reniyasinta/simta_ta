@@ -25,9 +25,10 @@
                             <th>No</th>
                             <th>Nama Dosen</th>
                             <th>Prodi</th>
-                            <th>Kuota</th>
+                            <th>Kuota (P1)</th>
                             <th>Terisi</th>
                             <th>Sisa</th>
+                            <th>Kuota (P2)</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -58,6 +59,9 @@
                                     {{ $sisa }}
                                 </span>
                             </td>
+                               <td>
+        <input type="number" name="kuota_p2" value="{{ $dosen->kuota_p2 ?? 0 }}" class="form-control form-control-sm" style="width: 80px;" min="0">
+    </td>
                             <td>
                                     <button type="submit" class="btn btn-sm btn-primary">Simpan</button>
                                 </form>

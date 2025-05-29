@@ -32,20 +32,19 @@
                             <label class="form-label">Judul TA</label>
                             <input type="text" name="judul_ta" class="form-control" required>
                         </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Perihal</label>
-                            <input type="text" name="perihal" class="form-control" required>
-                        </div>
+                    <div class="mb-3">
+                        <label class="form-label">Perihal</label>
+                        <select name="perihal" class="form-control" required>
+                            <option value="">-- Pilih Perihal --</option>
+                            <option value="Studi Pendahuluan">Studi Pendahuluan</option>
+                            <option value="Pengantar Penelitian">Pengantar Penelitian</option>
+                            <option value="Permintaan Data">Permintaan Data</option>
+                        </select>
+                    </div>
 
                         <div class="mb-3">
                             <label class="form-label">Tujuan Surat</label>
                             <input type="text" name="tujuan" class="form-control" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Dosen Pembimbing</label>
-                            <input type="text" name="dosen_pembimbing" class="form-control" required>
                         </div>
 
                         <div class="text-end">

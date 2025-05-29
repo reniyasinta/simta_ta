@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Dosen;
+use App\Models\PengajuanPembimbing;
 
 class ProfileController extends Controller
 {
@@ -14,6 +15,25 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
         $dosen = Dosen::with('prodi')->where('user_id', $user->id)->firstOrFail();
+
+        // Hitung kuota terpakai
+        $jumlah1 = \App\Models\PengajuanPembimbing::where('id_dosen1', $user->id)
+            ->where('status', 'Diterima')
+            ->with('kelompok')
+            ->get()
+            ->sum(function ($pengajuan) {
+                return $pengajuan->kelompok?->anggota->count() ?? 0;
+            });
+
+        $jumlah2 = \App\Models\PengajuanPembimbing::where('id_dosen2', $user->id)
+            ->where('status', 'Diterima')
+            ->with('kelompok')
+            ->get()
+            ->sum(function ($pengajuan) {
+                return $pengajuan->kelompok?->anggota->count() ?? 0;
+            });
+
+        $dosen->kuota_terpakai = $jumlah1 + $jumlah2;
 
         return view('pages.dosen.profile', compact('user', 'dosen'));
     }

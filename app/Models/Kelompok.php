@@ -65,6 +65,10 @@ class Kelompok extends Model
 
         return collect($anggota)->filter(); // Buang null
     }
+    public function getJumlahAnggotaAttribute()
+    {
+        return $this->anggota->count(); // anggota adalah relasi ke Mahasiswa
+    }
 
 
     public function prodi()
