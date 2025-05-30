@@ -32,11 +32,13 @@ public function index()
     $totalBimbingan = $jumlah1 + $jumlah2;
     $kuota = $dosen->kuota_bimbingan ?? 0;
 
-    $jadwals = Jadwal::where(function ($query) use ($user) {
-        $query->where('penguji_1_id', $user->id)
-            ->orWhere('penguji_2_id', $user->id)
-            ->orWhere('penguji_3_id', $user->id);
-    })->orderBy('tanggal_mulai')->get();
+    $jadwals = Jadwal::where(function ($query) use ($dosen) {
+        $query->where('penguji_1_id', $dosen->user_id)
+            ->orWhere('penguji_2_id', $dosen->user_id)
+            ->orWhere('penguji_3_id', $dosen->user_id);
+    })->orderBy('tanggal', 'asc')
+    ->orderBy('jam_mulai', 'asc')
+    ->get();
 
     return view('pages.dosen.dashboard', compact('dosen', 'totalBimbingan', 'kuota', 'jadwals'));
 }

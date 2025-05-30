@@ -102,7 +102,13 @@
                             <td>{{ $pengajuan->judul_ta ?? $pengajuan->judul }}</td>
                             <td>{{ $pengajuan->dosen1->name ?? '-' }}</td>
                             <td>{{ $pengajuan->dosen2->name ?? '-' }}</td>
-                            <td colspan="4" class="text-center">-</td>
+                            <td colspan="3" class="text-center">-</td>
+                            <td class="text-center" style="white-space: nowrap;">
+                                <a href="{{ route('jadwal.create', ['jenis' => $jenis, 'pengajuan_id' => $pengajuan->id]) }}"
+                                   class="btn btn-sm btn-primary" title="Input Jadwal">
+                                    <i class="fas fa-plus"></i> Input
+                                </a>
+                            </td>
                         </tr>
                     @empty
                         <tr>
