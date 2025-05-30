@@ -112,6 +112,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/validasi-pengajuan', [\App\Http\Controllers\Dosen\ValidasiPengajuanController::class, 'index'])->name('dosen.validasi');
         Route::post('/validasi-pengajuan/{id}', [\App\Http\Controllers\Dosen\ValidasiPengajuanController::class, 'validasi'])->name('dosen.validasi.submit');
 
+        Route::get('sidang/verifikasi', [\App\Http\Controllers\Dosen\SidangController::class, 'index'])->name('dosen.sidang.index');
+        Route::post('sidang/verifikasi/{id}', [\App\Http\Controllers\Dosen\SidangController::class, 'verifikasi'])->name('dosen.sidang.verifikasi');
         // bimbingan mahasiswa
         Route::get('/bimbingan', [DosenController::class, 'bimbingan'])->name('dosen.bimbingan');
 
@@ -151,6 +153,15 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/mahasiswa/surat', [MahasiswaSuratController::class, 'store'])->name('mahasiswa.surat.store');
         Route::get('/mahasiswa/surat/download/{id}', [MahasiswaSuratController::class, 'download'])->name('mahasiswa.surat.download');
 
+        // Revisi Laporan → ke Dosen
+        Route::get('/revisi', [\App\Http\Controllers\Mahasiswa\SidangRevisiController::class, 'index'])->name('mahasiswa.revisi.index');
+        Route::get('/revisi/upload', [\App\Http\Controllers\Mahasiswa\SidangRevisiController::class, 'create'])->name('mahasiswa.revisi.upload.form');
+        Route::post('/revisi/upload', [\App\Http\Controllers\Mahasiswa\SidangRevisiController::class, 'upload'])->name('mahasiswa.revisi.upload');
+
+        // Final Laporan → ke Panitia
+        Route::get('/final', [\App\Http\Controllers\Mahasiswa\SidangFinalController::class, 'index'])->name('mahasiswa.final.index');
+        Route::get('/final/upload', [\App\Http\Controllers\Mahasiswa\SidangFinalController::class, 'create'])->name('mahasiswa.final.upload.form');
+        Route::post('/final/upload', [\App\Http\Controllers\Mahasiswa\SidangFinalController::class, 'upload'])->name('mahasiswa.final.upload');
     });
 
     // Template user

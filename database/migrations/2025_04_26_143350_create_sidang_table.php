@@ -11,14 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sidang', function (Blueprint $table) {
-            $table->id('id_sidang');
-            $table->foreignId('id_sempro')->constrained('sempro','id_sempro');
-            $table->string('laporan_akhir');
-            $table->string('lembar_konsultasi');
-            $table->string('hasil_sidang');
-            $table->timestamps();
-        });
+    Schema::create('sidang', function (Blueprint $table) {
+        $table->id('id_sidang');
+        $table->unsignedBigInteger('id_mhs');
+        $table->foreign('id_mhs')->references('id_mhs')->on('mahasiswa')->onDelete('cascade');
+        $table->foreignId('id_dosen')->constrained('users')->onDelete('cascade');
+        $table->foreignId('id_sempro')->constrained('sempro', 'id_sempro')->onDelete('cascade');
+        $table->string('revisi_laporan')->nullable();
+        $table->string('laporan_akhir')->nullable();
+        $table->string('lembar_konsultasi')->nullable();
+        $table->string('hasil_sidang')->nullable();
+        $table->enum('status', ['Menunggu', 'Revisi', 'Disetujui'])->default('Menunggu');
+        $table->text('catatan_dosen')->nullable();
+
+        $table->timestamps();
+    });
+
     }
 
     /**

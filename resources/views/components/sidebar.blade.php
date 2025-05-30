@@ -68,6 +68,12 @@
                 </a>
             </li>
 
+            <li>
+                <a href="{{ route('panitia.sidang.index') }}">
+                    <i class="fas fa-file-upload"></i> <span>Kelola Berkas Sidang</span>
+                </a>
+            </li>
+
             <li class="nav-item {{ ($type_menu ?? '') === 'kuota' ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('panitia.kuota.index') }}">
                     <i class="fas fa-user-cog"></i> <span>Manajemen Kuota Dosen</span>
@@ -106,7 +112,11 @@
                     <i class="fas fa-comments"></i> <span>Data Bimbingan</span>
                 </a>
             </li>
-
+            <li>
+                <a class="nav-link" href="{{ route('dosen.sidang.index') }}">
+                <i class="fa-check-circle "></i> <span>Persetujuan Laporan </span>
+                </a>
+            </li>
 
             <li class="menu-header">Data Pengujian TA</li>
             <li>
@@ -132,36 +142,72 @@
 
         {{-- ================= Mahasiswa (role_id = 4) ================= --}}
         @elseif($roleId == 4)
-        <ul class="sidebar-menu">
-            <li class="nav-item dropdown {{ ($type_menu ?? '') === 'dashboard' ? 'active' : '' }}">
-                <a href="{{ route('mahasiswa.dashboard') }}" class="nav-link"><i class="fas fa-fire"></i><span>Dashboard</span></a>
-            </li>
-            <li class="menu-header">General</li>
+   <ul class="sidebar-menu">
+    <li class="nav-item {{ request()->routeIs('mahasiswa.dashboard') ? 'active' : '' }}">
+        <a href="{{ route('mahasiswa.dashboard') }}" class="nav-link">
+            <i class="fas fa-fire"></i><span>Dashboard</span>
+        </a>
+    </li>
+
+    <li class="menu-header">General</li>
+    <li>
+        <a class="nav-link {{ request()->routeIs('mahasiswa.berkas.*') ? 'active' : '' }}" href="{{ route('mahasiswa.berkas.index') }}">
+            <i class="fas fa-file-upload"></i> <span>Berkas Persyaratan</span>
+        </a>
+    </li>
+
+    <li>
+        <a class="nav-link {{ request()->routeIs('mahasiswa.surat.*') ? 'active' : '' }}" href="{{ route('mahasiswa.surat.index') }}">
+            <i class="fas fa-file-alt"></i> <span>Surat Pendukung</span>
+        </a>
+    </li>
+
+    <li class="menu-header">Seminar Proposal</li>
+    <li>
+        <a class="nav-link {{ request()->routeIs('kelompok.*') ? 'active' : '' }}" href="{{ route('kelompok.index') }}">
+            <i class="fas fa-users"></i> <span>Kelompok</span>
+        </a>
+    </li>
+
+    <li>
+        <a class="nav-link {{ request()->routeIs('pengajuan.*') ? 'active' : '' }}" href="{{ route('pengajuan.index') }}">
+            <i class="fas fa-file-signature"></i> <span>Pengajuan Dospem1</span>
+        </a>
+    </li>
+
+    <li>
+        <a class="nav-link" href="{{ url('seminar') }}">
+            <i class="fas fa-file-alt"></i> <span>Usulan Tugas Akhir</span>
+        </a>
+    </li>
+
+    <li class="menu-header">Pengumpulan</li>
+    <li class="nav-item dropdown {{ request()->is('mahasiswa/revisi*') || request()->is('mahasiswa/final*') ? 'active' : '' }}">
+        <a href="#" class="nav-link has-dropdown">
+            <i class="fas fa-file-upload"></i> <span>Pengumpulan</span>
+        </a>
+        <ul class="dropdown-menu">
             <li>
-                <a class="nav-link" href="{{ route('mahasiswa.berkas.index') }}"><i class="fas fa-file-upload">
-                    </i> <span>Berkas Persyaratan</span></a></li>
+                <a class="nav-link {{ request()->routeIs('mahasiswa.revisi.index') ? 'active' : '' }}" href="{{ route('mahasiswa.revisi.index') }}">
+                    Revisi Laporan
+                </a>
             </li>
-
             <li>
-                <a class="nav-link" href="{{ route('mahasiswa.surat.index') }}">
-                    <i class="fas fa-file-alt"></i> <span>Surat Pendukung</span></a>
+                <a class="nav-link {{ request()->routeIs('mahasiswa.final.index') ? 'active' : '' }}" href="{{ route('mahasiswa.final.index') }}">
+                    Upload Laporan Final
+                </a>
             </li>
-
-
-            <li class="menu-header">Seminar Proposal</li>
-
-            <li><a class="nav-link" href="{{ route('kelompok.index') }}"><i class="fas fa-users"></i> <span>Kelompok</span></a></li>
-
-            <li><a class="nav-link" href="{{ route('pengajuan.index') }}"><i class="fas fa-file-signature"></i> <span>Pengajuan Dospem1</span></a></li>
-
-            <li><a class="nav-link" href="{{ url('seminar') }}"><i class="fas fa-file-alt"></i> <span>Usulan Tugas Akhir</span></a></li>
-
-            <li class="menu-header">Sidang TA</li>
-            <li><a class="nav-link" href="{{ url('sidang') }}"><i class="fas fa-file-alt"></i> <span>Hasil Sidang</span></a></li>
-
-            <li class="menu-header">Profil</li>
-            <li><a class="nav-link" href="{{ route('mahasiswa.profile') }}"><i class="fas fa-user"></i> <span>Profil</span></a></li>
         </ul>
+    </li>
+
+    <li class="menu-header">Profil</li>
+    <li>
+        <a class="nav-link {{ request()->routeIs('mahasiswa.profile') ? 'active' : '' }}" href="{{ route('mahasiswa.profile') }}">
+            <i class="fas fa-user"></i> <span>Profil</span>
+        </a>
+    </li>
+</ul>
+
         @endif
         @endauth
     </aside>

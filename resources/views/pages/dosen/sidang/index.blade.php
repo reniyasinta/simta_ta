@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'Verifikasi Sidang TA')
+@section('title', 'Persetujuan Laporan TA')
 
 @section('main')
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>Verifikasi Berkas Sidang</h1>
+            <h1>Persetujuan Laporan TA</h1>
         </div>
 
         @if(session('success'))
@@ -32,12 +32,12 @@
                                 <td>{{ $key + 1 }}</td>
                                 <td>{{ $sidang->mahasiswa->nama_mhs ?? '-' }}</td>
 
-                                {{-- Link file revisi --}}
+                                {{-- Kolom Revisi --}}
                                 <td>
                                     @if ($sidang->revisi_laporan)
                                         <a href="{{ asset($sidang->revisi_laporan) }}" target="_blank" class="btn btn-sm btn-link">Download</a>
                                     @else
-                                        <span class="text-muted">Belum ada</span>
+                                        <span class="text-muted">Belum diunggah</span>
                                     @endif
                                 </td>
 
@@ -54,7 +54,7 @@
 
                                 {{-- Catatan --}}
                                 <td>
-                                    @if($sidang->status === 'Menunggu')
+                                    @if($sidang->status === 'Menunggu' && $sidang->revisi_laporan)
                                         <form action="{{ route('dosen.sidang.verifikasi', $sidang->id_sidang) }}" method="POST" id="form-{{ $sidang->id_sidang }}">
                                             @csrf
                                             <textarea name="catatan_dosen" class="form-control form-control-sm" rows="2" placeholder="Isi catatan (opsional)"></textarea>
@@ -64,9 +64,9 @@
                                     @endif
                                 </td>
 
-                                {{-- Tombol aksi --}}
+                                {{-- Aksi --}}
                                 <td>
-                                    @if($sidang->status === 'Menunggu')
+                                    @if($sidang->status === 'Menunggu' && $sidang->revisi_laporan)
                                         <div class="d-flex gap-2">
                                             <button form="form-{{ $sidang->id_sidang }}" type="submit" name="status" value="Diterima" class="btn btn-sm btn-success">
                                                 Setujui
@@ -75,6 +75,8 @@
                                                 Revisi
                                             </button>
                                         </div>
+                                    @elseif($sidang->status === 'Menunggu')
+                                        <span class="text-muted">Menunggu unggahan mahasiswa</span>
                                     @else
                                         <span class="text-muted">Sudah diverifikasi</span>
                                     @endif
