@@ -16,6 +16,7 @@ use App\Http\Controllers\Mahasiswa\PengajuanController;
 use App\Http\Controllers\Mahasiswa\KelompokController;
 use App\Http\Controllers\Mahasiswa\BerkasController;
 use App\Http\Controllers\Mahasiswa\SuratController as MahasiswaSuratController;
+use App\Http\Controllers\Mahasiswa\UndanganController;
 use App\Http\Controllers\Panitia\PanitiaPengajuanController;
 use App\Http\Controllers\Panitia\BerkasController as PanitiaBerkasController;
 use App\Http\Controllers\Panitia\PanitiaJadwalController;
@@ -126,12 +127,11 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/dosen/profile', [ProfileController::class, 'update'])->name('dosen.profile.update');
 
         // validasi pengajuan pembimbing 1
-        Route::get('/validasi-pengajuan', [\App\Http\Controllers\Dosen\ValidasiPengajuanController::class, 'index'])->name('dosen.validasi');
-        Route::post('/validasi-pengajuan/{id}', [\App\Http\Controllers\Dosen\ValidasiPengajuanController::class, 'validasi'])->name('dosen.validasi.submit');
+        Route::get('/validasi-pengajuan', [ValidasiPengajuanController::class, 'index'])->name('dosen.validasi');
+        Route::post('/validasi-pengajuan/{id}', [ValidasiPengajuanController::class, 'validasi'])->name('dosen.validasi.submit');
 
         // bimbingan mahasiswa
         Route::get('/bimbingan', [DosenController::class, 'bimbingan'])->name('dosen.bimbingan');
-
     });
 
     // MAHASISWA
@@ -170,6 +170,11 @@ Route::middleware(['auth'])->group(function () {
 
         // jadwal mahasiswa
         Route::get('/jadwal', [MahasiswaController::class, 'jadwal'])->name('mahasiswa.jadwal.index');
+
+        // Upload undangan oleh mahasiswa
+        Route::get('/undangan', [UndanganController::class, 'index'])->name('mahasiswa.undangan.index');
+        Route::get('/undangan/create', [UndanganController::class, 'create'])->name('mahasiswa.undangan.create');
+        Route::post('/undangan/store', [UndanganController::class, 'store'])->name('mahasiswa.undangan.store');
 
     });
 

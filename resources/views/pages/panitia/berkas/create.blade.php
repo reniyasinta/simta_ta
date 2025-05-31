@@ -32,8 +32,9 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="file">File (PDF, max 20MB)</label>
-                                <input type="file" name="file" id="file" class="form-control-file" required>
+                                <label for="file">File (pdf, ppt, pptx, xls, xlsx, doc, docx, txt, jpeg, jpg, png, rar, zip - max 20MB)</label>
+                                <input type="file" name="file" id="file" class="form-control-file"
+                                    accept=".pdf,.ppt,.pptx,.xls,.xlsx,.doc,.docx,.txt,.jpeg,.jpg,.png,.rar,.zip" required>
                             </div>
 
                             <div class="text-right">
