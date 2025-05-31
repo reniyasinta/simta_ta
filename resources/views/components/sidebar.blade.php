@@ -187,6 +187,11 @@
         </a>
         <ul class="dropdown-menu">
             <li>
+                <a class="#">
+                    Upload Laporan TA
+                </a>
+            </li>
+            <li>
                 <a class="nav-link {{ request()->routeIs('mahasiswa.revisi.index') ? 'active' : '' }}" href="{{ route('mahasiswa.revisi.index') }}">
                     Revisi Laporan
                 </a>
