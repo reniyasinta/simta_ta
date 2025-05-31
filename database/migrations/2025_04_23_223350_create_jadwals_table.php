@@ -13,24 +13,26 @@ return new class extends Migration
     {
         Schema::create('jadwals', function (Blueprint $table) {
             $table->id();
-            $table->dateTime('tanggal_mulai');
-            $table->dateTime('tanggal_selesai')->nullable();
-            $table->string('tempat');
-            $table->enum('jenis_acara', ['sosialisasi', 'seminar_proposal', 'sidang_ta']);
+            $table->date('tanggal'); // ⬅️ hanya tanggal
+            $table->time('jam_mulai'); // ⬅️ waktu mulai
+            $table->time('jam_selesai')->nullable(); // ⬅️ waktu selesai
+            $table->string('ruangan');
+            $table->enum('jenis_acara', ['seminar', 'sidang', 'yudisium']);
             $table->string('judul_ta');
             $table->string('nim');
             $table->string('nama');
             $table->string('prodi');
-            $table->string('kelas');
             $table->string('pembimbing_1');
             $table->string('pembimbing_2')->nullable();
-            $table->foreignId('penguji_1_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('penguji_1_id')->nullable()->constrained('users')->onDelete('set null');
             $table->foreignId('penguji_2_id')->nullable()->constrained('users')->onDelete('set null');
             $table->foreignId('penguji_3_id')->nullable()->constrained('users')->onDelete('set null');
             $table->unsignedBigInteger('id_mhs')->nullable();
             $table->foreign('id_mhs')->references('id_mhs')->on('mahasiswa')->onDelete('set null');
             $table->unsignedBigInteger('id_dosen')->nullable();
             $table->foreign('id_dosen')->references('id')->on('users')->onDelete('set null');
+            $table->unsignedBigInteger('id_ajuan')->nullable();
+            $table->foreign('id_ajuan')->references('id_ajuan')->on('pengajuan_pembimbing')->onDelete('set null');
             $table->timestamps();
         });
     }

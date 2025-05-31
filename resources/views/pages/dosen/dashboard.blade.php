@@ -65,9 +65,9 @@
                     <tbody>
                         @forelse ($jadwals as $jadwal)
                             <tr>
-                                <td>{{ \Carbon\Carbon::parse($jadwal->tanggal)->format('d M Y') }}</td>
-                                <td>{{ $jadwal->jam_mulai }} - {{ $jadwal->jam_selesai }}</td>
-                                <td>{{ $jadwal->tempat }}</td>
+                                <td>{{ \Carbon\Carbon::parse($jadwal->tanggal)->translatedFormat('l, d M Y') }}</td>
+                                <td>{{ \Carbon\Carbon::parse($jadwal->jam_mulai)->format('H:i') }} - {{ \Carbon\Carbon::parse($jadwal->jam_selesai)->format('H:i') }}</td>
+                                <td>{{ $jadwal->ruangan }}</td>
                                 <td>{{ $jadwal->judul_ta }}</td>
                                 <td>{{ $jadwal->pengajuan?->kelompok?->anggota->pluck('nama_mhs')->implode(', ') ?? '-' }}</td>
                             </tr>

@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-@section('title', 'Verifikasi Sidang TA')
+@section('title', 'Validasi Pengajuan Pembimbing')
 
 @section('main')
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>Verifikasi Berkas Sidang</h1>
+            <h1>Validasi Pengajuan Pembimbing</h1>
         </div>
 
         @if(session('success'))
@@ -19,23 +19,41 @@
                     <thead>
                         <tr>
                             <th>No</th>
-                            <th>Nama Mahasiswa</th>
-                            <th>Revisi Laporan</th>
+                            <th>Anggota Kelompok</th>
+                            <th>Judul TA</th>
+                            <th>Proposal</th>
                             <th>Status</th>
-                            <th>Catatan</th>
+                            <th>Keterangan</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($sidangs as $key => $sidang)
+                        @forelse($pengajuan as $key => $item)
                             <tr>
                                 <td>{{ $key + 1 }}</td>
-                                <td>{{ $sidang->mahasiswa->nama_mhs ?? '-' }}</td>
 
-                                {{-- Link file revisi --}}
+                                {{-- Anggota kelompok --}}
                                 <td>
-                                    @if ($sidang->revisi_laporan)
-                                        <a href="{{ asset($sidang->revisi_laporan) }}" target="_blank" class="btn btn-sm btn-link">Download</a>
+                                    <ul>
+                                        @if($item->kelompok->anggota1)
+                                            <li>{{ $item->kelompok->anggota1->mahasiswa->nama_mhs ?? '-' }}</li>
+                                        @endif
+                                        @if($item->kelompok->anggota2)
+                                            <li>{{ $item->kelompok->anggota2->mahasiswa->nama_mhs ?? '-' }}</li>
+                                        @endif
+                                        @if($item->kelompok->anggota3)
+                                            <li>{{ $item->kelompok->anggota3->mahasiswa->nama_mhs ?? '-' }}</li>
+                                        @endif
+                                    </ul>
+                                </td>
+
+                                {{-- Judul TA --}}
+                                <td>{{ $item->judul_ta ?? '-' }}</td>
+
+                                {{-- Proposal --}}
+                                <td>
+                                    @if($item->proposal)
+                                        <a href="{{ asset('storage/proposal/' . $item->proposal) }}" target="_blank" class="btn btn-sm btn-link">Download</a>
                                     @else
                                         <span class="text-muted">Belum ada</span>
                                     @endif
@@ -43,46 +61,42 @@
 
                                 {{-- Status --}}
                                 <td>
-                                    @if($sidang->status === 'Diterima')
+                                    @if($item->status === 'Diterima')
                                         <span class="badge bg-success">Diterima</span>
-                                    @elseif($sidang->status === 'Revisi')
-                                        <span class="badge bg-danger">Revisi</span>
+                                    @elseif($item->status === 'Ditolak')
+                                        <span class="badge bg-danger">Ditolak</span>
                                     @else
                                         <span class="badge bg-warning text-dark">Menunggu</span>
                                     @endif
                                 </td>
 
-                                {{-- Catatan --}}
+                                {{-- Keterangan --}}
                                 <td>
-                                    @if($sidang->status === 'Menunggu')
-                                        <form action="{{ route('dosen.sidang.verifikasi', $sidang->id_sidang) }}" method="POST" id="form-{{ $sidang->id_sidang }}">
+                                    @if($item->status === 'Menunggu')
+                                        <form action="{{ route('dosen.validasi.submit', $item->id_ajuan) }}" method="POST" id="form-{{ $item->id_ajuan }}">
                                             @csrf
-                                            <textarea name="catatan_dosen" class="form-control form-control-sm" rows="2" placeholder="Isi catatan (opsional)"></textarea>
+                                            <textarea name="keterangan" class="form-control form-control-sm" rows="2" placeholder="Isi keterangan (opsional)"></textarea>
                                         </form>
                                     @else
-                                        {{ $sidang->catatan_dosen ?? '-' }}
+                                        {{ $item->keterangan ?? '-' }}
                                     @endif
                                 </td>
 
-                                {{-- Tombol aksi --}}
+                                {{-- Aksi --}}
                                 <td>
-                                    @if($sidang->status === 'Menunggu')
+                                    @if($item->status === 'Menunggu')
                                         <div class="d-flex gap-2">
-                                            <button form="form-{{ $sidang->id_sidang }}" type="submit" name="status" value="Diterima" class="btn btn-sm btn-success">
-                                                Setujui
-                                            </button>
-                                            <button form="form-{{ $sidang->id_sidang }}" type="submit" name="status" value="Revisi" class="btn btn-sm btn-danger">
-                                                Revisi
-                                            </button>
+                                            <button form="form-{{ $item->id_ajuan }}" type="submit" name="status" value="Diterima" class="btn btn-sm btn-success">Setujui</button>
+                                            <button form="form-{{ $item->id_ajuan }}" type="submit" name="status" value="Ditolak" class="btn btn-sm btn-danger">Tolak</button>
                                         </div>
                                     @else
-                                        <span class="text-muted">Sudah diverifikasi</span>
+                                        <span class="text-muted">Sudah divalidasi</span>
                                     @endif
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center">Tidak ada data sidang.</td>
+                                <td colspan="7" class="text-center">Tidak ada pengajuan.</td>
                             </tr>
                         @endforelse
                     </tbody>

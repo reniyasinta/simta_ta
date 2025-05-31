@@ -38,6 +38,4 @@ class Mahasiswa extends Model
                     ->where('status', 'Diterima');
     }
 
-
-
 }
