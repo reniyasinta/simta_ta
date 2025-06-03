@@ -83,8 +83,6 @@
                 </a>
             </li>
 
-
-
             <li class="menu-header">Profil</li>
             <li class="nav-item {{ ($type_menu ?? '') === 'profil' ? 'active' : '' }}">
                 <a class="nav-link" href="{{ url('profil') }}">
@@ -117,7 +115,7 @@
                 </a>
             </li>
             <li>
-                <a class="nav-link" href="{{ route('dosen.sidang.index') }}">
+                <a class="nav-link" href="#">
                 <i class="fa-check-circle "></i> <span>Persetujuan Laporan </span>
                 </a>
             </li>
@@ -220,13 +218,13 @@
                 </a>
                 <ul class="dropdown-menu">
                 <li class="{{ request()->is('mahasiswa/laporan-ta*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('mahasiswa.laporan-ta') }}">Laporan TA</a>
+                    <a class="nav-link" href="#">Laporan TA</a>
                 </li>
                 <li class="{{ request()->is('mahasiswa/revisi-laporan*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('mahasiswa.revisi-laporan') }}">Revisi Laporan</a>
+                    <a class="nav-link" href="#">Revisi Laporan</a>
                 </li>
                 <li class="{{ request()->is('mahasiswa/laporan-akhir*') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ route('mahasiswa.laporan-akhir') }}">Laporan Akhir</a>
+                    <a class="nav-link" href="#">Laporan Akhir</a>
                 </li>
                 </ul>
             </li>
