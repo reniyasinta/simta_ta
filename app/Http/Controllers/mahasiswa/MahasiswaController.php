@@ -10,50 +10,65 @@ use App\Models\Dosen;
 use App\Models\Mahasiswa;
 use App\Models\PengajuanPembimbing;
 use Illuminate\Support\Facades\Storage;
+use App\Models\KuotaBimbinganDosen;
 
 class MahasiswaController extends Controller
 {
+
     public function index()
-    {
-        $user = Auth::user();
-        $mahasiswa = $user->mahasiswa;
+{
+    $user = Auth::user();
+    $mahasiswa = $user->mahasiswa;
 
-        if (!$mahasiswa) {
-            return redirect()->back()->withErrors(['Anda belum terdaftar sebagai mahasiswa.']);
-        }
-
-        $idKelompok = $mahasiswa->id_kelompok;
-
-        $jadwals = Jadwal::where(function ($query) use ($idKelompok) {
-            $query->whereHas('pengajuan', function ($q) use ($idKelompok) {
-                $q->where('id_kelompok', $idKelompok);
-            })
-            ->orWhereNull('id_ajuan'); // untuk yudisium
-        })->orderByDesc('tanggal')->get();
-
-
-
-        $dosens = Dosen::with('user', 'prodi')->get();
-
-        foreach ($dosens as $dosen) {
-            $jumlahSebagai1 = PengajuanPembimbing::where('id_dosen1', $dosen->user_id)
-                ->where('status', 'Diterima')
-                ->with('kelompok')
-                ->get()
-                ->sum(function ($pengajuan) {
-                    return $pengajuan->kelompok?->anggota->count() ?? 0;
-                });
-
-            $jumlahSebagai2 = PengajuanPembimbing::where('id_dosen2', $dosen->user_id)
-                ->where('status', 'Diterima')
-                ->count();
-
-            $dosen->kuota_terpakai = $jumlahSebagai1 + $jumlahSebagai2;
-            $dosen->kuota_total = $dosen->kuota_bimbingan ?? 0;
-        }
-
-        return view('pages.mahasiswa.dashboard', compact('jadwals', 'dosens'));
+    if (!$mahasiswa) {
+        return redirect()->back()->withErrors(['Anda belum terdaftar sebagai mahasiswa.']);
     }
+
+    $idKelompok = $mahasiswa->id_kelompok;
+
+    $jadwals = Jadwal::where(function ($query) use ($idKelompok) {
+        $query->whereHas('pengajuan', function ($q) use ($idKelompok) {
+            $q->where('id_kelompok', $idKelompok);
+        })
+        ->orWhereNull('id_ajuan'); // untuk yudisium
+    })->orderByDesc('tanggal')->get();
+
+    $dosens = Dosen::with('user', 'prodi')->get();
+
+    foreach ($dosens as $dosen) {
+        $jumlahSebagai1 = PengajuanPembimbing::where('id_dosen1', $dosen->user_id)
+            ->where('status', 'Diterima')
+            ->whereHas('kelompok.anggota', function ($query) use ($mahasiswa) {
+                $query->where('id_prodi', $mahasiswa->id_prodi);
+            })
+            ->with('kelompok')
+            ->get()
+            ->sum(function ($pengajuan) {
+                return $pengajuan->kelompok?->anggota->count() ?? 0;
+            });
+
+        $jumlahSebagai2 = PengajuanPembimbing::where('id_dosen2', $dosen->user_id)
+            ->where('status', 'Diterima')
+            ->whereHas('kelompok.anggota', function ($query) use ($mahasiswa) {
+                $query->where('id_prodi', $mahasiswa->id_prodi);
+            })
+            ->with('kelompok')
+            ->get()
+            ->sum(function ($pengajuan) {
+                return $pengajuan->kelompok?->anggota->count() ?? 0;
+            });
+
+        // Ambil kuota per prodi dari kuota_bimbingan_dosen
+        $kuota = KuotaBimbinganDosen::where('id_dosen', $dosen->id_dosen)
+            ->where('id_prodi', $mahasiswa->id_prodi)
+            ->first();
+
+        $dosen->kuota_total = $kuota ? $kuota->kuota_bimbingan : 0;
+        $dosen->kuota_terpakai = $jumlahSebagai1 + $jumlahSebagai2;
+    }
+
+    return view('pages.mahasiswa.dashboard', compact('jadwals', 'dosens'));
+}
 
     public function profile()
     {

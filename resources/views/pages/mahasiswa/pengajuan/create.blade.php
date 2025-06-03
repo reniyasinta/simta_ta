@@ -64,15 +64,34 @@
                                 <input type="file" name="proposal" class="form-control" accept="application/pdf">
                             </div>
 
-                            <div class="form-group mb-4">
+                            <div class="form-group mb-3">
                                 <label for="id_dosen1">Pilih Dosen Pembimbing</label>
                                 <select name="id_dosen1" class="form-control selectric" required>
                                     <option value="">-- Pilih Dosen --</option>
                                     @foreach($dosenList as $dosen)
-                                        <option value="{{ $dosen->id }}">{{ $dosen->name }}</option>
+                                        @php
+                                            $label = $dosen->name;
+
+                                            if ($dosen->kuota_total == 0) {
+                                                $isDisabled = true;
+                                                $label .= ' (Belum ditentukan)';
+                                            } elseif ($dosen->kuota_terpakai >= $dosen->kuota_total) {
+                                                $isDisabled = true;
+                                                $label .= ' (Kuota Penuh)';
+                                            } else {
+                                                $isDisabled = false;
+                                                $label .= ' (' . $dosen->kuota_terpakai . '/' . $dosen->kuota_total . ')';
+                                            }
+                                        @endphp
+
+                                        <option value="{{ $dosen->id }}" {{ $isDisabled ? 'disabled' : '' }}>
+                                            {{ $label }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
+
+
 
                             <div class="text-end">
                                 <button type="submit" class="btn btn-primary">Kirim Pengajuan</button>

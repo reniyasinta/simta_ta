@@ -13,19 +13,20 @@ class PanitiaPengajuanController extends Controller
     {
         $user = auth()->user();
 
-        $pengajuanList = PengajuanPembimbing::with(['dosen1.dosen', 'dosen2.dosen', 'kelompok'])
-        ->where('status', 'Diterima')
-        ->get();
+        // Ambil pengajuan mahasiswa sesuai prodi panitia
+        $pengajuanList = PengajuanPembimbing::with(['dosen1', 'dosen2', 'kelompok.anggota1.mahasiswa'])
+            ->where('status', 'Diterima')
+            ->whereHas('kelompok.anggota1.mahasiswa', function ($q) use ($user) {
+                if ($user->role->name === 'panitia' && $user->id_prodi !== null) {
+                    // Filter mahasiswa sesuai id_prodi panitia
+                    $q->where('id_prodi', $user->id_prodi);
+                }
+                // Kalau panitia jurusan (id_prodi null) → tidak ada filter, tampilkan semua
+            })
+            ->get();
 
-        // Filtering dosen berdasarkan prodi panitia (many-to-many)
-        if ($user->role->name === 'panitia' && $user->id_prodi !== null) {
-            $dosenList = Dosen::whereHas('prodis', function ($q) use ($user) {
-                 $q->where('prodis.id', $user->id_prodi);
-            })->get();
-        } else {
-            // Panitia jurusan atau lainnya → tampilkan semua
-            $dosenList = Dosen::all();
-        }
+        // Dosen sementara → ambil semua dulu (nanti bisa pakai group mapping)
+        $dosenList = Dosen::all();
 
         return view('pages.panitia.pengajuan.index', compact('pengajuanList', 'dosenList'));
     }
@@ -35,19 +36,14 @@ class PanitiaPengajuanController extends Controller
     {
         $user = auth()->user();
 
-        $pengajuan = PengajuanPembimbing::with(['kelompok', 'dosen1', 'dosen2'])->findOrFail($id);
+        $pengajuan = PengajuanPembimbing::with(['kelompok', 'dosen1', 'dosen2'])
+            ->findOrFail($id);
 
-        if ($user->role->name === 'panitia' && $user->id_prodi !== null) {
-            $dosenList = Dosen::whereHas('prodis', function ($q) use ($user) {
-                 $q->where('prodis.id', $user->id_prodi);
-            })->get();
-        } else {
-            $dosenList = Dosen::all();
-        }
+        // Dosen sementara → ambil semua dulu
+        $dosenList = Dosen::all();
 
         return view('pages.panitia.pengajuan.edit', compact('pengajuan', 'dosenList'));
     }
-
 
     public function update(Request $request, $id)
     {
@@ -56,13 +52,13 @@ class PanitiaPengajuanController extends Controller
         ]);
 
         // Ambil ID user dari tabel dosen
-        $dosen = \App\Models\Dosen::findOrFail($request->id_dosen2);
-        $pengajuan = \App\Models\PengajuanPembimbing::findOrFail($id);
-        $pengajuan->id_dosen2 = $dosen->user_id; // <--- Ini kuncinya
+        $dosen = Dosen::findOrFail($request->id_dosen2);
+        $pengajuan = PengajuanPembimbing::findOrFail($id);
+
+        // Simpan ke id_dosen2 → simpan user_id dosen (seperti di create)
+        $pengajuan->id_dosen2 = $dosen->user_id;
         $pengajuan->save();
 
         return redirect()->route('panitia.pengajuan.index')->with('success', 'Dosen Pembimbing 2 berhasil ditetapkan.');
     }
-
 }
-

@@ -57,10 +57,9 @@ class Dosen extends Model
         return $this->belongsTo(Prodi::class, 'id_prodi');
     }
 
-    public function prodis()
+    public function kuotaBimbinganProdi()
     {
-        return $this->belongsToMany(Prodi::class, 'dosen_prodi', 'id_dosen', 'id_prodi');
+        return $this->hasMany(KuotaBimbinganDosen::class, 'id_dosen');
     }
-
 
 }
