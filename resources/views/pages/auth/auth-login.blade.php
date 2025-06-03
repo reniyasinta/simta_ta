@@ -52,11 +52,11 @@
     <div class="card card-primary">
         <div class="card-header text-center d-block">
             <div class="w-100">
-                <h4>Login</h4>
+                <h4>Login SIMTA</h4>
                 <p class="text-dark mt-2 mb-0" style="font-size: 14px;">
-                <strong>Selamat Datang di SIMTA</strong><br>
-                Sistem Informasi Tugas Akhir<br>
-                Politeknik Negeri Banjarmasin
+                Selamat Datang di<br>
+                <strong>Sistem Informasi Tugas Akhir Poliban</strong><br>
+                Silakan melakukan login terlebih dahulu
             </p>
             </div>
         </div>
@@ -72,6 +72,7 @@
                            type="email"
                            class="form-control @error('email') is-invalid @enderror"
                            name="email"
+                           placeholder="Masukkan email yang terdaftar"
                            tabindex="1"
                            required
                            autofocus>
@@ -83,24 +84,27 @@
                 </div>
 
                 <div class="form-group">
-                    <div class="d-block">
-                        <label for="password" class="control-label">Password</label>
-                        <div class="float-right">
-                        </div>
-                    </div>
+                <label for="password">Password</label>
+
+                <div class="position-relative">
                     <input id="password"
-                           type="password"
-                           class="form-control @error('password') is-invalid @enderror"
-                           name="password"
-                           tabindex="2"
-                           required>
-                    @error('password')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
+                        type="password"
+                        class="form-control @error('password') is-invalid @enderror"
+                        name="password"
+                        placeholder="Masukkan password"
+                        tabindex="2"
+                        required>
+
+                    <i class="fas fa-eye position-absolute" id="togglePassword"
+                    style="top: 50%; right: 15px; transform: translateY(-50%); cursor: pointer;"></i>
                 </div>
 
+                @error('password')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror
+            </div>
                 <div class="form-group">
                     <button type="submit"
                             class="btn btn-primary btn-lg btn-block"
@@ -115,5 +119,18 @@
 @endsection
 
 @push('scripts')
-    <!-- JS Libraries -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+
+        togglePassword.addEventListener('click', function () {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+    });
+</script>
 @endpush

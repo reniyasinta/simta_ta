@@ -23,7 +23,7 @@
 
             <div class="clearfix mb-3"></div>
             <div class="table-responsive">
-                <table class="table table-bordered table-striped">
+            <table id="table-pengajuan" class="table table-bordered table-striped table-hover">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -63,3 +63,37 @@
         </section>
     </div>
 @endsection
+@push('scripts')
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $('#table-pengajuan').DataTable({
+            "language": {
+                "search": "Cari Mahasiswa / NIM / Judul:",
+                "lengthMenu": "Tampilkan _MENU_ data per halaman",
+                "zeroRecords": "Data tidak ditemukan",
+                "info": "Menampilkan _PAGE_ dari _PAGES_",
+                "infoEmpty": "Tidak ada data",
+                "infoFiltered": "(filtered from _MAX_ total records)"
+            },
+            "pageLength": 10
+        });
+    });
+</script>
+@endpush
+@push('style')
+<link rel="stylesheet" href="{{ asset('library/summernote/dist/summernote-bs4.css') }}">
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+
+<style>
+    /* Biar search box di ujung kanan */
+    .dataTables_wrapper .dataTables_filter {
+        float: right;
+        text-align: right;
+    }
+</style>
+@endpush
+

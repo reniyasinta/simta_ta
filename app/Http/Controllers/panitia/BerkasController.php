@@ -24,15 +24,18 @@ class BerkasController extends Controller
     {
         $request->validate([
             'nama_berkas' => 'required|string',
-            'file' => 'required|mimes:pdf|max:20480',
+            'file' => 'required|mimes:pdf,ppt,pptx,xls,xlsx,doc,docx,txt,jpeg,jpg,png,rar,zip|max:20480',
         ]);
 
-        // Validasi file upload
         if ($request->hasFile('file') && $request->file('file')->isValid()) {
-            $path = $request->file('file')->store('berkas', 'public');
+            $originalName = $request->file('file')->getClientOriginalName();
+            $filename = time() . '_' . $originalName;
+
+            $path = $request->file('file')->storeAs('berkas', $filename, 'public');
         } else {
             return back()->withErrors(['file' => 'File tidak valid']);
-}
+        }
+
         Berkas::create([
             'nama_berkas' => $request->nama_berkas,
             'file_path' => $path,
@@ -51,7 +54,7 @@ class BerkasController extends Controller
     {
         $request->validate([
             'nama_berkas' => 'required|string',
-            'file' => 'nullable|mimes:pdf|max:20480',
+            'file' => 'nullable|mimes:pdf,ppt,pptx,xls,xlsx,doc,docx,txt,jpeg,jpg,png,rar,zip|max:20480',
         ]);
 
         $berkas = Berkas::findOrFail($id);
@@ -62,8 +65,11 @@ class BerkasController extends Controller
             // Hapus file lama
             Storage::disk('public')->delete($berkas->file_path);
 
-            // Simpan file baru
-            $path = $request->file('file')->store('berkas', 'public');
+            // Simpan file baru dengan nama asli
+            $originalName = $request->file('file')->getClientOriginalName();
+            $filename = time() . '_' . $originalName;
+
+            $path = $request->file('file')->storeAs('berkas', $filename, 'public');
         }
 
         $berkas->update([
@@ -78,7 +84,6 @@ class BerkasController extends Controller
     {
         $berkas = Berkas::findOrFail($id);
 
-        // Hapus file fisik
         Storage::disk('public')->delete($berkas->file_path);
 
         $berkas->delete();
@@ -86,9 +91,15 @@ class BerkasController extends Controller
         return redirect()->route('pages.panitia.berkas.index')->with('success', 'Berkas berhasil dihapus');
     }
 
-        public function download($id)
-        {
-            $berkas = Berkas::findOrFail($id);
-            return Storage::disk('public')->download($berkas->file_path, $berkas->nama_berkas . '.pdf');
+    public function download($id)
+    {
+        $berkas = Berkas::findOrFail($id);
+
+        if (Storage::disk('public')->exists($berkas->file_path)) {
+            $extension = pathinfo($berkas->file_path, PATHINFO_EXTENSION);
+            return Storage::disk('public')->download($berkas->file_path, $berkas->nama_berkas . '.' . $extension);
         }
+
+        return redirect()->back()->with('error', 'File tidak ditemukan.');
+    }
 }

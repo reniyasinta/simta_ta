@@ -16,6 +16,7 @@ return new class extends Migration
         $table->unsignedBigInteger('id_mhs');
         $table->foreign('id_mhs')->references('id_mhs')->on('mahasiswa')->onDelete('cascade');
         $table->foreignId('id_dosen')->constrained('users')->onDelete('cascade');
+        $table->foreignId('id_dosen_penguji')->constrained('users')->onDelete('cascade'); 
         $table->foreignId('id_sempro')->constrained('sempro', 'id_sempro')->onDelete('cascade');
         // Laporan Draft
         $table->string('laporan_TA')->nullable();

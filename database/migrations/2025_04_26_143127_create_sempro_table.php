@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('sempro', function (Blueprint $table) {
             $table->id('id_Sempro');
             $table->foreignId('id_ajuan')->constrained('pengajuan_pembimbing','id_ajuan');
-            $table->string('form_persetujuan_sempro');
-            $table->string('hasil_sempro');
+            $table->string('form_persetujuan_sempro')->nullable();
+            $table->string('hasil_sempro')->nullable();
             $table->timestamps();
         });
     }
