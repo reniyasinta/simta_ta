@@ -1,3 +1,5 @@
+
+
 @extends('layouts.app')
 
 @section('title', 'Data Mahasiswa Bimbingan')
@@ -10,78 +12,124 @@
         </div>
 
         <div class="section-body">
-            <div class="mb-4">
-                <h5>Kuota Bimbingan: {{ $kuota }}</h5>
-                <h5>Jumlah Bimbingan Aktif: {{ $totalBimbingan }}</h5>
-            </div>
 
-            <div class="card">
-                <div class="card-header"><h4>Dosen Pembimbing 1</h4></div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-bordered mb-0">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Nama Mahasiswa</th>
-                                    <th>Judul TA</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse($sebagaiPembimbing1 as $key => $item)
-                                    <tr>
-                                        <td>{{ $key + 1 }}</td>
-                                        <td>
-                                            <ul>
-                                                @foreach($item->kelompok->anggota as $mhs)
-                                                    <li>{{ $mhs->nama_mhs }}</li>
-                                                @endforeach
-                                            </ul>
-                                        </td>
-                                        <td>{{ $item->judul_ta }}</td>
-                                    </tr>
-                                @empty
-                                    <tr><td colspan="3" class="text-center">Tidak ada bimbingan.</td></tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
+            {{-- Filter Prodi --}}
+            <form action="{{ route('dosen.bimbingan') }}" method="GET" class="mb-4">
+                <div class="form-inline">
+                    <label class="mr-2 font-weight-bold">Filter Prodi:</label>
+                    <select name="prodi" class="form-control mr-2" onchange="this.form.submit()">
+                        <option value="">-- Semua Prodi --</option>
+                        <option value="TI" {{ request('prodi') == 'TI' ? 'selected' : '' }}>Teknik Informatika</option>
+                        <option value="SIKC" {{ request('prodi') == 'SIKC' ? 'selected' : '' }}>Sistem Informasi Kota Cerdas</option>
+                    </select>
+                </div>
+            </form>
+
+            {{-- Info Kuota --}}
+            <div class="mb-4">
+                <div class="alert alert-info mb-2">
+                    <strong>Kuota Bimbingan:</strong> {{ $kuota }} &nbsp; | &nbsp;
+                    <strong>Jumlah Bimbingan Aktif:</strong> {{ $totalBimbingan }}
                 </div>
             </div>
 
-            <div class="card mt-4">
-                <div class="card-header"><h4>Dosen Pembimbing 2</h4></div>
+ {{-- Section Pembimbing 1 --}}
+<div class="card shadow mb-4">
+    <div class="card-header bg-light border-bottom d-flex justify-content-between align-items-center">
+        <h4 class="mb-0 font-weight-bold text-primary">Mahasiswa Bimbingan 1</h4>
+    </div>
+
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover table-striped mb-0">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Mahasiswa</th>
+                        <th>Prodi</th>
+                        <th>Judul TA</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($sebagaiPembimbing1 as $key => $item)
+                        @foreach($item->kelompok->anggota as $mhs)
+                            <tr>
+                                <td>{{ $key + 1 }}</td>
+                                <td>{{ $mhs->nama_mhs }}</td>
+                                <td>
+                                    <span class="badge badge-info">
+                                        {{ $mhs->prodi->nama_prodi ?? '-' }}
+                                    </span>
+                                </td>
+                                <td>{{ $item->judul_ta }}</td>
+                                <td>
+                                    <a href="{{ route('dosen.mahasiswa.show', $mhs->id_mhs) }}" class="btn btn-sm btn-success">
+                                        <i class="fas fa-user"></i> Lihat Profil
+                                    </a>
+                                </td>
+                            </tr>
+                        @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-4">Tidak ada bimbingan.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+            {{-- Section Pembimbing 2 --}}
+<div class="card shadow mb-4">
+    <div class="card-header bg-light border-bottom d-flex justify-content-between align-items-center">
+        <h4 class="mb-0 font-weight-bold text-primary">Mahasiswa bimbingan 2</h4>
+    </div>
+
+
                 <div class="card-body p-0">
                     <div class="table-responsive">
-                        <table class="table table-bordered mb-0">
+                        <table class="table table-hover table-striped mb-0">
                             <thead>
                                 <tr>
                                     <th>No</th>
                                     <th>Nama Mahasiswa</th>
+                                    <th>Prodi</th>
                                     <th>Judul TA</th>
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse($sebagaiPembimbing2 as $key => $item)
-                                    <tr>
-                                        <td>{{ $key + 1 }}</td>
-                                        <td>
-                                            <ul>
-                                                @foreach($item->kelompok->anggota as $mhs)
-                                                    <li>{{ $mhs->nama_mhs }}</li>
-                                                @endforeach
-                                            </ul>
-                                        </td>
-                                        <td>{{ $item->judul_ta }}</td>
-                                    </tr>
+                                    @foreach($item->kelompok->anggota as $mhs)
+                                        <tr>
+                                            <td>{{ $key + 1 }}</td>
+                                            <td>{{ $mhs->nama_mhs }}</td>
+                                            <td>
+                                                <span class="badge badge-info">
+                                                    {{ $mhs->prodi->nama_prodi ?? '-' }}
+                                                </span>
+                                            </td>
+                                            <td>{{ $item->judul_ta }}</td>
+                                            <td>
+                                                <a href="{{ route('dosen.mahasiswa.show', $mhs->id_mhs) }}" class="btn btn-sm btn-success">
+                                                    <i class="fas fa-user"></i> Lihat Profil
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                 @empty
-                                    <tr><td colspan="3" class="text-center">Tidak ada bimbingan.</td></tr>
+                                    <tr>
+                                        <td colspan="5" class="text-center text-muted py-4">Tidak ada bimbingan.</td>
+                                    </tr>
                                 @endforelse
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
+
         </div>
     </section>
 </div>

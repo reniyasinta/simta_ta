@@ -38,7 +38,11 @@
                     <i class="fas fa-fire"></i> <span>Dashboard</span>
                 </a>
             </li>
-
+                        <li class="nav-item {{ ($type_menu ?? '') === 'kuota' ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('panitia.kuota.index') }}">
+                    <i class="fas fa-user-cog"></i> <span>Manajemen Kuota Dosen</span>
+                </a>
+            </li>
             <li class="menu-header">General</li>
 
             <li class="nav-item {{ ($type_menu ?? '') === 'berkas' ? 'active' : '' }}">
@@ -66,10 +70,16 @@
                     <i class="fas fa-file-signature"></i> <span>Pengajuan Dospem 2</span>
                 </a>
             </li>
-
-            <li class="nav-item {{ ($type_menu ?? '') === 'kuota' ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('panitia.kuota.index') }}">
-                    <i class="fas fa-user-cog"></i> <span>Manajemen Kuota Dosen</span>
+            <li class="menu-header">Sempro</li>
+            <li class="{{ request()->routeIs('panitia.sempro.index') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('panitia.sempro.index') }}">
+                    <i class="fas fa-file-pdf"></i> <span>Berkas Sempro</span>
+                </a>
+            </li>
+            <li class="menu-header">Sidang</li>
+            <li>
+                <a href="#">
+                    <i class="fas fa-file-upload"></i> <span>Kelola Berkas Sidang</span>
                 </a>
             </li>
 
@@ -104,7 +114,11 @@
                     <i class="fas fa-comments"></i> <span>Data Bimbingan</span>
                 </a>
             </li>
-
+            <li>
+                <a class="nav-link" href="#">
+                <i class="fa-check-circle "></i> <span>Persetujuan Laporan </span>
+                </a>
+            </li>
 
             <li class="menu-header">Data Pengujian TA</li>
             <li>
@@ -129,7 +143,7 @@
 
 
         {{-- ================= Mahasiswa (role_id = 4) ================= --}}
-        @elseif($roleId == 4)
+       @elseif($roleId == 4)
         <ul class="sidebar-menu">
 
             {{-- Dashboard --}}
@@ -143,7 +157,7 @@
             <li class="menu-header">General</li>
 
             <li>
-                <a class="nav-link" href="{{ route('mahasiswa.jadwal.index') }}">
+            <a class="nav-link" href="{{ route('mahasiswa.jadwal.index') }}">
                     <i class="fas fa-calendar-alt"></i> <span>Jadwal Saya</span>
                 </a>
             </li>
@@ -166,10 +180,10 @@
                     <i class="fas fa-envelope-open-text"></i> <span>Upload Undangan</span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li class="{{ request()->is('mahasiswa/undangan?jenis=seminar') || request()->fullUrlIs('*undangan*seminar*') ? 'active' : '' }}">
+                    <li class="{{ request()->is('mahasiswa/undangan?jenis=seminar') || request()->fullUrlIs('undangan*seminar') ? 'active' : '' }}">
                         <a class="nav-link" href="{{ route('mahasiswa.undangan.index', ['jenis' => 'seminar']) }}">Undangan Seminar</a>
                     </li>
-                    <li class="{{ request()->is('mahasiswa/undangan?jenis=sidang') || request()->fullUrlIs('*undangan*sidang*') ? 'active' : '' }}">
+                    <li class="{{ request()->is('mahasiswa/undangan?jenis=sidang') || request()->fullUrlIs('undangan*sidang') ? 'active' : '' }}">
                         <a class="nav-link" href="{{ route('mahasiswa.undangan.index', ['jenis' => 'sidang']) }}">Undangan Sidang</a>
                     </li>
                 </ul>
@@ -191,19 +205,30 @@
             </li>
 
             <li>
-                <a class="nav-link" href="{{ url('seminar') }}">
-                    <i class="fas fa-file-alt"></i> <span>Usulan Tugas Akhir</span>
+                <a class="nav-link" href="{{ route('mahasiswa.sempro.index') }}">
+                    <i class="fas fa-file-alt"></i> <span>berkas sempro</span>
                 </a>
             </li>
 
             {{-- Sidang TA --}}
-            <li class="menu-header">Sidang TA</li>
-
-            <li>
-                <a class="nav-link" href="{{ url('sidang') }}">
-                    <i class="fas fa-file-alt"></i> <span>Hasil Sidang</span>
+            <li class="menu-header">Tugas Akhir</li>
+            <li class="nav-item dropdown {{ request()->is('mahasiswa/laporan-ta*') || request()->is('mahasiswa/revisi-laporan*') || request()->is('mahasiswa/laporan-akhir*') ? 'active' : '' }}">
+                <a href="#" class="nav-link has-dropdown">
+                    <i class="fas fa-book"></i> <span>Tahapan Laporan TA</span>
                 </a>
+                <ul class="dropdown-menu">
+                <li class="{{ request()->is('mahasiswa/laporan-ta*') ? 'active' : '' }}">
+                    <a class="nav-link" href="#">Laporan TA</a>
+                </li>
+                <li class="{{ request()->is('mahasiswa/revisi-laporan*') ? 'active' : '' }}">
+                    <a class="nav-link" href="#">Revisi Laporan</a>
+                </li>
+                <li class="{{ request()->is('mahasiswa/laporan-akhir*') ? 'active' : '' }}">
+                    <a class="nav-link" href="#">Laporan Akhir</a>
+                </li>
+                </ul>
             </li>
+
 
             {{-- Profil --}}
             <li class="menu-header">Profil</li>
@@ -214,7 +239,7 @@
                 </a>
             </li>
         </ul>
-        @endif
+                @endif
         @endauth
     </aside>
 </div>

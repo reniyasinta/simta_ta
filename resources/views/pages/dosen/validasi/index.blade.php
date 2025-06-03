@@ -9,11 +9,11 @@
             <h1>Validasi Pengajuan Pembimbing</h1>
         </div>
 
-        <div class="section-body">
-            @if(session('success'))
-                <div class="alert alert-success">{{ session('success') }}</div>
-            @endif
+        @if(session('success'))
+            <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
 
+        <div class="section-body">
             <div class="table-responsive">
                 <table class="table table-bordered table-striped">
                     <thead>
@@ -31,21 +31,35 @@
                         @forelse($pengajuan as $key => $item)
                             <tr>
                                 <td>{{ $key + 1 }}</td>
+
+                                {{-- Anggota kelompok --}}
                                 <td>
                                     <ul>
-                                        @foreach($item->kelompok->anggota as $anggota)
-                                            <li>{{ $anggota->nama_mhs }} ({{ $anggota->nim_mhs }})</li>
-                                        @endforeach
+                                        @if($item->kelompok->anggota1)
+                                            <li>{{ $item->kelompok->anggota1->mahasiswa->nama_mhs ?? '-' }}</li>
+                                        @endif
+                                        @if($item->kelompok->anggota2)
+                                            <li>{{ $item->kelompok->anggota2->mahasiswa->nama_mhs ?? '-' }}</li>
+                                        @endif
+                                        @if($item->kelompok->anggota3)
+                                            <li>{{ $item->kelompok->anggota3->mahasiswa->nama_mhs ?? '-' }}</li>
+                                        @endif
                                     </ul>
                                 </td>
-                                <td>{{ $item->judul_ta }}</td>
+
+                                {{-- Judul TA --}}
+                                <td>{{ $item->judul_ta ?? '-' }}</td>
+
+                                {{-- Proposal --}}
                                 <td>
                                     @if($item->proposal)
-                                        <a href="{{ asset('storage/proposal/' . $item->proposal) }}" target="_blank" class="btn btn-sm btn-link">Lihat</a>
+                                        <a href="{{ asset('storage/proposal/' . $item->proposal) }}" target="_blank" class="btn btn-sm btn-link">Download</a>
                                     @else
                                         <span class="text-muted">Belum ada</span>
                                     @endif
                                 </td>
+
+                                {{-- Status --}}
                                 <td>
                                     @if($item->status === 'Diterima')
                                         <span class="badge bg-success">Diterima</span>
@@ -56,7 +70,7 @@
                                     @endif
                                 </td>
 
-                                {{-- KETERANGAN --}}
+                                {{-- Keterangan --}}
                                 <td>
                                     @if($item->status === 'Menunggu')
                                         <form action="{{ route('dosen.validasi.submit', $item->id_ajuan) }}" method="POST" id="form-{{ $item->id_ajuan }}">
@@ -68,16 +82,12 @@
                                     @endif
                                 </td>
 
-                                {{-- AKSI --}}
+                                {{-- Aksi --}}
                                 <td>
                                     @if($item->status === 'Menunggu')
                                         <div class="d-flex gap-2">
-                                            <button form="form-{{ $item->id_ajuan }}" type="submit" name="status" value="Diterima" class="btn btn-sm btn-success">
-                                                Setujui
-                                            </button>
-                                            <button form="form-{{ $item->id_ajuan }}" type="submit" name="status" value="Ditolak" class="btn btn-sm btn-danger">
-                                                Tolak
-                                            </button>
+                                            <button form="form-{{ $item->id_ajuan }}" type="submit" name="status" value="Diterima" class="btn btn-sm btn-success">Setujui</button>
+                                            <button form="form-{{ $item->id_ajuan }}" type="submit" name="status" value="Ditolak" class="btn btn-sm btn-danger">Tolak</button>
                                         </div>
                                     @else
                                         <span class="text-muted">Sudah divalidasi</span>

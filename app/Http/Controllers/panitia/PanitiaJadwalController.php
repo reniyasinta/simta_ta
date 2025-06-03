@@ -10,6 +10,7 @@ use App\Models\Jadwal;
 use App\Models\User;
 use App\Models\PengajuanPembimbing;
 use App\Models\Dosen;
+use App\Models\Sidang;
 
 class PanitiaJadwalController extends Controller
 {

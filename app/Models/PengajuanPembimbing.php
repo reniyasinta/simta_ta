@@ -37,5 +37,10 @@ class PengajuanPembimbing extends Model
     {
         return $this->belongsTo(Mahasiswa::class, 'id_mhs', 'id_mhs');
     }
+    public function sempro()
+    {
+        return $this->hasOne(\App\Models\Sempro::class, 'id_ajuan');
+    }
+
 
 }

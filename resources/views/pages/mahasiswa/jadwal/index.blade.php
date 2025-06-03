@@ -23,7 +23,7 @@
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th>#</th>
+                                    <th>No</th>
                                     <th>Jenis</th>
                                     <th>Tanggal</th>
                                     <th>Jam</th>

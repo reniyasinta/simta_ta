@@ -17,9 +17,13 @@ use App\Http\Controllers\Mahasiswa\KelompokController;
 use App\Http\Controllers\Mahasiswa\BerkasController;
 use App\Http\Controllers\Mahasiswa\SuratController as MahasiswaSuratController;
 use App\Http\Controllers\Mahasiswa\UndanganController;
+use App\Http\Controllers\Mahasiswa\LaporanController;
+use App\Http\Controllers\Mahasiswa\LaporanAkhirController;
+use App\Http\Controllers\Mahasiswa\MahasiswaSemproController;
 use App\Http\Controllers\Panitia\PanitiaPengajuanController;
 use App\Http\Controllers\Panitia\BerkasController as PanitiaBerkasController;
 use App\Http\Controllers\Panitia\PanitiaJadwalController;
+use App\Http\Controllers\Panitia\PanitiaSemproController;
 use App\Exports\TemplateUserExport;
 use App\Exports\TemplateJadwalExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -68,33 +72,32 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/surat/download/{id}', [AdminSuratController::class, 'download'])->name('admin.surat.download');
     });
 
-    // PANITIA
-    Route::middleware(['role:panitia'])->prefix('panitia')->group(function () {
-        Route::get('/dashboard', [PanitiaController::class, 'index'])->name('panitia.dashboard');
+// PANITIA
+Route::middleware(['role:panitia'])->prefix('panitia')->group(function () {
+    Route::get('/dashboard', [PanitiaController::class, 'index'])->name('panitia.dashboard');
 
-        // Pengajuan
-        Route::get('/pengajuan', [PanitiaPengajuanController::class, 'index'])->name('panitia.pengajuan.index');
-        Route::get('/pengajuan/{id}/edit', [PanitiaPengajuanController::class, 'edit'])->name('panitia.pengajuan.edit');
-        Route::put('/pengajuan/{id}', [PanitiaPengajuanController::class, 'update'])->name('panitia.pengajuan.update');
+    // Pengajuan
+    Route::get('/pengajuan', [PanitiaPengajuanController::class, 'index'])->name('panitia.pengajuan.index');
+    Route::get('/pengajuan/{id}/edit', [PanitiaPengajuanController::class, 'edit'])->name('panitia.pengajuan.edit');
+    Route::put('/pengajuan/{id}', [PanitiaPengajuanController::class, 'update'])->name('panitia.pengajuan.update');
 
-        // Berkas
-        Route::get('/berkas', [PanitiaBerkasController::class, 'index'])->name('pages.panitia.berkas.index');
-        Route::get('/berkas/create', [PanitiaBerkasController::class, 'create'])->name('pages.panitia.berkas.create');
-        Route::post('/berkas', [PanitiaBerkasController::class, 'store'])->name('panitia.berkas.store');
-        Route::get('/berkas/{id}/edit', [PanitiaBerkasController::class, 'edit'])->name('pages.panitia.berkas.edit');
-        Route::put('/berkas/{id}', [PanitiaBerkasController::class, 'update'])->name('panitia.berkas.update');
-        Route::delete('/berkas/{id}', [PanitiaBerkasController::class, 'destroy'])->name('panitia.berkas.destroy');
+    // Berkas
+    Route::get('/berkas', [PanitiaBerkasController::class, 'index'])->name('pages.panitia.berkas.index');
+    Route::get('/berkas/create', [PanitiaBerkasController::class, 'create'])->name('pages.panitia.berkas.create');
+    Route::post('/berkas', [PanitiaBerkasController::class, 'store'])->name('panitia.berkas.store');
+    Route::get('/berkas/{id}/edit', [PanitiaBerkasController::class, 'edit'])->name('pages.panitia.berkas.edit');
+    Route::put('/berkas/{id}', [PanitiaBerkasController::class, 'update'])->name('panitia.berkas.update');
+    Route::delete('/berkas/{id}', [PanitiaBerkasController::class, 'destroy'])->name('panitia.berkas.destroy');
 
-        // JADWAL
+    // JADWAL
     Route::prefix('jadwal')->name('jadwal.')->group(function () {
         Route::get('/', [PanitiaJadwalController::class, 'index'])->name('index');
-
         Route::get('/seminar', [PanitiaJadwalController::class, 'seminar'])->name('seminar.index');
         Route::get('/sidang', [PanitiaJadwalController::class, 'sidang'])->name('sidang.index');
         Route::get('/yudisium', [PanitiaJadwalController::class, 'yudisium'])->name('yudisium.index');
 
         // Tambah
-        Route::get('/create', [PanitiaJadwalController::class, 'create'])->name('create'); // gunakan ?jenis=seminar
+        Route::get('/create', [PanitiaJadwalController::class, 'create'])->name('create');
         Route::post('/', [PanitiaJadwalController::class, 'store'])->name('store');
 
         // Edit dan Hapus dinamis
@@ -114,10 +117,16 @@ Route::middleware(['auth'])->group(function () {
         })->name('template');
     });
 
-        // Kuota Dosen Management
-        Route::get('/kuota-dosen', [DosenKuotaController::class, 'index'])->name('panitia.kuota.index');
-        Route::post('/kuota-dosen/{id}', [DosenKuotaController::class, 'update'])->name('panitia.kuota.update');
-    });
+    // SEMPRO — DITARUH DI SINI ya, BUKAN dalam JADWAL
+    Route::get('/sempro', [App\Http\Controllers\Panitia\PanitiaSemproController::class, 'index'])->name('panitia.sempro.index');
+    Route::get('/sempro/create', [App\Http\Controllers\Panitia\PanitiaSemproController::class, 'create'])->name('panitia.sempro.create');
+    Route::post('/sempro/store', [App\Http\Controllers\Panitia\PanitiaSemproController::class, 'store'])->name('panitia.sempro.store');
+    Route::get('/berkas-sempro', [\App\Http\Controllers\Panitia\PanitiaSemproController::class, 'index'])->name('panitia.sempro.index');
+
+    // Kuota Dosen Management
+    Route::get('/kuota-dosen', [DosenKuotaController::class, 'index'])->name('panitia.kuota.index');
+    Route::post('/kuota-dosen/{id}', [DosenKuotaController::class, 'update'])->name('panitia.kuota.update');
+});
 
     // DOSEN
     Route::middleware(['role:dosen'])->prefix('dosen')->group(function () {
@@ -130,8 +139,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/validasi-pengajuan', [ValidasiPengajuanController::class, 'index'])->name('dosen.validasi');
         Route::post('/validasi-pengajuan/{id}', [ValidasiPengajuanController::class, 'validasi'])->name('dosen.validasi.submit');
 
+        Route::get('sidang/verifikasi', [\App\Http\Controllers\Dosen\SidangController::class, 'index'])->name('dosen.sidang.index');
+        Route::post('sidang/verifikasi/{id}', [\App\Http\Controllers\Dosen\SidangController::class, 'verifikasi'])->name('dosen.sidang.verifikasi');
         // bimbingan mahasiswa
         Route::get('/bimbingan', [DosenController::class, 'bimbingan'])->name('dosen.bimbingan');
+        Route::get('/mahasiswa/{id}', [\App\Http\Controllers\Dosen\MahasiswaController::class, 'show'])->name('dosen.mahasiswa.show');
+
     });
 
     // MAHASISWA
@@ -140,6 +153,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/mahasiswa/profile', [MahasiswaController::class, 'profile'])->name('mahasiswa.profile');
         Route::post('/mahasiswa/profile/update', [MahasiswaController::class, 'updateProfile'])->name('mahasiswa.profile.update');
         Route::get('/profile/edit', [MahasiswaController::class, 'editProfile'])->name('mahasiswa.profile_edit');
+Route::get('/jadwal', [MahasiswaController::class, 'jadwal'])->name('mahasiswa.jadwal.index');
 
 
         // Berkas
@@ -168,13 +182,31 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/mahasiswa/surat', [MahasiswaSuratController::class, 'store'])->name('mahasiswa.surat.store');
         Route::get('/mahasiswa/surat/download/{id}', [MahasiswaSuratController::class, 'download'])->name('mahasiswa.surat.download');
 
-        // jadwal mahasiswa
-        Route::get('/jadwal', [MahasiswaController::class, 'jadwal'])->name('mahasiswa.jadwal.index');
+        // Laporan TA & Revisi
+        Route::get('laporan-ta', [LaporanController::class, 'laporanTA'])->name('mahasiswa.laporan-ta');
+        Route::get('laporan-ta/create', [LaporanController::class, 'createLaporanTA'])->name('mahasiswa.laporan-ta.create');
+        Route::post('laporan-ta/upload', [LaporanController::class, 'uploadLaporanTA'])->name('mahasiswa.laporan-ta.upload');
+
+        Route::get('revisi-laporan', [LaporanController::class, 'revisiLaporan'])->name('mahasiswa.revisi-laporan');
+        Route::get('revisi-laporan/create', [LaporanController::class, 'createRevisiLaporan'])->name('mahasiswa.revisi-laporan.create');
+        Route::post('revisi-laporan/upload', [LaporanController::class, 'uploadRevisiLaporan'])->name('mahasiswa.revisi-laporan.upload');
+
+        // Laporan Akhir
+        Route::get('laporan-akhir', [LaporanAkhirController::class, 'laporanAkhir'])->name('mahasiswa.laporan-akhir');
+        Route::get('laporan-akhir/create', [LaporanAkhirController::class, 'createLaporanAkhir'])->name('mahasiswa.laporan-akhir.create');
+        Route::post('laporan-akhir/upload', [LaporanAkhirController::class, 'uploadLaporanAkhir'])->name('mahasiswa.laporan-akhir.upload');
 
         // Upload undangan oleh mahasiswa
         Route::get('/undangan', [UndanganController::class, 'index'])->name('mahasiswa.undangan.index');
         Route::get('/undangan/create', [UndanganController::class, 'create'])->name('mahasiswa.undangan.create');
         Route::post('/undangan/store', [UndanganController::class, 'store'])->name('mahasiswa.undangan.store');
+
+        //SEMPRO
+        Route::get('sempro', [App\Http\Controllers\Mahasiswa\MahasiswaSemproController::class, 'index'])->name('mahasiswa.sempro.index');
+        Route::post('sempro/upload-form', [App\Http\Controllers\Mahasiswa\MahasiswaSemproController::class, 'uploadForm'])->name('mahasiswa.sempro.uploadForm');
+        Route::post('sempro/upload-hasil', [App\Http\Controllers\Mahasiswa\MahasiswaSemproController::class, 'uploadHasil'])->name('mahasiswa.sempro.uploadHasil');
+Route::delete('/mahasiswa/sempro/deleteForm', [MahasiswaSemproController::class, 'deleteForm'])->name('mahasiswa.sempro.deleteForm');
+        Route::delete('mahasiswa/sempro/deleteHasil', [MahasiswaSemproController::class, 'deleteHasil'])->name('mahasiswa.sempro.deleteHasil');
 
     });
 
