@@ -62,4 +62,15 @@ class Dosen extends Model
         return $this->hasMany(KuotaBimbinganDosen::class, 'id_dosen');
     }
 
+    public function pengajuanDosen1()
+    {
+        return $this->hasMany(PengajuanPembimbing::class, 'id_dosen1', 'user_id');
+    }
+
+    public function pengajuanDosen2()
+    {
+        return $this->hasMany(PengajuanPembimbing::class, 'id_dosen2', 'user_id');
+    }
+
+
 }

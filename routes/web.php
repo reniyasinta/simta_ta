@@ -121,7 +121,7 @@ Route::middleware(['role:panitia'])->prefix('panitia')->group(function () {
     Route::get('/sempro', [App\Http\Controllers\Panitia\PanitiaSemproController::class, 'index'])->name('panitia.sempro.index');
     Route::get('/sempro/create', [App\Http\Controllers\Panitia\PanitiaSemproController::class, 'create'])->name('panitia.sempro.create');
     Route::post('/sempro/store', [App\Http\Controllers\Panitia\PanitiaSemproController::class, 'store'])->name('panitia.sempro.store');
-    Route::get('/berkas-sempro', [\App\Http\Controllers\Panitia\PanitiaSemproController::class, 'index'])->name('panitia.sempro.index');
+    Route::get('/berkas-sempro', [PanitiaSemproController::class, 'index'])->name('panitia.berkas-sempro.index');
 
     // Kuota Dosen Management
     Route::get('/kuota-dosen', [DosenKuotaController::class, 'index'])->name('panitia.kuota.index');

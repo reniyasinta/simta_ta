@@ -42,17 +42,35 @@
                         <input type="text" class="form-control" value="{{ $pengajuan->dosen1->dosen->nama_dosen ?? '-' }}" readonly>
                     </div>
 
-                    <div class="form-group">
-                        <label>Dosen 2</label>
-                        <select name="id_dosen2" class="form-control" required>
-                            <option value="">-- Pilih Dosen Pembimbing 2 --</option>
-                            @foreach ($dosenList as $dosen)
-                                <option value="{{ $dosen->id_dosen }}" {{ $pengajuan->id_dosen2 == $dosen->id_dosen ? 'selected' : '' }}>
-                                    {{ $dosen->nama_dosen }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
+<div class="form-group mb-3">
+    <label for="id_dosen2">Pilih Dosen Pembimbing 2</label>
+    <select name="id_dosen2" class="form-control selectric" required>
+        <option value="">-- Pilih Dosen --</option>
+        @foreach($dosenList as $dosen)
+            @php
+                $label = $dosen->name;
+
+                if ($dosen->kuota_total == 0) {
+                    $isDisabled = true;
+                    $label .= ' (Belum ditentukan)';
+                } elseif ($dosen->kuota_terpakai >= $dosen->kuota_total) {
+                    $isDisabled = true;
+                    $label .= ' (Kuota Penuh)';
+                } else {
+                    $isDisabled = false;
+                    $label .= ' (' . $dosen->kuota_terpakai . '/' . $dosen->kuota_total . ')';
+                }
+            @endphp
+
+            <option value="{{ $dosen->id }}"
+                {{ $pengajuan->id_dosen2 == $dosen->id ? 'selected' : '' }}
+                {{ $isDisabled ? 'disabled' : '' }}>
+                {{ $label }}
+            </option>
+        @endforeach
+    </select>
+</div>
+
 
                 </div>
                 <div class="card-footer text-right">

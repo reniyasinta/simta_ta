@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\PengajuanPembimbing;
 use App\Models\Dosen;
+use App\Models\User;
+
 
 class PanitiaPengajuanController extends Controller
 {
@@ -32,33 +34,52 @@ class PanitiaPengajuanController extends Controller
     }
 
 
-    public function edit($id)
-    {
-        $user = auth()->user();
+public function edit($id)
+{
+    $pengajuan = PengajuanPembimbing::with(['kelompok.anggota', 'dosen1.dosen', 'dosen2.dosen'])->findOrFail($id);
 
-        $pengajuan = PengajuanPembimbing::with(['kelompok', 'dosen1', 'dosen2'])
-            ->findOrFail($id);
+    // Ambil semua dosen role_id = 3 (tanpa group mapping)
+    $dosenList = User::where('role_id', 3)->get();
 
-        // Dosen sementara → ambil semua dulu
-        $dosenList = Dosen::all();
+    foreach ($dosenList as $dosen) {
+        // Hitung total bimbingan sebagai DOSEN 2 saja!
+        $jumlahSebagai2 = PengajuanPembimbing::where('id_dosen2', $dosen->id)
+            ->where('status', 'Diterima')
+            ->with('kelompok')
+            ->get()
+            ->sum(function ($pengajuan) {
+                return $pengajuan->kelompok?->anggota->count() ?? 0;
+            });
 
-        return view('pages.panitia.pengajuan.edit', compact('pengajuan', 'dosenList'));
+        // Cari kuota P2 dari tabel Dosen
+        $dosenModel = \App\Models\Dosen::where('user_id', $dosen->id)->first();
+
+        $kuotaP2 = null;
+        if ($dosenModel) {
+            $kuotaModel = \App\Models\KuotaBimbinganDosen::where('id_dosen', $dosenModel->id_dosen)->first();
+            $kuotaP2 = $kuotaModel ? $kuotaModel->kuota_p2 : 0;
+        }
+
+        $dosen->kuota_total = $kuotaP2 ?? 0;
+        $dosen->kuota_terpakai = $jumlahSebagai2;
     }
 
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'id_dosen2' => 'required|exists:dosen,id_dosen', // tetap validasi dari dosen
-        ]);
+    return view('pages.panitia.pengajuan.edit', compact('pengajuan', 'dosenList'));
+}
 
-        // Ambil ID user dari tabel dosen
-        $dosen = Dosen::findOrFail($request->id_dosen2);
-        $pengajuan = PengajuanPembimbing::findOrFail($id);
+public function update(Request $request, $id)
+{
+    $request->validate([
+        'id_dosen2' => 'required|exists:users,id', // karena select value = User.id
+    ]);
 
-        // Simpan ke id_dosen2 → simpan user_id dosen (seperti di create)
-        $pengajuan->id_dosen2 = $dosen->user_id;
-        $pengajuan->save();
+    $pengajuan = PengajuanPembimbing::findOrFail($id);
 
-        return redirect()->route('panitia.pengajuan.index')->with('success', 'Dosen Pembimbing 2 berhasil ditetapkan.');
-    }
+    // Simpan langsung user_id ke id_dosen2
+    $pengajuan->id_dosen2 = $request->id_dosen2;
+    $pengajuan->save();
+
+    return redirect()->route('panitia.pengajuan.index')->with('success', 'Dosen Pembimbing 2 berhasil ditetapkan.');
+}
+
 }

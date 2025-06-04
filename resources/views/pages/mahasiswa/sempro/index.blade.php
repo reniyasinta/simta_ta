@@ -38,24 +38,28 @@
                     {{-- Form Persetujuan --}}
                     <tr>
                         <td>1</td>
-                            <td>
-                                <ul style="padding-left: 16px;">
-                                    @if($pengajuan->kelompok->anggota1)
-                                        <li>{{ $pengajuan->kelompok->anggota1->mahasiswa->nama_mhs ?? '-' }} ({{ $pengajuan->kelompok->anggota1->mahasiswa->nim_mhs ?? '-' }})</li>
-                                    @endif
-                                    @if($pengajuan->kelompok->anggota2)
-                                        <li>{{ $pengajuan->kelompok->anggota2->mahasiswa->nama_mhs ?? '-' }} ({{ $pengajuan->kelompok->anggota2->mahasiswa->nim_mhs ?? '-' }})</li>
-                                    @endif
-                                    @if($pengajuan->kelompok->anggota3)
-                                        <li>{{ $pengajuan->kelompok->anggota3->mahasiswa->nama_mhs ?? '-' }} ({{ $pengajuan->kelompok->anggota3->mahasiswa->nim_mhs ?? '-' }})</li>
-                                    @endif
-                                </ul>
-                            </td>
+                        <td>
+                            <ul style="padding-left: 16px;">
+                                @if($pengajuan && $pengajuan->kelompok && $pengajuan->kelompok->anggota1)
+                                    <li>{{ $pengajuan->kelompok->anggota1->mahasiswa->nama_mhs ?? '-' }} ({{ $pengajuan->kelompok->anggota1->mahasiswa->nim_mhs ?? '-' }})</li>
+                                @endif
+                                @if($pengajuan && $pengajuan->kelompok && $pengajuan->kelompok->anggota2)
+                                    <li>{{ $pengajuan->kelompok->anggota2->mahasiswa->nama_mhs ?? '-' }} ({{ $pengajuan->kelompok->anggota2->mahasiswa->nim_mhs ?? '-' }})</li>
+                                @endif
+                                @if($pengajuan && $pengajuan->kelompok && $pengajuan->kelompok->anggota3)
+                                    <li>{{ $pengajuan->kelompok->anggota3->mahasiswa->nama_mhs ?? '-' }} ({{ $pengajuan->kelompok->anggota3->mahasiswa->nim_mhs ?? '-' }})</li>
+                                @endif
+
+                                @if(!$pengajuan)
+                                    <li><em>Belum ada pengajuan disetujui</em></li>
+                                @endif
+                            </ul>
+                        </td>
                         <td>{{ $pengajuan->judul_ta ?? '-' }}</td>
                         <td>Form Persetujuan</td>
                         <td>
                             @if($sempro && $sempro->form_persetujuan_sempro)
-                            <a href="{{ asset($sempro->form_persetujuan_sempro) }}" target="_blank" class="btn btn-sm btn-success">Lihat</a>
+                                <a href="{{ asset($sempro->form_persetujuan_sempro) }}" target="_blank" class="btn btn-sm btn-success">Lihat</a>
                             @else
                                 <span class="text-muted">Belum ada</span>
                             @endif
@@ -73,40 +77,44 @@
                                 </div>
                             </form>
                         </td>
-                       <td>
-                        @if($sempro && $sempro->form_persetujuan_sempro)
-                            <form action="{{ route('mahasiswa.sempro.deleteForm') }}" method="POST" onsubmit="return confirm('Hapus Form Persetujuan?')" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm" title="Hapus">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </form>
-                        @endif
-                    </td>
+                        <td>
+                            @if($sempro && $sempro->form_persetujuan_sempro)
+                                <form action="{{ route('mahasiswa.sempro.deleteForm') }}" method="POST" onsubmit="return confirm('Hapus Form Persetujuan?')" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm" title="Hapus">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            @endif
+                        </td>
                     </tr>
 
                     {{-- Hasil SEMPRO --}}
                     <tr>
                         <td>2</td>
-                            <td>
-                                <ul style="padding-left: 16px;">
-                                    @if($pengajuan->kelompok->anggota1)
-                                        <li>{{ $pengajuan->kelompok->anggota1->mahasiswa->nama_mhs ?? '-' }} ({{ $pengajuan->kelompok->anggota1->mahasiswa->nim_mhs ?? '-' }})</li>
-                                    @endif
-                                    @if($pengajuan->kelompok->anggota2)
-                                        <li>{{ $pengajuan->kelompok->anggota2->mahasiswa->nama_mhs ?? '-' }} ({{ $pengajuan->kelompok->anggota2->mahasiswa->nim_mhs ?? '-' }})</li>
-                                    @endif
-                                    @if($pengajuan->kelompok->anggota3)
-                                        <li>{{ $pengajuan->kelompok->anggota3->mahasiswa->nama_mhs ?? '-' }} ({{ $pengajuan->kelompok->anggota3->mahasiswa->nim_mhs ?? '-' }})</li>
-                                    @endif
-                                </ul>
-                            </td>
+                        <td>
+                            <ul style="padding-left: 16px;">
+                                @if($pengajuan && $pengajuan->kelompok && $pengajuan->kelompok->anggota1)
+                                    <li>{{ $pengajuan->kelompok->anggota1->mahasiswa->nama_mhs ?? '-' }} ({{ $pengajuan->kelompok->anggota1->mahasiswa->nim_mhs ?? '-' }})</li>
+                                @endif
+                                @if($pengajuan && $pengajuan->kelompok && $pengajuan->kelompok->anggota2)
+                                    <li>{{ $pengajuan->kelompok->anggota2->mahasiswa->nama_mhs ?? '-' }} ({{ $pengajuan->kelompok->anggota2->mahasiswa->nim_mhs ?? '-' }})</li>
+                                @endif
+                                @if($pengajuan && $pengajuan->kelompok && $pengajuan->kelompok->anggota3)
+                                    <li>{{ $pengajuan->kelompok->anggota3->mahasiswa->nama_mhs ?? '-' }} ({{ $pengajuan->kelompok->anggota3->mahasiswa->nim_mhs ?? '-' }})</li>
+                                @endif
+
+                                @if(!$pengajuan)
+                                    <li><em>Belum ada pengajuan disetujui</em></li>
+                                @endif
+                            </ul>
+                        </td>
                         <td>{{ $pengajuan->judul_ta ?? '-' }}</td>
                         <td>Hasil SEMPRO</td>
                         <td>
                             @if($sempro && $sempro->hasil_sempro)
-                            <a href="{{ asset($sempro->lihat_sempro) }}" target="_blank" class="btn btn-sm btn-success">Lihat</a>
+                                <a href="{{ asset($sempro->hasil_sempro) }}" target="_blank" class="btn btn-sm btn-success">Lihat</a>
                             @else
                                 <span class="text-muted">Belum ada</span>
                             @endif
@@ -135,9 +143,9 @@
                                 </form>
                             @endif
                         </td>
-                        </tr>
-                    </tbody>
-                </table>
+                    </tr>
+                </tbody>
+            </table>
             </div>
         </div>
     </section>
