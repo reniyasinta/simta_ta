@@ -10,7 +10,7 @@ class Sempro extends Model
     use HasFactory;
 
     protected $table = 'sempro';
-    protected $primaryKey = 'id_Sempro';
+    protected $primaryKey = 'id_sempro';
 
     protected $fillable = [
         'id_ajuan',

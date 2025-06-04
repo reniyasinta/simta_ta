@@ -171,9 +171,6 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title">Detail Dosen</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
                                     </div>
                                     <div class="modal-body">
                                         <div class="text-center mb-3">
@@ -190,6 +187,11 @@
                                             <tr><th>Prodi</th><td>: {{ $dosen->prodi->nama_prodi ?? '-' }}</td></tr>
                                             <tr><th>Kuota</th><td>: {{ $dosen->kuota_bimbingan ?? '-' }}</td></tr>
                                         </table>
+
+                                        {{-- Tombol Kembali --}}
+                                        <div class="text-right mt-4">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -203,7 +205,8 @@
     </section>
 </div>
 @endsection
+
 @push('scripts')
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 @endpush

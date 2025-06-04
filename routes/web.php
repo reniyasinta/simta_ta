@@ -20,6 +20,7 @@ use App\Http\Controllers\Mahasiswa\UndanganController;
 use App\Http\Controllers\Mahasiswa\LaporanController;
 use App\Http\Controllers\Mahasiswa\LaporanAkhirController;
 use App\Http\Controllers\Mahasiswa\MahasiswaSemproController;
+use App\Http\Controllers\Mahasiswa\MahasiswaSidangController;
 use App\Http\Controllers\Panitia\PanitiaPengajuanController;
 use App\Http\Controllers\Panitia\BerkasController as PanitiaBerkasController;
 use App\Http\Controllers\Panitia\PanitiaJadwalController;
@@ -74,6 +75,8 @@ Route::middleware(['auth'])->group(function () {
 
 // PANITIA
 Route::middleware(['role:panitia'])->prefix('panitia')->group(function () {
+
+    // Dashboard
     Route::get('/dashboard', [PanitiaController::class, 'index'])->name('panitia.dashboard');
 
     // Pengajuan
@@ -91,6 +94,8 @@ Route::middleware(['role:panitia'])->prefix('panitia')->group(function () {
 
     // JADWAL
     Route::prefix('jadwal')->name('jadwal.')->group(function () {
+
+        // List
         Route::get('/', [PanitiaJadwalController::class, 'index'])->name('index');
         Route::get('/seminar', [PanitiaJadwalController::class, 'seminar'])->name('seminar.index');
         Route::get('/sidang', [PanitiaJadwalController::class, 'sidang'])->name('sidang.index');
@@ -100,7 +105,7 @@ Route::middleware(['role:panitia'])->prefix('panitia')->group(function () {
         Route::get('/create', [PanitiaJadwalController::class, 'create'])->name('create');
         Route::post('/', [PanitiaJadwalController::class, 'store'])->name('store');
 
-        // Edit dan Hapus dinamis
+        // Edit / Hapus
         Route::get('/{id}/edit', [PanitiaJadwalController::class, 'edit'])->name('edit');
         Route::put('/{id}', [PanitiaJadwalController::class, 'update'])->name('update');
         Route::delete('/{id}', [PanitiaJadwalController::class, 'destroy'])->name('destroy');
@@ -115,18 +120,26 @@ Route::middleware(['role:panitia'])->prefix('panitia')->group(function () {
             $filename = 'template_jadwal_' . $jenis . '.xlsx';
             return Excel::download(new TemplateJadwalExport, $filename);
         })->name('template');
+
     });
 
-    // SEMPRO — DITARUH DI SINI ya, BUKAN dalam JADWAL
-    Route::get('/sempro', [App\Http\Controllers\Panitia\PanitiaSemproController::class, 'index'])->name('panitia.sempro.index');
-    Route::get('/sempro/create', [App\Http\Controllers\Panitia\PanitiaSemproController::class, 'create'])->name('panitia.sempro.create');
-    Route::post('/sempro/store', [App\Http\Controllers\Panitia\PanitiaSemproController::class, 'store'])->name('panitia.sempro.store');
+    // SEMPRO (Ditaruh di sini, BUKAN di dalam JADWAL)
+    Route::get('/sempro/create', [\App\Http\Controllers\Panitia\PanitiaSemproController::class, 'create'])->name('panitia.sempro.create');
+    Route::post('/sempro/store', [\App\Http\Controllers\Panitia\PanitiaSemproController::class, 'store'])->name('panitia.sempro.store');
     Route::get('/berkas-sempro', [\App\Http\Controllers\Panitia\PanitiaSemproController::class, 'index'])->name('panitia.sempro.index');
 
-    // Kuota Dosen Management
+    // BERKAS SIDANG (Draft, Revisi, Final) — ini tambahan sesuai permintaan
+    Route::prefix('sidang')->name('sidang.')->group(function () {
+        Route::get('/draft', [\App\Http\Controllers\Panitia\PanitiaSidangController::class, 'draft'])->name('draft');
+        Route::get('/revisi', [\App\Http\Controllers\Panitia\PanitiaSidangController::class, 'revisi'])->name('revisi');
+        Route::get('/final', [\App\Http\Controllers\Panitia\PanitiaSidangController::class, 'final'])->name('final');
+    });
+
+    // Kuota Dosen
     Route::get('/kuota-dosen', [DosenKuotaController::class, 'index'])->name('panitia.kuota.index');
     Route::post('/kuota-dosen/{id}', [DosenKuotaController::class, 'update'])->name('panitia.kuota.update');
 });
+
 
     // DOSEN
     Route::middleware(['role:dosen'])->prefix('dosen')->group(function () {
@@ -145,6 +158,13 @@ Route::middleware(['role:panitia'])->prefix('panitia')->group(function () {
         Route::get('/bimbingan', [DosenController::class, 'bimbingan'])->name('dosen.bimbingan');
         Route::get('/mahasiswa/{id}', [\App\Http\Controllers\Dosen\MahasiswaController::class, 'show'])->name('dosen.mahasiswa.show');
 
+// DRAFT
+Route::get('/draft', [App\Http\Controllers\Dosen\DosenSidangController::class, 'draft'])->name('dosen.sidang.draft');
+Route::post('/draft/{id_sidang}/update', [App\Http\Controllers\Dosen\DosenSidangController::class, 'updateStatusDraft'])->name('dosen.sidang.updateStatusDraft');
+
+// REVISI
+Route::get('/revisi', [App\Http\Controllers\Dosen\DosenSidangController::class, 'revisi'])->name('dosen.sidang.revisi');
+Route::post('/revisi/{id_sidang}/{penguji_ke}/update', [App\Http\Controllers\Dosen\DosenSidangController::class, 'updateStatusRevisi'])->name('dosen.sidang.updateStatusRevisi');
     });
 
     // MAHASISWA
@@ -207,6 +227,21 @@ Route::get('/jadwal', [MahasiswaController::class, 'jadwal'])->name('mahasiswa.j
         Route::post('sempro/upload-hasil', [App\Http\Controllers\Mahasiswa\MahasiswaSemproController::class, 'uploadHasil'])->name('mahasiswa.sempro.uploadHasil');
 Route::delete('/mahasiswa/sempro/deleteForm', [MahasiswaSemproController::class, 'deleteForm'])->name('mahasiswa.sempro.deleteForm');
         Route::delete('mahasiswa/sempro/deleteHasil', [MahasiswaSemproController::class, 'deleteHasil'])->name('mahasiswa.sempro.deleteHasil');
+
+    // Draft
+    Route::get('/draft', [App\Http\Controllers\Mahasiswa\MahasiswaSidangController::class, 'draft'])->name('mahasiswa.sidang.draft');
+    Route::get('/draft/create', [App\Http\Controllers\Mahasiswa\MahasiswaSidangController::class, 'createDraft'])->name('mahasiswa.sidang.draft.create');
+    Route::post('/upload-draft', [App\Http\Controllers\Mahasiswa\MahasiswaSidangController::class, 'uploadDraft'])->name('mahasiswa.sidang.uploadDraft');
+
+// REVISI
+Route::get('/revisi', [App\Http\Controllers\Mahasiswa\MahasiswaSidangController::class, 'revisi'])->name('mahasiswa.sidang.revisi');
+Route::get('/revisi/create', [App\Http\Controllers\Mahasiswa\MahasiswaSidangController::class, 'createRevisi'])->name('mahasiswa.sidang.revisi.create');
+Route::post('/upload-revisi', [App\Http\Controllers\Mahasiswa\MahasiswaSidangController::class, 'uploadRevisi'])->name('mahasiswa.sidang.uploadRevisi');
+
+// FINAL
+Route::get('/final', [App\Http\Controllers\Mahasiswa\MahasiswaSidangController::class, 'final'])->name('mahasiswa.sidang.final');
+Route::get('/final/create', [App\Http\Controllers\Mahasiswa\MahasiswaSidangController::class, 'createFinal'])->name('mahasiswa.sidang.final.create');
+Route::post('/upload-final', [App\Http\Controllers\Mahasiswa\MahasiswaSidangController::class, 'uploadFinal'])->name('mahasiswa.sidang.uploadFinal');
 
     });
 

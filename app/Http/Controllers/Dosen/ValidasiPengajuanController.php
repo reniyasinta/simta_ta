@@ -16,7 +16,8 @@ class ValidasiPengajuanController extends Controller
         $pengajuan = PengajuanPembimbing::with([
             'kelompok.anggota1.mahasiswa',
             'kelompok.anggota2.mahasiswa',
-            'kelompok.anggota3.mahasiswa'
+            'kelompok.anggota3.mahasiswa',
+            'dosen1.dosen',
         ])
         ->where('id_dosen1', $userId)
         ->orderBy('created_at', 'desc')

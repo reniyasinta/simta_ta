@@ -43,13 +43,13 @@
                                 @endif
                             </td>
                             <td>{{ $item->keterangan ?? '-' }}</td>
-                            <td>
-                                @if($item->proposal)
-                                    <a href="{{ asset('storage/' . $item->proposal) }}" target="_blank">Lihat</a>
-                                @else
-                                    <span class="text-muted">Belum ada</span>
-                                @endif
-                            </td>
+<td>
+    @if ($item->proposal)
+        <a href="{{ asset('storage/proposal/' . $item->proposal) }}" target="_blank">Lihat</a>
+    @else
+        <span class="text-muted">Belum ada</span>
+    @endif
+</td>
                         </tr>
                     @empty
                         <tr>
