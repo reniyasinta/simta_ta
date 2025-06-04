@@ -11,31 +11,56 @@ return new class extends Migration
      */
     public function up(): void
     {
-    Schema::create('sidang', function (Blueprint $table) {
-        $table->id('id_sidang');
-        $table->unsignedBigInteger('id_mhs');
-        $table->foreign('id_mhs')->references('id_mhs')->on('mahasiswa')->onDelete('cascade');
-        $table->foreignId('id_dosen')->constrained('users')->onDelete('cascade');
-        $table->foreignId('id_dosen_penguji')->constrained('users')->onDelete('cascade'); 
-        $table->foreignId('id_sempro')->constrained('sempro', 'id_sempro')->onDelete('cascade');
-        // Laporan Draft
-        $table->string('laporan_TA')->nullable();
-        $table->enum('status_draft', ['Menunggu', 'Revisi', 'Disetujui'])->default('Menunggu');
+        Schema::create('sidang', function (Blueprint $table) {
+            $table->id('id_sidang');
 
-        // Revisi Laporan
-        $table->string('revisi_laporan')->nullable();
-        $table->enum('status_revisi', ['Menunggu', 'Revisi', 'Disetujui'])->default('Menunggu');
+            // Relasi Mahasiswa
+            $table->unsignedBigInteger('id_mhs');
+            $table->foreign('id_mhs')->references('id_mhs')->on('mahasiswa')->onDelete('cascade');
 
-        // Laporan Final
-        $table->string('laporan_akhir')->nullable();
-        $table->enum('status_final', ['Menunggu', 'Disetujui'])->default('Menunggu');
+            // Dosen Pembimbing
+            $table->foreignId('id_dosen')->constrained('users')->onDelete('cascade'); // dospem 1
+            $table->foreignId('id_dosen2')->nullable()->constrained('users')->onDelete('set null'); // dospem 2
 
-        $table->string('lembar_konsultasi')->nullable();
-        $table->string('hasil_sidang')->nullable();        $table->text('catatan_dosen')->nullable();
+            // Dosen Penguji
+            $table->foreignId('penguji_1_id')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignId('penguji_2_id')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignId('penguji_3_id')->nullable()->constrained('users')->onDelete('set null');
 
-        $table->timestamps();
-    });
+            // Relasi Sempro
+            $table->foreignId('id_sempro')->constrained('sempro', 'id_sempro')->onDelete('cascade');
 
+            // Laporan Draft
+            $table->string('laporan_TA')->nullable();
+            $table->enum('status_draft_dosen1', ['Menunggu', 'Revisi', 'Disetujui'])->default('Menunggu');
+            $table->enum('status_draft_dosen2', ['Menunggu', 'Revisi', 'Disetujui'])->default('Menunggu');
+
+            // Revisi Laporan per Penguji
+            $table->string('revisi_laporan')->nullable();
+            $table->enum('status_revisi_penguji_1', ['Menunggu', 'Revisi', 'Disetujui'])->default('Menunggu');
+            $table->enum('status_revisi_penguji_2', ['Menunggu', 'Revisi', 'Disetujui'])->default('Menunggu');
+            $table->enum('status_revisi_penguji_3', ['Menunggu', 'Revisi', 'Disetujui'])->default('Menunggu');
+
+            // Laporan Final
+            $table->string('laporan_akhir')->nullable();
+            $table->enum('status_final', ['Menunggu', 'Disetujui'])->default('Menunggu');
+
+            // Lembar Konsultasi & Hasil Sidang
+            $table->string('lembar_konsultasi')->nullable();
+            $table->string('hasil_sidang')->nullable();
+
+            // Catatan Dosen (bebas diisi panitia atau dospem — untuk laporan akhir)
+            $table->text('catatan_dosen')->nullable();
+            $table->text('catatan_revisi')->nullable();
+
+            // Catatan per Penguji (untuk revisi laporan)
+            $table->text('catatan_penguji_1')->nullable();
+            $table->text('catatan_penguji_2')->nullable();
+            $table->text('catatan_penguji_3')->nullable();
+
+            // Timestamps
+            $table->timestamps();
+        });
     }
 
     /**

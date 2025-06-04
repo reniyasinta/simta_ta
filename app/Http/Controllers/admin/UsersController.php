@@ -37,8 +37,7 @@ class UsersController extends Controller
             });
         }
 
-        // ✅ Tambahkan orderBy di sini untuk urutkan berdasarkan yang terbaru
-        $users = $query->orderBy('created_at', 'desc')->paginate(10);
+        $users = $query->orderBy('created_at', 'desc')->get();
         $prodis = Prodi::all();
         $tahunList = User::selectRaw('YEAR(created_at) as tahun')->groupBy('tahun')->pluck('tahun');
 

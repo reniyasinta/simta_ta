@@ -53,7 +53,7 @@
                                 {{-- Proposal --}}
                                 <td>
                                     @if($item->proposal)
-                                        <a href="{{ asset('storage/proposal/' . $item->proposal) }}" target="_blank" class="btn btn-sm btn-link">Download</a>
+                                        <a href="{{ asset('storage/proposal/' . $item->proposal) }}" target="_blank" class="btn btn-sm btn-link">Lihat</a>
                                     @else
                                         <span class="text-muted">Belum ada</span>
                                     @endif

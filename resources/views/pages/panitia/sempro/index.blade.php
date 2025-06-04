@@ -20,22 +20,22 @@
                 </tr>
                 </thead>
                 <tbody>
-                    @foreach ($pengajuanList as $index => $pengajuan)
+                    @forelse ($pengajuanList as $index => $pengajuan)
                         @php
                             $sempro = $semproList->where('id_ajuan', $pengajuan->id_ajuan)->first();
                         @endphp
                         <tr>
-                            <td>{{ $index + 1 }}</td>
+                            <td class="text-center">{{ $index + 1 }}</td>
                             <td>
                                 <strong>Anggota:</strong>
                                 <ul style="padding-left: 16px;">
-                                    @if($pengajuan->kelompok->anggota1)
+                                    @if($pengajuan->kelompok && $pengajuan->kelompok->anggota1)
                                         <li>{{ $pengajuan->kelompok->anggota1->mahasiswa->nama_mhs ?? '-' }} ({{ $pengajuan->kelompok->anggota1->mahasiswa->nim_mhs ?? '-' }})</li>
                                     @endif
-                                    @if($pengajuan->kelompok->anggota2)
+                                    @if($pengajuan->kelompok && $pengajuan->kelompok->anggota2)
                                         <li>{{ $pengajuan->kelompok->anggota2->mahasiswa->nama_mhs ?? '-' }} ({{ $pengajuan->kelompok->anggota2->mahasiswa->nim_mhs ?? '-' }})</li>
                                     @endif
-                                    @if($pengajuan->kelompok->anggota3)
+                                    @if($pengajuan->kelompok && $pengajuan->kelompok->anggota3)
                                         <li>{{ $pengajuan->kelompok->anggota3->mahasiswa->nama_mhs ?? '-' }} ({{ $pengajuan->kelompok->anggota3->mahasiswa->nim_mhs ?? '-' }})</li>
                                     @endif
                                 </ul>
@@ -50,7 +50,7 @@
                                 @endif
                             </td>
                             <td class="text-center">
-                                @if ($sempro && $sempro->form_persetujuan_sempro)
+                                @if ($sempro && $sempro->hasil_sempro)
                                     <a href="{{ asset($sempro->hasil_sempro) }}" target="_blank" class="btn btn-sm btn-info">
                                         <i class="fas fa-eye"></i> Lihat
                                     </a>
@@ -59,7 +59,11 @@
                                 @endif
                             </td>
                         </tr>
-                    @endforeach
+                    @empty
+                        <tr>
+                            <td colspan="4" class="text-center text-danger">Belum ada pengajuan Diterima.</td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

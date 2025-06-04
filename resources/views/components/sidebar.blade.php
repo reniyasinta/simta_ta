@@ -76,12 +76,32 @@
                     <i class="fas fa-file-pdf"></i> <span>Berkas Sempro</span>
                 </a>
             </li>
-            <li class="menu-header">Sidang</li>
-            <li>
-                <a href="#">
-                    <i class="fas fa-file-upload"></i> <span>Kelola Berkas Sidang</span>
-                </a>
-            </li>
+<li class="menu-header">Tugas Akhir</li>
+
+<li class="nav-item dropdown {{ request()->routeIs('panitia.sidang.*') ? 'active' : '' }}">
+    <a href="#" class="nav-link has-dropdown">
+        <i class="fas fa-book"></i> <span>Berkas Sidang TA</span>
+    </a>
+    <ul class="dropdown-menu">
+        <li class="{{ request()->routeIs('sidang.draft') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('sidang.draft') }}">
+                <i class="fas fa-file-alt"></i> Laporan TA
+            </a>
+        </li>
+        <li class="{{ request()->routeIs('sidang.revisi') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('sidang.revisi') }}">
+                <i class="fas fa-file-signature"></i> Revisi Laporan TA
+            </a>
+        </li>
+        <li class="{{ request()->routeIs('sidang.final') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('sidang.final') }}">
+                <i class="fas fa-file-upload"></i> Laporan Final TA
+            </a>
+        </li>
+    </ul>
+</li>
+
+
 
             <li class="menu-header">Profil</li>
             <li class="nav-item {{ ($type_menu ?? '') === 'profil' ? 'active' : '' }}">
@@ -114,11 +134,24 @@
                     <i class="fas fa-comments"></i> <span>Data Bimbingan</span>
                 </a>
             </li>
-            <li>
-                <a class="nav-link" href="#">
-                <i class="fa-check-circle "></i> <span>Persetujuan Laporan </span>
-                </a>
-            </li>
+    <li class="nav-item dropdown {{ request()->is('dosen/sidang/*') ? 'active' : '' }}">
+    <a href="#" class="nav-link has-dropdown"><i class="fas fa-file-signature"></i> <span>Sidang TA</span></a>
+    <ul class="dropdown-menu">
+        <li>
+            <a class="nav-link {{ request()->routeIs('dosen.sidang.draft') ? 'active' : '' }}"
+               href="{{ route('dosen.sidang.draft') }}">
+               Laporan TA
+            </a>
+        </li>
+        <li>
+            <a class="nav-link {{ request()->routeIs('dosen.sidang.revisi') ? 'active' : '' }}"
+               href="{{ route('dosen.sidang.revisi') }}">
+               ACC Revisi Laporan TA
+            </a>
+        </li>
+    </ul>
+</li>
+
 
             <li class="menu-header">Data Pengujian TA</li>
             <li>
@@ -211,23 +244,15 @@
             </li>
 
             {{-- Sidang TA --}}
-            <li class="menu-header">Tugas Akhir</li>
-            <li class="nav-item dropdown {{ request()->is('mahasiswa/laporan-ta*') || request()->is('mahasiswa/revisi-laporan*') || request()->is('mahasiswa/laporan-akhir*') ? 'active' : '' }}">
-                <a href="#" class="nav-link has-dropdown">
-                    <i class="fas fa-book"></i> <span>Tahapan Laporan TA</span>
-                </a>
-                <ul class="dropdown-menu">
-                <li class="{{ request()->is('mahasiswa/laporan-ta*') ? 'active' : '' }}">
-                    <a class="nav-link" href="#">Laporan TA</a>
-                </li>
-                <li class="{{ request()->is('mahasiswa/revisi-laporan*') ? 'active' : '' }}">
-                    <a class="nav-link" href="#">Revisi Laporan</a>
-                </li>
-                <li class="{{ request()->is('mahasiswa/laporan-akhir*') ? 'active' : '' }}">
-                    <a class="nav-link" href="#">Laporan Akhir</a>
-                </li>
-                </ul>
-            </li>
+<li class="nav-item dropdown {{ request()->is('mahasiswa/sidang/*') ? 'active' : '' }}">
+    <a href="#" class="nav-link has-dropdown"><i class="fas fa-file-alt"></i> <span>Sidang TA</span></a>
+    <ul class="dropdown-menu">
+        <li><a class="nav-link {{ request()->routeIs('mahasiswa.sidang.draft') ? 'active' : '' }}" href="{{ route('mahasiswa.sidang.draft') }}">Laporan TA Draft</a></li>
+        <li><a class="nav-link {{ request()->routeIs('mahasiswa.sidang.revisi') ? 'active' : '' }}" href="{{ route('mahasiswa.sidang.revisi') }}">Revisi Laporan</a></li>
+        <li><a class="nav-link {{ request()->routeIs('mahasiswa.sidang.final') ? 'active' : '' }}" href="{{ route('mahasiswa.sidang.final') }}">Laporan Akhir</a></li>
+    </ul>
+</li>
+
 
 
             {{-- Profil --}}
