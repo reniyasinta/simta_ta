@@ -15,12 +15,12 @@ return new class extends Migration
             $table->id('id_sidang');
 
             // Relasi Mahasiswa
-            $table->unsignedBigInteger('id_mhs');
-            $table->foreign('id_mhs')->references('id_mhs')->on('mahasiswa')->onDelete('cascade');
+            $table->unsignedBigInteger('id_kelompok');
+            $table->foreign('id_kelompok')->references('id_kelompok')->on('kelompok')->onDelete('cascade');
 
             // Dosen Pembimbing
-            $table->foreignId('id_dosen')->constrained('users')->onDelete('cascade'); // dospem 1
-            $table->foreignId('id_dosen2')->nullable()->constrained('users')->onDelete('set null'); // dospem 2
+            $table->foreignId('id_dosen1')->constrained('users', 'id')->onDelete('cascade'); // dospem 1
+            $table->foreignId('id_dosen2')->nullable()->constrained('users', 'id')->onDelete('set null'); // dospem 2
 
             // Dosen Penguji
             $table->foreignId('penguji_1_id')->nullable()->constrained('users')->onDelete('set null');

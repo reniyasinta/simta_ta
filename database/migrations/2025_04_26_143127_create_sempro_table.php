@@ -16,6 +16,10 @@ return new class extends Migration
             $table->foreignId('id_ajuan')->constrained('pengajuan_pembimbing','id_ajuan');
             $table->string('form_persetujuan_sempro')->nullable();
             $table->string('hasil_sempro')->nullable();
+            $table->enum('status_dospem1', ['Menunggu', 'Menyetujui', 'Tidak Menyetujui'])->default('Menunggu');
+            $table->enum('status_dospem2', ['Menunggu', 'Menyetujui', 'Tidak Menyetujui'])->default('Menunggu');
+            $table->text('catatan_dospem1')->nullable();
+            $table->text('catatan_dospem2')->nullable();
             $table->timestamps();
         });
     }

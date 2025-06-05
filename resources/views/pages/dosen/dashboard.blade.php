@@ -83,7 +83,6 @@
 
                                     @if ($undangan)
                                         <a href="{{ Storage::url($undangan->file_path) }}" target="_blank" class="btn btn-sm btn-info">Preview</a>
-                                        <a href="{{ Storage::url($undangan->file_path) }}" download class="btn btn-sm btn-success">Download</a>
                                     @else
                                         <span class="text-muted">Belum ada undangan</span>
                                     @endif

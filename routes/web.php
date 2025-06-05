@@ -32,6 +32,7 @@ use App\Http\Controllers\Dosen\ProfileController;
 use App\Http\Controllers\Dosen\ValidasiPengajuanController;
 use App\Http\Controllers\Panitia\DosenKuotaController;
 use App\Http\Controllers\Dosen\BimbinganController;
+use App\Http\Controllers\Dosen\DosenSemproController;
 
 // Halaman login
 Route::get('/', function () {
@@ -158,14 +159,18 @@ Route::middleware(['role:panitia'])->prefix('panitia')->group(function () {
         Route::get('/bimbingan', [DosenController::class, 'bimbingan'])->name('dosen.bimbingan');
         Route::get('/mahasiswa/{id}', [\App\Http\Controllers\Dosen\MahasiswaController::class, 'show'])->name('dosen.mahasiswa.show');
 
-// DRAFT
-Route::get('/draft', [App\Http\Controllers\Dosen\DosenSidangController::class, 'draft'])->name('dosen.sidang.draft');
-Route::post('/draft/{id_sidang}/update', [App\Http\Controllers\Dosen\DosenSidangController::class, 'updateStatusDraft'])->name('dosen.sidang.updateStatusDraft');
+        // PERSETUJUAN SEMPRO
+        Route::get('sempro', [DosenSemproController::class, 'index'])->name('dosen.sempro.index');
+        Route::post('sempro/submit/{id}', [DosenSemproController::class, 'submit'])->name('dosen.sempro.submit');
 
-// REVISI
-Route::get('/revisi', [App\Http\Controllers\Dosen\DosenSidangController::class, 'revisi'])->name('dosen.sidang.revisi');
-Route::post('/revisi/{id_sidang}/{penguji_ke}/update', [App\Http\Controllers\Dosen\DosenSidangController::class, 'updateStatusRevisi'])->name('dosen.sidang.updateStatusRevisi');
-    });
+        // DRAFT
+        Route::get('/draft', [App\Http\Controllers\Dosen\DosenSidangController::class, 'draft'])->name('dosen.sidang.draft');
+        Route::post('/draft/{id_sidang}/update', [App\Http\Controllers\Dosen\DosenSidangController::class, 'updateStatusDraft'])->name('dosen.sidang.updateStatusDraft');
+
+        // REVISI
+        Route::get('/revisi', [App\Http\Controllers\Dosen\DosenSidangController::class, 'revisi'])->name('dosen.sidang.revisi');
+        Route::post('/revisi/{id_sidang}/{penguji_ke}/update', [App\Http\Controllers\Dosen\DosenSidangController::class, 'updateStatusRevisi'])->name('dosen.sidang.updateStatusRevisi');
+            });
 
     // MAHASISWA
     Route::middleware(['role:mahasiswa'])->prefix('mahasiswa')->group(function () {
@@ -242,6 +247,10 @@ Route::post('/upload-revisi', [App\Http\Controllers\Mahasiswa\MahasiswaSidangCon
 Route::get('/final', [App\Http\Controllers\Mahasiswa\MahasiswaSidangController::class, 'final'])->name('mahasiswa.sidang.final');
 Route::get('/final/create', [App\Http\Controllers\Mahasiswa\MahasiswaSidangController::class, 'createFinal'])->name('mahasiswa.sidang.final.create');
 Route::post('/upload-final', [App\Http\Controllers\Mahasiswa\MahasiswaSidangController::class, 'uploadFinal'])->name('mahasiswa.sidang.uploadFinal');
+
+// Ajukan Sempro
+Route::post('/sempro/ajukan', [MahasiswaSemproController::class, 'ajukan'])->name('mahasiswa.sempro.ajukan');
+
 
     });
 

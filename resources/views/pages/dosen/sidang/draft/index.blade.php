@@ -33,7 +33,7 @@
                         <td>
                             @php
                                 $anggotaList = [];
-                                foreach([$sidang->mahasiswa->kelompok->anggota1, $sidang->mahasiswa->kelompok->anggota2, $sidang->mahasiswa->kelompok->anggota3] as $anggota) {
+                                foreach([$sidang->kelompok->anggota1, $sidang->kelompok->anggota2, $sidang->kelompok->anggota3] as $anggota) {
                                     if ($anggota && $anggota->mahasiswa) {
                                         $anggotaList[] = $anggota->mahasiswa->nama_mhs . ' (' . $anggota->mahasiswa->nim_mhs . ')';
                                     }
@@ -53,7 +53,7 @@
                         </td>
 
                         <td>
-                            @if ($sidang->id_dosen == auth()->user()->id)
+                            @if ($sidang->id_dosen1 == auth()->user()->id)
                                 {{ $sidang->status_draft_dosen1 ?? '-' }}
                             @elseif ($sidang->id_dosen2 == auth()->user()->id)
                                 {{ $sidang->status_draft_dosen2 ?? '-' }}
@@ -65,24 +65,25 @@
                         <td>
                             {{ $sidang->catatan_dosen ?? '-' }}
                         </td>
-<td>
-    <form action="{{ route('dosen.sidang.updateStatusDraft', $sidang->id_sidang) }}" method="POST" id="form-{{ $sidang->id_sidang }}">
-        @csrf
 
-        <div class="form-group mb-1">
-            <textarea name="catatan" class="form-control form-control-sm" rows="2" placeholder="Catatan (opsional)">{{ old('catatan', $sidang->catatan_dosen ?? '') }}</textarea>
-        </div>
+                        <td>
+                            <form action="{{ route('dosen.sidang.updateStatusDraft', $sidang->id_sidang) }}" method="POST" id="form-{{ $sidang->id_sidang }}">
+                                @csrf
 
-        <div class="d-flex gap-2">
-            <button type="submit" name="status_draft" value="Disetujui" class="btn btn-sm btn-success w-50">
-                <i class="fas fa-check-circle"></i> ACC
-            </button>
-            <button type="submit" name="status_draft" value="Revisi" class="btn btn-sm btn-warning w-50">
-                <i class="fas fa-edit"></i> Revisi
-            </button>
-        </div>
-    </form>
-</td>
+                                <div class="form-group mb-1">
+                                    <textarea name="catatan" class="form-control form-control-sm" rows="2" placeholder="Catatan (opsional)">{{ old('catatan', $sidang->catatan_dosen ?? '') }}</textarea>
+                                </div>
+
+                                <div class="d-flex gap-2">
+                                    <button type="submit" name="status_draft" value="Disetujui" class="btn btn-sm btn-success w-50">
+                                        <i class="fas fa-check-circle"></i> ACC
+                                    </button>
+                                    <button type="submit" name="status_draft" value="Revisi" class="btn btn-sm btn-warning w-50">
+                                        <i class="fas fa-edit"></i> Revisi
+                                    </button>
+                                </div>
+                            </form>
+                        </td>
 
                     </tr>
                     @empty

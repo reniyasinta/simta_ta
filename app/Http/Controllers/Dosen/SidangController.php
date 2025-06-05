@@ -10,8 +10,9 @@ class SidangController extends Controller
 {
     public function index()
     {
-        $sidangs = Sidang::with('mahasiswa')
-            ->where('id_dosen', auth()->id())
+        $sidangs = Sidang::with('kelompok')
+            ->where('id_dosen1', auth()->id())
+            ->orWhere('id_dosen2', auth()->id())
             ->get();
 
         return view('pages.dosen.sidang.index', compact('sidangs'));

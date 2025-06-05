@@ -67,7 +67,7 @@
 
             <li class="nav-item {{ ($type_menu ?? '') === 'pengajuan' ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('panitia.pengajuan.index') }}">
-                    <i class="fas fa-file-signature"></i> <span>Pengajuan Dospem 2</span>
+                    <i class="fas fa-file-signature"></i> <span>Penentuan Dospem 2</span>
                 </a>
             </li>
             <li class="menu-header">Sempro</li>
@@ -101,8 +101,6 @@
     </ul>
 </li>
 
-
-
             <li class="menu-header">Profil</li>
             <li class="nav-item {{ ($type_menu ?? '') === 'profil' ? 'active' : '' }}">
                 <a class="nav-link" href="{{ url('profil') }}">
@@ -110,7 +108,6 @@
                 </a>
             </li>
         </ul>
-
 
         {{-- ================= Dosen (role_id = 3) ================= --}}
         @elseif($roleId == 3)
@@ -123,35 +120,51 @@
             </li>
 
             <li class="menu-header">Pembimbingan TA</li>
+
+            {{-- Validasi Pengajuan Pembimbing --}}
             <li>
                 <a class="nav-link {{ request()->routeIs('dosen.validasi') ? 'active' : '' }}" href="{{ route('dosen.validasi') }}">
                     <i class="fas fa-check-circle"></i> <span>Validasi Pengajuan</span>
                 </a>
             </li>
 
+            {{-- Validasi SEMPRO --}}
+            <li>
+                <a class="nav-link {{ request()->routeIs('dosen.sempro.index') ? 'active' : '' }}" href="{{ route('dosen.sempro.index') }}">
+                    <i class="fas fa-file-signature"></i> <span>Validasi Maju Sempro</span>
+                </a>
+            </li>
+
+            {{-- Data Bimbingan --}}
             <li>
                 <a class="nav-link {{ request()->routeIs('dosen.bimbingan') ? 'active' : '' }}" href="{{ route('dosen.bimbingan') }}">
                     <i class="fas fa-comments"></i> <span>Data Bimbingan</span>
                 </a>
             </li>
-    <li class="nav-item dropdown {{ request()->is('dosen/sidang/*') ? 'active' : '' }}">
-    <a href="#" class="nav-link has-dropdown"><i class="fas fa-file-signature"></i> <span>Sidang TA</span></a>
-    <ul class="dropdown-menu">
-        <li>
-            <a class="nav-link {{ request()->routeIs('dosen.sidang.draft') ? 'active' : '' }}"
-               href="{{ route('dosen.sidang.draft') }}">
-               Laporan TA
-            </a>
-        </li>
-        <li>
-            <a class="nav-link {{ request()->routeIs('dosen.sidang.revisi') ? 'active' : '' }}"
-               href="{{ route('dosen.sidang.revisi') }}">
-               ACC Revisi Laporan TA
-            </a>
-        </li>
-    </ul>
-</li>
 
+            {{-- Sidang TA --}}
+            <li class="nav-item dropdown {{ request()->routeIs('dosen.sidang.*') ? 'active' : '' }}">
+                <a href="#" class="nav-link has-dropdown">
+                    <i class="fas fa-file-signature"></i> <span>Sidang TA</span>
+                </a>
+                <ul class="dropdown-menu">
+                    {{-- Laporan TA --}}
+                    <li>
+                        <a class="nav-link {{ request()->routeIs('dosen.sidang.draft') ? 'active' : '' }}"
+                        href="{{ route('dosen.sidang.draft') }}">
+                        Laporan TA
+                        </a>
+                    </li>
+
+                    {{-- ACC Revisi Laporan TA --}}
+                    <li>
+                        <a class="nav-link {{ request()->routeIs('dosen.sidang.revisi') ? 'active' : '' }}"
+                        href="{{ route('dosen.sidang.revisi') }}">
+                        ACC Revisi Laporan TA
+                        </a>
+                    </li>
+                </ul>
+            </li>
 
             <li class="menu-header">Data Pengujian TA</li>
             <li>
@@ -227,33 +240,42 @@
 
             <li>
                 <a class="nav-link" href="{{ route('kelompok.index') }}">
-                    <i class="fas fa-users"></i> <span>Kelompok</span>
+                    <i class="fas fa-users"></i> <span>Data Kelompok</span>
                 </a>
             </li>
 
             <li>
                 <a class="nav-link" href="{{ route('pengajuan.index') }}">
-                    <i class="fas fa-file-signature"></i> <span>Pengajuan Dospem1</span>
+                    <i class="fas fa-file-signature"></i> <span>Pengajuan Pembimbing</span>
                 </a>
             </li>
 
             <li>
                 <a class="nav-link" href="{{ route('mahasiswa.sempro.index') }}">
-                    <i class="fas fa-file-alt"></i> <span>berkas sempro</span>
+                    <i class="fas fa-file-alt"></i> <span>Berkas Sempro</span>
                 </a>
             </li>
 
             {{-- Sidang TA --}}
-<li class="nav-item dropdown {{ request()->is('mahasiswa/sidang/*') ? 'active' : '' }}">
-    <a href="#" class="nav-link has-dropdown"><i class="fas fa-file-alt"></i> <span>Sidang TA</span></a>
-    <ul class="dropdown-menu">
-        <li><a class="nav-link {{ request()->routeIs('mahasiswa.sidang.draft') ? 'active' : '' }}" href="{{ route('mahasiswa.sidang.draft') }}">Laporan TA Draft</a></li>
-        <li><a class="nav-link {{ request()->routeIs('mahasiswa.sidang.revisi') ? 'active' : '' }}" href="{{ route('mahasiswa.sidang.revisi') }}">Revisi Laporan</a></li>
-        <li><a class="nav-link {{ request()->routeIs('mahasiswa.sidang.final') ? 'active' : '' }}" href="{{ route('mahasiswa.sidang.final') }}">Laporan Akhir</a></li>
-    </ul>
-</li>
+            <li class="menu-header">Sidang Tugas Akhir</li>
 
+            <li class="{{ request()->routeIs('mahasiswa.sidang.draft') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('mahasiswa.sidang.draft') }}">
+                    <i class="fas fa-file-alt"></i> <span>Laporan Draft TA</span>
+                </a>
+            </li>
 
+            <li class="{{ request()->routeIs('mahasiswa.sidang.revisi') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('mahasiswa.sidang.revisi') }}">
+                    <i class="fas fa-file-alt"></i> <span>Revisi Laporan TA</span>
+                </a>
+            </li>
+
+            <li class="{{ request()->routeIs('mahasiswa.sidang.final') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('mahasiswa.sidang.final') }}">
+                    <i class="fas fa-file-upload"></i> <span>Laporan Final TA</span>
+                </a>
+            </li>
 
             {{-- Profil --}}
             <li class="menu-header">Profil</li>

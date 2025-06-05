@@ -11,76 +11,75 @@ use Illuminate\Support\Facades\Auth;
 
 class MahasiswaSidangController extends Controller
 {
-public function draft()
-{
-    $mahasiswa = Auth::user()->mahasiswa;
-    $sidang = Sidang::where('id_mhs', $mahasiswa->id_mhs)->first();
+    public function draft()
+    {
+        $mahasiswa = Auth::user()->mahasiswa;
+        $sidang = Sidang::where('id_kelompok', $mahasiswa->id_kelompok)->first();
 
-    return view('pages.mahasiswa.sidang.draft.index', compact('sidang'));
-}
+        return view('pages.mahasiswa.sidang.draft.index', compact('sidang'));
+    }
 
     public function createDraft()
     {
         return view('pages.mahasiswa.sidang.draft.create');
     }
 
-   public function uploadDraft(Request $request)
-{
-    $request->validate([
-        'laporan_TA' => 'required|mimes:pdf|max:20480',
-        'lembar_konsultasi' => 'required|mimes:pdf|max:20480',
-    ]);
-
-    $mahasiswa = Auth::user()->mahasiswa;
-
-    // Cek pengajuan dulu
-    $pengajuan = \App\Models\PengajuanPembimbing::where('id_kelompok', $mahasiswa->id_kelompok)
-                    ->where('status', 'Diterima')
-                    ->first();
-
-    if (!$pengajuan) {
-        return redirect()->back()->with('error', 'Pengajuan Pembimbing Diterima belum ada. Silakan cek pengajuan.');
-    }
-
-    // Cek SEMPRO
-    $sempro = \App\Models\Sempro::where('id_ajuan', $pengajuan->id_ajuan)->first();
-
-    if (!$sempro) {
-        return redirect()->back()->with('error', 'Data SEMPRO tidak ditemukan. Pastikan sudah input SEMPRO.');
-    }
-
-    // Cek apakah SIDANG sudah ada
-    $sidang = Sidang::where('id_mhs', $mahasiswa->id_mhs)->first();
-
-    if (!$sidang) {
-        // Kalau belum ada → buat baru
-        $sidang = Sidang::create([
-            'id_mhs' => $mahasiswa->id_mhs,
-            'id_dosen' => $pengajuan->id_dosen1,
-            'id_dosen2' => $pengajuan->id_dosen2,
-            'id_sempro' => $sempro->id_sempro,
-            'status_draft_dosen1' => 'Menunggu',
-            'status_draft_dosen2' => 'Menunggu',
+    public function uploadDraft(Request $request)
+    {
+        $request->validate([
+            'laporan_TA' => 'required|mimes:pdf|max:20480',
+            'lembar_konsultasi' => 'required|mimes:pdf|max:20480',
         ]);
+
+        $mahasiswa = Auth::user()->mahasiswa;
+
+        // Cek pengajuan dulu
+        $pengajuan = \App\Models\PengajuanPembimbing::where('id_kelompok', $mahasiswa->id_kelompok)
+                        ->where('status', 'Diterima')
+                        ->first();
+
+        if (!$pengajuan) {
+            return redirect()->back()->with('error', 'Pengajuan Pembimbing Diterima belum ada. Silakan cek pengajuan.');
+        }
+
+        // Cek SEMPRO
+        $sempro = \App\Models\Sempro::where('id_ajuan', $pengajuan->id_ajuan)->first();
+
+        if (!$sempro) {
+            return redirect()->back()->with('error', 'Data SEMPRO tidak ditemukan. Pastikan sudah input SEMPRO.');
+        }
+
+        // Cek apakah SIDANG sudah ada
+        $sidang = Sidang::where('id_kelompok', $mahasiswa->id_kelompok)->first();
+
+        if (!$sidang) {
+            // Kalau belum ada → buat baru
+            $sidang = Sidang::create([
+                'id_kelompok' => $mahasiswa->id_kelompok,
+                'id_dosen1' => $pengajuan->id_dosen1,
+                'id_dosen2' => $pengajuan->id_dosen2,
+                'id_sempro' => $sempro->id_sempro,
+                'status_draft_dosen1' => 'Menunggu',
+                'status_draft_dosen2' => 'Menunggu',
+            ]);
+        }
+
+        // Simpan file
+        $laporanPath = $request->file('laporan_TA')->store('uploads/laporan_ta', 'public');
+        $lembarPath = $request->file('lembar_konsultasi')->store('uploads/lembar_konsultasi', 'public');
+
+        // Update data
+        $sidang->laporan_TA = 'storage/' . $laporanPath;
+        $sidang->lembar_konsultasi = 'storage/' . $lembarPath;
+        $sidang->save();
+
+        return redirect()->route('mahasiswa.sidang.draft')->with('success', 'Draft Laporan berhasil diupload.');
     }
-
-    // Simpan file
-    $laporanPath = $request->file('laporan_TA')->store('uploads/laporan_ta', 'public');
-    $lembarPath = $request->file('lembar_konsultasi')->store('uploads/lembar_konsultasi', 'public');
-
-    // Update data
-    $sidang->laporan_TA = 'storage/' . $laporanPath;
-    $sidang->lembar_konsultasi = 'storage/' . $lembarPath;
-    $sidang->save();
-
-    return redirect()->route('mahasiswa.sidang.draft')->with('success', 'Draft Laporan berhasil diupload.');
-}
-
 
     public function revisi()
     {
         $mahasiswa = Auth::user()->mahasiswa;
-        $sidang = Sidang::where('id_mhs', $mahasiswa->id_mhs)->first();
+        $sidang = Sidang::where('id_kelompok', $mahasiswa->id_kelompok)->first();
 
         return view('pages.mahasiswa.sidang.revisi.index', compact('sidang'));
     }
@@ -97,7 +96,7 @@ public function draft()
         ]);
 
         $mahasiswa = Auth::user()->mahasiswa;
-        $sidang = Sidang::where('id_mhs', $mahasiswa->id_mhs)->firstOrFail();
+        $sidang = Sidang::where('id_kelompok', $mahasiswa->id_kelompok)->firstOrFail();
 
         $revisiPath = $request->file('revisi_laporan')->store('uploads/revisi_laporan', 'public');
 
@@ -113,7 +112,7 @@ public function draft()
     public function final()
     {
         $mahasiswa = Auth::user()->mahasiswa;
-        $sidang = Sidang::where('id_mhs', $mahasiswa->id_mhs)->first();
+        $sidang = Sidang::where('id_kelompok', $mahasiswa->id_kelompok)->first();
 
         return view('pages.mahasiswa.sidang.final.index', compact('sidang'));
     }
@@ -132,7 +131,7 @@ public function draft()
         ]);
 
         $mahasiswa = Auth::user()->mahasiswa;
-        $sidang = Sidang::where('id_mhs', $mahasiswa->id_mhs)->firstOrFail();
+        $sidang = Sidang::where('id_kelompok', $mahasiswa->id_kelompok)->firstOrFail();
 
         $finalPath = $request->file('laporan_akhir')->store('uploads/laporan_akhir', 'public');
         $lembarPath = $request->file('lembar_konsultasi')->store('uploads/lembar_konsultasi', 'public');

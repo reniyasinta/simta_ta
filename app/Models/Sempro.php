@@ -16,6 +16,10 @@ class Sempro extends Model
         'id_ajuan',
         'form_persetujuan_sempro',
         'hasil_sempro',
+        'status_dospem1',
+        'status_dospem2',
+        'catatan_dospem1',
+        'catatan_dospem2',
     ];
 
     // Relasi ke pengajuan

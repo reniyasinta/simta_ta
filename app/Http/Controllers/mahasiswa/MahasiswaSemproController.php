@@ -129,4 +129,29 @@ public function deleteHasil()
     return redirect()->route('mahasiswa.sempro.index')->with('success', 'Hasil SEMPRO berhasil dihapus.');
 }
 
+// Controller
+public function ajukan()
+{
+    $mahasiswa = Auth::user()->mahasiswa;
+    $pengajuan = PengajuanPembimbing::where('id_kelompok', $mahasiswa->id_kelompok)
+        ->where('status', 'Diterima')
+        ->first();
+
+    if (!$pengajuan) {
+        return back()->with('error', 'Pengajuan belum disetujui.');
+    }
+
+    $sempro = Sempro::where('id_ajuan', $pengajuan->id_ajuan)->first();
+
+    if (!$sempro || !$sempro->form_persetujuan_sempro) {
+        return back()->with('error', 'Form Persetujuan belum diupload.');
+    }
+
+    $sempro->status_pengajuan = 'Diajukan';
+    $sempro->save();
+
+    return back()->with('success', 'Form Persetujuan berhasil diajukan ke Dosen.');
+}
+
+
 }
