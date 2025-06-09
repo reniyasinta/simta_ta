@@ -137,23 +137,38 @@ class MahasiswaController extends Controller
     }
 
     // ===== Jadwal Mahasiswa =====
-    public function jadwal()
+    public function jadwalSeminar()
     {
         $mahasiswa = Auth::user()->mahasiswa;
         $idKelompok = $mahasiswa->id_kelompok;
 
-        // Ambil semua jadwal yang terkait dengan kelompok mahasiswa
         $jadwals = Jadwal::with(['penguji1', 'penguji2', 'penguji3'])
-            ->where(function ($query) use ($idKelompok) {
-                $query->whereHas('pengajuan', function ($q) use ($idKelompok) {
-                    $q->where('id_kelompok', $idKelompok);
-                })
-                ->orWhereNull('id_ajuan'); // untuk jadwal Yudisium
+            ->where('jenis_acara', 'seminar')
+            ->whereHas('pengajuan', function ($q) use ($idKelompok) {
+                $q->where('id_kelompok', $idKelompok);
             })
             ->orderByDesc('tanggal')
             ->orderBy('jam_mulai')
             ->get();
 
-        return view('pages.mahasiswa.jadwal.index', compact('jadwals'));
+        return view('pages.mahasiswa.jadwal.seminar', compact('jadwals'));
     }
+
+    public function jadwalSidang()
+    {
+        $mahasiswa = Auth::user()->mahasiswa;
+        $idKelompok = $mahasiswa->id_kelompok;
+
+        $jadwals = Jadwal::with(['penguji1', 'penguji2', 'penguji3'])
+            ->where('jenis_acara', 'sidang')
+            ->whereHas('pengajuan', function ($q) use ($idKelompok) {
+                $q->where('id_kelompok', $idKelompok);
+            })
+            ->orderByDesc('tanggal')
+            ->orderBy('jam_mulai')
+            ->get();
+
+        return view('pages.mahasiswa.jadwal.sidang', compact('jadwals'));
+    }
+
 }

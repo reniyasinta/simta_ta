@@ -24,8 +24,6 @@
             <li><a class="nav-link" href="{{ route('admin.surat.index') }}"><i class="fas fa-file"></i> <span>Approval Surat</span></a></li>
 
             <li class="menu-header">User Account</li>
-            <li><a class="nav-link" href="{{ url('profil') }}"><i class="fas fa-user"></i> <span>Profil</span></a></li>
-
             <li><a class="nav-link" href="{{ route('admin.users') }}"><i class="fas fa-user"></i> <span>Manage User</span></a></li>
         </ul>
 
@@ -100,13 +98,6 @@
         </li>
     </ul>
 </li>
-
-            <li class="menu-header">Profil</li>
-            <li class="nav-item {{ ($type_menu ?? '') === 'profil' ? 'active' : '' }}">
-                <a class="nav-link" href="{{ url('profil') }}">
-                    <i class="fas fa-user"></i> <span>Profil</span>
-                </a>
-            </li>
         </ul>
 
         {{-- ================= Dosen (role_id = 3) ================= --}}
@@ -177,13 +168,6 @@
                     <i class="fas fa-gavel"></i> <span>Sidang TA</span>
                 </a>
             </li>
-
-            <li class="menu-header">Profil</li>
-            <li>
-                <a class="nav-link {{ request()->routeIs('dosen.profile') ? 'active' : '' }}" href="{{ route('dosen.profile') }}">
-                    <i class="fas fa-user"></i> <span>Profil</span>
-                </a>
-            </li>
         </ul>
 
 
@@ -203,8 +187,14 @@
             <li class="menu-header">General</li>
 
             <li>
-            <a class="nav-link" href="{{ route('mahasiswa.jadwal.index') }}">
-                    <i class="fas fa-calendar-alt"></i> <span>Jadwal Saya</span>
+                <a class="nav-link" href="{{ route('mahasiswa.jadwal.seminar') }}">
+                    <i class="fas fa-calendar-alt"></i> <span>Jadwal Seminar</span>
+                </a>
+            </li>
+
+            <li>
+                <a class="nav-link" href="{{ route('mahasiswa.jadwal.sidang') }}">
+                    <i class="fas fa-calendar-check"></i> <span>Jadwal Sidang</span>
                 </a>
             </li>
 
@@ -274,15 +264,6 @@
             <li class="{{ request()->routeIs('mahasiswa.sidang.final') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('mahasiswa.sidang.final') }}">
                     <i class="fas fa-file-upload"></i> <span>Laporan Final TA</span>
-                </a>
-            </li>
-
-            {{-- Profil --}}
-            <li class="menu-header">Profil</li>
-
-            <li>
-                <a class="nav-link" href="{{ route('mahasiswa.profile') }}">
-                    <i class="fas fa-user"></i> <span>Profil</span>
                 </a>
             </li>
         </ul>

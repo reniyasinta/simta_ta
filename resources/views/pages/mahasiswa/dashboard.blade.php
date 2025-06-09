@@ -4,38 +4,50 @@
 
 @push('style')
 <style>
-    .modal-backdrop.show {
-        opacity: 0.3 !important;
-        background-color: #ffffff !important;
+    /* Animasi fade in modal */
+    .modal.fade .modal-dialog {
+        -webkit-transform: translate(0, -25%);
+        transform: translate(0, -25%);
+        -webkit-transition: transform 0.3s ease-out;
+        transition: transform 0.3s ease-out;
     }
 
-    .modal-content {
-        background-color: #fff !important;
-        color: #000000;
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-        z-index: 1055;
+    .modal.fade.show .modal-dialog {
+        -webkit-transform: translate(0, 0);
+        transform: translate(0, 0);
     }
 
-    .modal-header .btn-close {
-        background: none;
-        border: none;
-        font-size: 1.2rem;
+    /* Style hover tombol Kembali */
+    .modal-footer .btn-secondary:hover,
+    .text-right .btn-secondary:hover {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: #fff;
+        box-shadow: 0 0 8px rgba(0,0,0,0.2);
     }
 
-    .modal .table th {
-        width: 100px;
-    }
+    /* Responsive modal */
+    @media (max-width: 576px) {
+        .modal-dialog {
+            margin: 1rem;
+        }
 
-    .modal-title {
-        font-weight: bold;
-        color: #000;
-    }
+        .modal-content {
+            padding: 10px;
+        }
 
-    .modal-header {
-        border-bottom: 1px solid #dee2e6;
+        .modal-body img {
+            width: 70px !important;
+            height: 70px !important;
+        }
+
+        .modal-body .table th {
+            width: 90px;
+        }
     }
 </style>
 @endpush
+
 
 @section('main')
 <div class="main-content">
@@ -55,55 +67,61 @@
             <div class="row">
                 {{-- Jadwal Seminar --}}
                 <div class="col-lg-4 col-md-6 col-sm-12">
-                    <div class="card card-statistic-2">
-                        <div class="card-icon shadow-primary bg-info">
-                            <i class="fas fa-chalkboard-teacher"></i>
-                        </div>
-                        <div class="card-wrap">
-                            <div class="card-header">
-                                <h4 class="text-dark">Jadwal Seminar</h4>
+                    <a href="{{ route('mahasiswa.jadwal.seminar') }}" style="text-decoration: none;">
+                        <div class="card card-statistic-2">
+                            <div class="card-icon shadow-primary bg-info">
+                                <i class="fas fa-chalkboard-teacher"></i>
                             </div>
-                            <div class="card-body">
-                                @php
-                                    $seminar = $jadwals->where('jenis_acara', 'seminar')->sortByDesc('tanggal')->first();
-                                @endphp
-                                @if ($seminar)
-                                    <div class="small text-dark">
-                                        <strong>Tanggal :</strong> {{ \Carbon\Carbon::parse($seminar->tanggal)->translatedFormat('d M Y') }}
-                                    </div>
-                                @else
-                                    <p class="mb-0 small text-dark">Jadwal belum tersedia.</p>
-                                @endif
+                            <div class="card-wrap">
+                                <div class="card-header">
+                                    <h4 class="text-dark">Jadwal Seminar</h4>
+                                </div>
+                                <div class="card-body">
+                                    @php
+                                        $seminar = $jadwals->where('jenis_acara', 'seminar')->sortByDesc('tanggal')->first();
+                                    @endphp
+                                    @if ($seminar)
+                                        <div class="small text-dark">
+                                            <strong>Tanggal :</strong> {{ \Carbon\Carbon::parse($seminar->tanggal)->translatedFormat('d M Y') }}
+                                        </div>
+                                    @else
+                                        <p class="mb-0 small text-dark">Jadwal belum tersedia.</p>
+                                    @endif
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
+
 
                 {{-- Jadwal Sidang --}}
                 <div class="col-lg-4 col-md-6 col-sm-12">
-                    <div class="card card-statistic-2">
-                        <div class="card-icon shadow-primary bg-warning">
-                            <i class="fas fa-balance-scale"></i>
-                        </div>
-                        <div class="card-wrap">
-                            <div class="card-header">
-                                <h4 class="text-dark">Jadwal Sidang</h4>
+                    <a href="{{ route('mahasiswa.jadwal.sidang') }}" style="text-decoration: none;">
+                        <div class="card card-statistic-2">
+                            <div class="card-icon shadow-primary bg-warning">
+                                <i class="fas fa-balance-scale"></i>
                             </div>
-                            <div class="card-body">
-                                @php
-                                    $sidang = $jadwals->where('jenis_acara', 'sidang')->sortByDesc('tanggal')->first();
-                                @endphp
-                                @if ($sidang)
-                                    <div class="small text-dark">
-                                        <strong>Tanggal :</strong> {{ \Carbon\Carbon::parse($sidang->tanggal)->translatedFormat('d M Y') }}
-                                    </div>
-                                @else
-                                    <p class="mb-0 small text-dark">Jadwal belum tersedia.</p>
-                                @endif
+                            <div class="card-wrap">
+                                <div class="card-header">
+                                    <h4 class="text-dark">Jadwal Sidang</h4>
+                                </div>
+                                <div class="card-body">
+                                    @php
+                                        $sidang = $jadwals->where('jenis_acara', 'sidang')->sortByDesc('tanggal')->first();
+                                    @endphp
+                                    @if ($sidang)
+                                        <div class="small text-dark">
+                                            <strong>Tanggal :</strong> {{ \Carbon\Carbon::parse($sidang->tanggal)->translatedFormat('d M Y') }}
+                                        </div>
+                                    @else
+                                        <p class="mb-0 small text-dark">Jadwal belum tersedia.</p>
+                                    @endif
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
+
 
                 {{-- Jadwal Yudisium --}}
                 <div class="col-lg-4 col-md-6 col-sm-12">
@@ -190,7 +208,7 @@
 
                                         {{-- Tombol Kembali --}}
                                         <div class="text-right mt-4">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
+                                            <a href="#" class="btn btn-secondary" role="button" data-dismiss="modal">Kembali</a>
                                         </div>
                                     </div>
                                 </div>
@@ -206,7 +224,4 @@
 </div>
 @endsection
 
-@push('scripts')
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-@endpush
+

@@ -178,8 +178,10 @@ Route::middleware(['role:panitia'])->prefix('panitia')->group(function () {
         Route::get('/mahasiswa/profile', [MahasiswaController::class, 'profile'])->name('mahasiswa.profile');
         Route::post('/mahasiswa/profile/update', [MahasiswaController::class, 'updateProfile'])->name('mahasiswa.profile.update');
         Route::get('/profile/edit', [MahasiswaController::class, 'editProfile'])->name('mahasiswa.profile_edit');
-Route::get('/jadwal', [MahasiswaController::class, 'jadwal'])->name('mahasiswa.jadwal.index');
 
+        // JADWAL
+        Route::get('/mahasiswa/jadwal/seminar', [MahasiswaController::class, 'jadwalSeminar'])->name('mahasiswa.jadwal.seminar');
+        Route::get('/mahasiswa/jadwal/sidang', [MahasiswaController::class, 'jadwalSidang'])->name('mahasiswa.jadwal.sidang');
 
         // Berkas
         Route::get('/mahasiswa/berkas', [BerkasController::class, 'index'])->name('mahasiswa.berkas.index');
