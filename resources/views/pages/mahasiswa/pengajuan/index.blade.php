@@ -55,13 +55,13 @@
                             <td>{{ $item->dosen2->dosen->nama_dosen ?? '-' }}</td>
                             {{-- Judul TA --}}
                             <td>{{ $item->judul_ta }}</td>
-<td>
-    @if ($item->proposal)
-        <a href="{{ asset('storage/proposal/' . $item->proposal) }}" target="_blank">Lihat</a>
-    @else
-        <span class="text-muted">Belum ada</span>
-    @endif
-</td>
+                        <td>
+                            @if ($item->proposal)
+                                <a href="{{ asset('storage/proposal/' . $item->proposal) }}" target="_blank">Lihat</a>
+                            @else
+                                <span class="text-muted">Belum ada</span>
+                            @endif
+                        </td>
                             <td>
                                 @if($item->status == 'Diterima')
                                     <span class="badge bg-success text-white">ACC</span>

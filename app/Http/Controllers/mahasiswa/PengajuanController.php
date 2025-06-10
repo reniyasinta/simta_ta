@@ -147,8 +147,8 @@ public function create()
     // Hanya proses jika ada file
     if ($request->hasFile('proposal')) {
         $file = $request->file('proposal');
-        $fileName = time() . '_' . $file->getClientOriginalName();
-        $file->storeAs('public/proposal', $fileName);
+        $fileName =  $file->getClientOriginalName();
+        $file->storeAs('proposal', $fileName, 'public');
     }
 
         PengajuanPembimbing::create([

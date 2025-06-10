@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('sidang', function (Blueprint $table) {
@@ -19,8 +16,8 @@ return new class extends Migration
             $table->foreign('id_kelompok')->references('id_kelompok')->on('kelompok')->onDelete('cascade');
 
             // Dosen Pembimbing
-            $table->foreignId('id_dosen1')->constrained('users', 'id')->onDelete('cascade'); // dospem 1
-            $table->foreignId('id_dosen2')->nullable()->constrained('users', 'id')->onDelete('set null'); // dospem 2
+            $table->foreignId('id_dosen1')->constrained('users', 'id')->onDelete('cascade');
+            $table->foreignId('id_dosen2')->nullable()->constrained('users', 'id')->onDelete('set null');
 
             // Dosen Penguji
             $table->foreignId('penguji_1_id')->nullable()->constrained('users')->onDelete('set null');
@@ -42,30 +39,31 @@ return new class extends Migration
             $table->enum('status_revisi_penguji_3', ['Menunggu', 'Revisi', 'Disetujui'])->default('Menunggu');
 
             // Laporan Final
-            $table->string('laporan_akhir')->nullable();
-            $table->enum('status_final', ['Menunggu', 'Disetujui'])->default('Menunggu');
+            $table->string('laporan_akhir_pdf')->nullable();
+            $table->string('laporan_akhir_word')->nullable();
+            $table->string('lembar_konsultasi')->nullable();
+            $table->string('berita_acara')->nullable();
+            $table->string('buku_manual')->nullable();
+            $table->string('halaman_pengesahan')->nullable();
+            $table->text('catatan_final')->nullable();
+            $table->enum('status_final', ['Menunggu', 'Disetujui', 'Ditolak'])->default('Menunggu');
 
             // Lembar Konsultasi & Hasil Sidang
-            $table->string('lembar_konsultasi')->nullable();
             $table->string('hasil_sidang')->nullable();
 
-            // Catatan Dosen (bebas diisi panitia atau dospem — untuk laporan akhir)
+            // Catatan Dosen
             $table->text('catatan_dosen')->nullable();
             $table->text('catatan_revisi')->nullable();
 
-            // Catatan per Penguji (untuk revisi laporan)
+            // Catatan per Penguji
             $table->text('catatan_penguji_1')->nullable();
             $table->text('catatan_penguji_2')->nullable();
             $table->text('catatan_penguji_3')->nullable();
 
-            // Timestamps
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('sidang');

@@ -1,70 +1,64 @@
 @extends('layouts.app')
 
-@push('styles')
-    <!-- CSS Libraries -->
-    <link rel="stylesheet" href="{{ asset('library/selectric/public/selectric.css') }}">
-@endpush
+@section('title', 'Upload Laporan Akhir')
 
 @section('main')
-    <div class="main-content">
-        <section class="section">
-            <div class="section-header">
-                <h1>Upload Laporan Akhir</h1>
-                <div class="section-header-breadcrumb">
-                    <div class="breadcrumb-item active"><a href="{{ url('home') }}">Dashboard</a></div>
-                    <div class="breadcrumb-item"><a href="{{ route('mahasiswa.sidang.final') }}">Laporan Akhir</a></div>
-                    <div class="breadcrumb-item">Upload</div>
-                </div>
+<div class="main-content">
+    <section class="section">
+        <div class="section-header">
+            <h1>Upload Laporan Akhir</h1>
+        </div>
+
+        {{-- TAMPILKAN ERROR VALIDASI --}}
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        {{-- FORM UPLOAD FINAL --}}
+        <form action="{{ route('mahasiswa.sidang.final.upload') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+
+            <div class="mb-3">
+                <label class="form-label">Laporan Akhir (PDF)</label>
+                <input type="file" name="laporan_akhir_pdf" class="form-control" accept=".pdf" required>
             </div>
 
-            <div class="section-body">
-                <div class="row">
-                    <div class="col-12">
-                        @if (session('success'))
-                            <div class="alert alert-success">{{ session('success') }}</div>
-                        @elseif (session('error'))
-                            <div class="alert alert-danger">{{ session('error') }}</div>
-                        @endif
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4>Upload Laporan Akhir</h4>
-                            </div>
-                            <div class="card-body">
-                                <form action="{{ route('mahasiswa.sidang.uploadFinal') }}" method="POST" enctype="multipart/form-data">
-                                    @csrf
-                                    <div class="form-group">
-                                        <label>Laporan Akhir (PDF)</label>
-                                        <input type="file" name="laporan_akhir" class="form-control" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Lembar Konsultasi (PDF)</label>
-                                        <input type="file" name="lembar_konsultasi" class="form-control" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Hasil Sidang (PDF)</label>
-                                        <input type="file" name="hasil_sidang" class="form-control" required>
-                                    </div>
-                                    <button type="submit" class="btn btn-info">Upload</button>
-                                    <a href="{{ route('mahasiswa.sidang.final') }}" class="btn btn-secondary">Kembali</a>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+            <div class="mb-3">
+                <label class="form-label">Laporan Akhir (Word)</label>
+                <input type="file" name="laporan_akhir_word" class="form-control" accept=".doc,.docx" required>
             </div>
-        </section>
-    </div>
+{{-- 
+            <div class="mb-3">
+                <label class="form-label">Lembar Konsultasi (PDF)</label>
+                <input type="file" name="lembar_konsultasi" class="form-control" accept=".pdf" required>
+            </div> --}}
+
+            <div class="mb-3">
+                <label class="form-label">Berita Acara (PDF)</label>
+                <input type="file" name="berita_acara" class="form-control" accept=".pdf" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Buku Manual (Word)</label>
+                <input type="file" name="buku_manual" class="form-control" accept=".doc,.docx" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Halaman Pengesahan (PDF / Word)</label>
+                <input type="file" name="halaman_pengesahan" class="form-control" accept=".pdf,.doc,.docx" required>
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <a href="{{ route('mahasiswa.sidang.final') }}" class="btn btn-secondary me-2">Kembali</a>
+    <button type="submit" class="btn btn-success">Upload</button>
+            </div>
+        </form>
+    </section>
+</div>
 @endsection
-
-@push('scripts')
-    <!-- JS Libraries -->
-    <script src="{{ asset('library/selectric/public/jquery.selectric.min.js') }}"></script>
-    <!-- Page Specific JS File -->
-    <script src="{{ asset('js/page/features-posts.js') }}"></script>
-@endpush

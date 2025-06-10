@@ -38,6 +38,12 @@ class Sidang extends Model
         'catatan_penguji_1',
         'catatan_penguji_2',
         'catatan_penguji_3',
+        'laporan_akhir_pdf',
+        
+        'laporan_akhir_word',
+        'berita_acara',
+        'buku_manual',
+        'halaman_pengesahan',
     ];
 
     // Relasi ke mahasiswa (via kelompok)
