@@ -77,7 +77,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="text-center">Belum ada berkas tersedia.</td>
+                            <td colspan="4" class="text-center">Belum ada berkas tersedia untuk prodi Anda.</td>
                         </tr>
                     @endforelse
                 </tbody>

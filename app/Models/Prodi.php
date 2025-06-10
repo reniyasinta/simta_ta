@@ -17,4 +17,10 @@ class Prodi extends Model
         return $this->belongsToMany(Dosen::class, 'dosen_prodi', 'id_prodi', 'id_dosen');
     }
 
+    public function berkas()
+{
+    return $this->hasMany(Berkas::class, 'id_prodi', 'id');
+}
+
+
 }

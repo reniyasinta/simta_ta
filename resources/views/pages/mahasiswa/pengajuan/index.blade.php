@@ -55,13 +55,13 @@
                             <td>{{ $item->dosen2->dosen->nama_dosen ?? '-' }}</td>
                             {{-- Judul TA --}}
                             <td>{{ $item->judul_ta }}</td>
-<td>
-    @if ($item->proposal)
-        <a href="{{ asset('storage/proposal/' . $item->proposal) }}" target="_blank">Lihat</a>
-    @else
-        <span class="text-muted">Belum ada</span>
-    @endif
-</td>
+                            <td>
+                                @if ($item->proposal)
+                                    <a href="{{ asset('storage/proposal/' . $item->proposal) }}" target="_blank">Lihat</a>
+                                @else
+                                    <span class="text-muted">Belum ada</span>
+                                @endif
+                            </td>
                             <td>
                                 @if($item->status == 'Diterima')
                                     <span class="badge bg-success text-white">ACC</span>
@@ -79,13 +79,23 @@
                     @endforelse
                 </tbody>
             </table>
+            @if (!isset($error))
+                @php
+                    $adaMenunggu = $pengajuan->contains(function ($item) {
+                        return $item->status === 'Menunggu';
+                    });
 
-            @if(!isset($error) && $pengajuan->where('status', 'Diterima')->isEmpty())
-                <div class="text-right mt-3">
-                    <a href="{{ route('pengajuan.create') }}" class="btn btn-primary">Pengajuan Dospem1</a>
-                </div>
+                    $adaDiterima = $pengajuan->contains(function ($item) {
+                        return $item->status === 'Diterima';
+                    });
+                @endphp
+
+                @if (!$adaMenunggu && !$adaDiterima)
+                    <div class="text-right mt-3">
+                        <a href="{{ route('pengajuan.create') }}" class="btn btn-primary">Pengajuan Dospem1</a>
+                    </div>
+                @endif
             @endif
-
         </div>
     </section>
 </div>

@@ -86,12 +86,14 @@ Route::middleware(['role:panitia'])->prefix('panitia')->group(function () {
     Route::put('/pengajuan/{id}', [PanitiaPengajuanController::class, 'update'])->name('panitia.pengajuan.update');
 
     // Berkas
-    Route::get('/berkas', [PanitiaBerkasController::class, 'index'])->name('pages.panitia.berkas.index');
-    Route::get('/berkas/create', [PanitiaBerkasController::class, 'create'])->name('pages.panitia.berkas.create');
+    Route::get('/berkas', [PanitiaBerkasController::class, 'index'])->name('panitia.berkas.index');
+    Route::get('/berkas/create', [PanitiaBerkasController::class, 'create'])->name('panitia.berkas.create');
     Route::post('/berkas', [PanitiaBerkasController::class, 'store'])->name('panitia.berkas.store');
-    Route::get('/berkas/{id}/edit', [PanitiaBerkasController::class, 'edit'])->name('pages.panitia.berkas.edit');
+    Route::get('/berkas/{id}/edit', [PanitiaBerkasController::class, 'edit'])->name('panitia.berkas.edit');
     Route::put('/berkas/{id}', [PanitiaBerkasController::class, 'update'])->name('panitia.berkas.update');
     Route::delete('/berkas/{id}', [PanitiaBerkasController::class, 'destroy'])->name('panitia.berkas.destroy');
+    Route::get('/berkas/{id}/download', [PanitiaBerkasController::class, 'download'])->name('panitia.berkas.download');
+
 
     // JADWAL
     Route::prefix('jadwal')->name('jadwal.')->group(function () {

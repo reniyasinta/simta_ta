@@ -11,7 +11,15 @@ class BerkasController extends Controller
 {
     public function index()
     {
-        $berkas = Berkas::all();
+        $user = auth()->user();
+        $idProdi = $user->mahasiswa?->id_prodi;
+
+        // Ambil berkas sesuai prodi mahasiswa
+        $berkas = Berkas::when($idProdi, function ($query) use ($idProdi) {
+            $query->where('id_prodi', $idProdi);
+        })->get();
+
+
         return view('pages.mahasiswa.berkas.index', compact('berkas'));
     }
 

@@ -44,7 +44,7 @@
             <li class="menu-header">General</li>
 
             <li class="nav-item {{ ($type_menu ?? '') === 'berkas' ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('pages.panitia.berkas.index') }}">
+                <a class="nav-link" href="{{ route('panitia.berkas.index') }}">
                     <i class="fas fa-file-upload"></i> <span>Upload Berkas</span>
                 </a>
             </li>
@@ -74,30 +74,22 @@
                     <i class="fas fa-file-pdf"></i> <span>Berkas Sempro</span>
                 </a>
             </li>
-<li class="menu-header">Tugas Akhir</li>
 
-<li class="nav-item dropdown {{ request()->routeIs('panitia.sidang.*') ? 'active' : '' }}">
-    <a href="#" class="nav-link has-dropdown">
-        <i class="fas fa-book"></i> <span>Berkas Sidang TA</span>
-    </a>
-    <ul class="dropdown-menu">
-        <li class="{{ request()->routeIs('sidang.draft') ? 'active' : '' }}">
-            <a class="nav-link" href="{{ route('sidang.draft') }}">
-                <i class="fas fa-file-alt"></i> Laporan TA
-            </a>
-        </li>
-        <li class="{{ request()->routeIs('sidang.revisi') ? 'active' : '' }}">
-            <a class="nav-link" href="{{ route('sidang.revisi') }}">
-                <i class="fas fa-file-signature"></i> Revisi Laporan TA
-            </a>
-        </li>
-        <li class="{{ request()->routeIs('sidang.final') ? 'active' : '' }}">
-            <a class="nav-link" href="{{ route('sidang.final') }}">
-                <i class="fas fa-file-upload"></i> Laporan Final TA
-            </a>
-        </li>
-    </ul>
-</li>
+            <li class="menu-header">Tugas Akhir</li>
+                <li class="nav-item dropdown {{ request()->is('sidang/*') ? 'active' : '' }}">
+                    <a href="#" class="nav-link has-dropdown"><i class="fas fa-file-alt"></i> <span>Laporan TA</span></a>
+                    <ul class="dropdown-menu">
+                        <li class="{{ request()->routeIs('sidang.draft') ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route('sidang.draft') }}">Laporan TA</a>
+                        </li>
+                        <li class="{{ request()->routeIs('sidang.revisi') ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route('sidang.revisi') }}">Revisi Laporan TA</a>
+                        </li>
+                        <li class="{{ request()->routeIs('sidang.final') ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route('sidang.final') }}">Laporan Final TA</a>
+                        </li>
+                    </ul>
+                </li>
         </ul>
 
         {{-- ================= Dosen (role_id = 3) ================= --}}

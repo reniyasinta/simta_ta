@@ -18,7 +18,7 @@
         @endif
 
         <div class="mb-3 text-right">
-            <a href="{{ route('pages.panitia.berkas.create') }}" class="btn btn-success">+ Upload Berkas</a>
+            <a href="{{ route('panitia.berkas.create') }}" class="btn btn-success">+ Upload Berkas</a>
         </div>
 
         <div class="table-responsive">
@@ -76,8 +76,8 @@
                                 @endif
                             </td>
                             <td>
-                                <a href="{{ route('pages.panitia.berkas.edit', $item->id_berkas) }}" class="btn btn-warning btn-sm">Edit</a>
-                                <form action="{{ route('panitia.berkas.destroy', $item->id_berkas) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Yakin ingin menghapus berkas ini?')">
+                                <a href="{{ route('panitia.berkas.edit', $item->id_berkas) }}" class="btn btn-warning btn-sm">Edit</a>
+                                <form action="{{ route('panitia.berkas.destroy', $item->id_berkas) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus berkas ini?')">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
@@ -86,7 +86,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="text-center">Belum ada berkas diunggah.</td>
+                            <td colspan="4" class="text-center">Belum ada berkas diunggah.</td>
                         </tr>
                     @endforelse
                 </tbody>
