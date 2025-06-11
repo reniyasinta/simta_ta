@@ -35,24 +35,25 @@
                                     <label>Email</label>
                                     <input type="email" name="email" class="form-control" value="{{ old('email', $user->email) }}" required>
                                 </div>
+
                                 <div class="form-group">
                                     <label>No. Telepon</label>
-                                    <input type="text" name="no_telp" class="form-control @error('no_telp') is-invalid @enderror" value="{{ old('no_telp', $mahasiswa->no_telp) }}">
-                                    @error('no_telp')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                    <input type="text" name="no_telp" class="form-control" value="{{ old('no_telp', $mahasiswa->no_telp) }}">
                                 </div>
-                                    <div class="form-group col-md-6">
-                                    <label>Upload Foto</label>
+
+                                <div class="form-group">
+                                    <label>Foto</label>
                                     <input type="file" name="foto" class="form-control-file">
+
                                     @if ($mahasiswa->foto)
-                                        <div class="mt-2">
-                                        <img src="{{ asset($mahasiswa->foto) }}" alt="Foto Mahasiswa"
-                                            style="width: 100px; height: 100px; object-fit: cover;" class="rounded-circle">
+                                        <div class="mt-3">
+                                            <img src="{{ asset($mahasiswa->foto) }}" alt="Foto Mahasiswa"
+                                                 style="width: 120px; height: 120px; object-fit: cover;" class="rounded-circle">
                                         </div>
                                     @endif
                                 </div>
                             </div>
+
                             <div class="card-footer text-right">
                                 <a href="{{ route('mahasiswa.profile') }}" class="btn btn-secondary">Batal</a>
                                 <button class="btn btn-primary" type="submit">Simpan Perubahan</button>

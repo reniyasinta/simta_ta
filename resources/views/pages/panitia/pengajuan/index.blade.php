@@ -11,7 +11,7 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>Daftar Pengajuan Mahasiswa</h1>
+            <h1>Daftar Penentuan Dosen Pembimbing 2</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="{{ url('home') }}">Dashboard</a></div>
                 <div class="breadcrumb-item">Pengajuan Mahasiswa</div>

@@ -84,12 +84,9 @@
                     @forelse ($pengajuans as $index => $pengajuan)
                         <tr>
                             <td>{{ $index + 1 }}</td>
-                            <td colspan="2">Belum Dijadwalkan</td>
                             <td>-</td>
-                            <td>
-                                @foreach ($pengajuan->kelompok->anggota as $anggota)
-                                @endforeach
-                            </td>
+                            <td>-</td>
+                            <td>-</td>
                             <td>
                                 @foreach ($pengajuan->kelompok->anggota as $anggota)
                                     <div>{{ $anggota->nama_mhs ?? '-' }}</div>
@@ -99,7 +96,9 @@
                             <td>{{ $pengajuan->judul_ta ?? $pengajuan->judul }}</td>
                             <td>{{ $pengajuan->dosen1->name ?? '-' }}</td>
                             <td>{{ $pengajuan->dosen2->name ?? '-' }}</td>
-                            <td colspan="3" class="text-center">-</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td>-</td>
                             <td class="text-center" style="white-space: nowrap;">
                                 <a href="{{ route('jadwal.create', ['jenis' => $jenis, 'pengajuan_id' => $pengajuan->id]) }}"
                                    class="btn btn-sm btn-primary" title="Input Jadwal">
@@ -109,7 +108,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="14" class="text-center">Belum ada jadwal {{ $jenis }} dan belum ada pengajuan yang lengkap.</td>
+                            <td colspan="13" class="text-center">Belum ada jadwal {{ $jenis }} dan belum ada pengajuan yang lengkap.</td>
                         </tr>
                     @endforelse
                 @endforelse

@@ -103,7 +103,25 @@
                     </tr>
                 </tbody>
             </table>
-        </div>
+            </div>
+
+            {{-- Status Validasi Final dari Panitia --}}
+            <div class="mt-4">
+                <h5>Status Validasi Panitia:</h5>
+                @if($sidang)
+                    @if($sidang->status_final === 'Disetujui')
+                        <span class="badge bg-success text-white">✅ Disetujui Panitia</span>
+                    @elseif($sidang->status_final === 'Ditolak')
+                        <span class="badge bg-danger text-white">❌ Ditolak Panitia</span>
+                        <div class="mt-2"><strong>Catatan Panitia:</strong> {{ $sidang->catatan_final ?? '-' }}</div>
+                    @else
+                        <span class="badge bg-secondary text-white">Menunggu Validasi Panitia</span>
+                    @endif
+                @else
+                    <span class="badge bg-secondary text-white">Belum ada data sidang</span>
+                @endif
+            </div>
+
     </section>
 </div>
 @endsection

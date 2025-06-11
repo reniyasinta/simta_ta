@@ -66,13 +66,19 @@
 
                         <td>
                             @php
-                                $catatan = $sidang->catatan_dosen ?? '-';
+                                if ($sidang->id_dosen1 == auth()->user()->id) {
+                                    $catatan = $sidang->catatan_draft_dosen1 ?? '-';
+                                } elseif ($sidang->id_dosen2 == auth()->user()->id) {
+                                    $catatan = $sidang->catatan_draft_dosen2 ?? '-';
+                                } else {
+                                    $catatan = '-';
+                                }
                             @endphp
                             {{ $catatan }}
                         </td>
 
                         <td>
-                            @if ($status == '-')
+                            @if ($status == '-' || $status == 'Menunggu')
                             <form action="{{ route('dosen.sidang.updateStatusDraft', $sidang->id_sidang) }}" method="POST">
                                 @csrf
                                 <div class="form-group mb-1">

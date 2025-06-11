@@ -89,10 +89,10 @@
         <li class="{{ request()->routeIs('sidang.final') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('sidang.final') }}"></i> Post</a>
         </li>
-        <li class="#">
-            <a class="nav-link" href="#"></i> Upload Link Drive</a>
+
+        <li class="{{ request()->is('panitia/sidang/drive*') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('sidang.final') }}"><i class="fas fa-link"></i> <span>Input Link Drive</span></a>
         </li>
-        </ul>
 
         {{-- ================= Dosen (role_id = 3) ================= --}}
         @elseif($roleId == 3)
@@ -238,22 +238,27 @@
                     <i class="fas fa-calendar-check"></i> <span>Jadwal Sidang</span>
                 </a>
             </li>
+            <li class="nav-item dropdown {{ request()->is('mahasiswa/Tugas akhir*') ? 'active' : '' }}">
+                <a href="#" class="nav-link has-dropdown">
+                    <i class="fas fa-file-alt"></i> <span>Upload Berkas Sidang</span>
+                </a>
+                <ul class="dropdown-menu">
+
             <li class="{{ request()->routeIs('mahasiswa.sidang.draft') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('mahasiswa.sidang.draft') }}">
-                    <i class="fas fa-file-alt"></i> <span>Pra</span>
+                <a class="nav-link" href="{{ route('mahasiswa.sidang.draft') }}"></i> <span>Pra</span>
                 </a>
             </li>
 
             <li class="{{ request()->routeIs('mahasiswa.sidang.revisi') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('mahasiswa.sidang.revisi') }}">
-                    <i class="fas fa-file-alt"></i> <span>Revisi Laporan TA</span>
+                <a class="nav-link" href="{{ route('mahasiswa.sidang.revisi') }}"> <span>Revisi Laporan TA</span>
                 </a>
             </li>
 
             <li class="{{ request()->routeIs('mahasiswa.sidang.final') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('mahasiswa.sidang.final') }}">
-                    <i class="fas fa-file-upload"></i> <span>Post</span>
+                <a class="nav-link" href="{{ route('mahasiswa.sidang.final') }}"> <span>Post</span>
                 </a>
+            </li>
+                </ul>
             </li>
         </ul>
                 @endif

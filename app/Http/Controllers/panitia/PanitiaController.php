@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Panitia;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\PengajuanPembimbing;
+use Illuminate\Support\Facades\Auth;
+
 
 class PanitiaController extends Controller
 {

@@ -18,7 +18,7 @@
                 <div class="card shadow">
                     <div class="card-header"><h4>Update Profil</h4></div>
                     <div class="card-body">
-                        <form method="POST" action="{{ route('panitia.profil.update') }}">
+                        <form method="POST" action="#">
                             @csrf
 
                             <div class="form-group">

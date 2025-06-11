@@ -93,48 +93,43 @@ class MahasiswaController extends Controller
         return view('pages.mahasiswa.profile_edit', compact('user', 'mahasiswa'));
     }
 
-    // ===== Update Profile Mahasiswa =====
-    public function updateProfile(Request $request)
-    {
-        $user = Auth::user();
-        $mahasiswa = Mahasiswa::where('user_id', $user->id)->firstOrFail();
+   public function updateProfile(Request $request)
+{
+    $user = Auth::user();
+    $mahasiswa = Mahasiswa::where('user_id', $user->id)->firstOrFail();
 
-        // Validasi input
-        $request->validate([
-            'nama_mhs' => 'required|string|max:255',
-            'nim_mhs' => 'required|string|max:255|unique:users,nim,' . $user->id,
-            'semester' => 'required|integer',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'no_telp' => 'required|string|max:20',
-        ]);
+    $request->validate([
+        'nama_mhs' => 'required|string|max:255',
+        'nim_mhs' => 'required|string|max:255|unique:mahasiswa,nim_mhs,' . $mahasiswa->id_mahasiswa,
+        'semester' => 'required|integer',
+        'email' => 'required|email|unique:users,email,' . $user->id,
+        'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        'no_telp' => 'required|string|max:20',
+    ]);
 
-        // Sinkron ke tabel users
-        $user->email = $request->email;
-        $user->name = $request->nama_mhs;
-        $user->nim = $request->nim_mhs;
-        $user->save();
+    // Update tabel users
+    $user->email = $request->email;
+    $user->name = $request->nama_mhs;
+    $user->save();
 
-        // Handle upload foto baru
-        if ($request->hasFile('foto')) {
-            if ($mahasiswa->foto && Storage::exists(str_replace('storage/', '', $mahasiswa->foto))) {
-                Storage::delete(str_replace('storage/', '', $mahasiswa->foto));
-            }
-
-            $path = $request->file('foto')->store('uploads/foto_mahasiswa', 'public');
-            $mahasiswa->foto = 'storage/' . $path;
+    // Upload Foto
+    if ($request->hasFile('foto')) {
+        if ($mahasiswa->foto && Storage::disk('public')->exists(str_replace('storage/', '', $mahasiswa->foto))) {
+            Storage::disk('public')->delete(str_replace('storage/', '', $mahasiswa->foto));
         }
-
-        // Update tabel mahasiswa
-        $mahasiswa->nama_mhs = $request->nama_mhs;
-        $mahasiswa->nim_mhs = $request->nim_mhs;
-        $mahasiswa->semester = $request->semester;
-        $mahasiswa->id_prodi = $user->id_prodi;
-        $mahasiswa->no_telp = $request->no_telp;
-        $mahasiswa->save();
-
-        return redirect()->route('mahasiswa.profile')->with('success', 'Profil berhasil diperbarui.');
+        $path = $request->file('foto')->store('uploads/foto_mahasiswa', 'public');
+        $mahasiswa->foto = 'storage/' . $path;
     }
+
+    // Update tabel mahasiswa
+    $mahasiswa->nama_mhs = $request->nama_mhs;
+    $mahasiswa->nim_mhs = $request->nim_mhs;
+    $mahasiswa->semester = $request->semester;
+    $mahasiswa->no_telp = $request->no_telp;
+    $mahasiswa->save();
+
+    return redirect()->route('mahasiswa.profile')->with('success', 'Profil berhasil diperbarui.');
+}
 
     // ===== Jadwal Mahasiswa =====
     public function jadwalSeminar()

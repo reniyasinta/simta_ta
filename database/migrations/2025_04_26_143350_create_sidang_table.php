@@ -31,12 +31,17 @@ return new class extends Migration
             $table->string('laporan_TA')->nullable();
             $table->enum('status_draft_dosen1', ['Menunggu', 'Revisi', 'Disetujui'])->default('Menunggu');
             $table->enum('status_draft_dosen2', ['Menunggu', 'Revisi', 'Disetujui'])->default('Menunggu');
+            $table->text('catatan_draft_dosen1')->nullable();
+            $table->text('catatan_draft_dosen2')->nullable();
 
             // Revisi Laporan per Penguji
             $table->string('revisi_laporan')->nullable();
             $table->enum('status_revisi_penguji_1', ['Menunggu', 'Revisi', 'Disetujui'])->default('Menunggu');
             $table->enum('status_revisi_penguji_2', ['Menunggu', 'Revisi', 'Disetujui'])->default('Menunggu');
             $table->enum('status_revisi_penguji_3', ['Menunggu', 'Revisi', 'Disetujui'])->default('Menunggu');
+            $table->text('catatan_penguji_1')->nullable();
+            $table->text('catatan_penguji_2')->nullable();
+            $table->text('catatan_penguji_3')->nullable();
 
             // Laporan Final
             $table->string('laporan_akhir_pdf')->nullable();
@@ -51,14 +56,8 @@ return new class extends Migration
             // Lembar Konsultasi & Hasil Sidang
             $table->string('hasil_sidang')->nullable();
 
-            // Catatan Dosen
-            $table->text('catatan_dosen')->nullable();
-            $table->text('catatan_revisi1')->nullable();
-
-            // Catatan per Penguji
-            $table->text('catatan_penguji_1')->nullable();
-            $table->text('catatan_penguji_2')->nullable();
-            $table->text('catatan_penguji_3')->nullable();
+            // Link Drive Proyek (tambahan)
+            $table->string('link_drive_proyek')->nullable();
 
             $table->timestamps();
         });
