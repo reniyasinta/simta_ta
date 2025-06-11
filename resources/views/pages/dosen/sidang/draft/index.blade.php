@@ -16,14 +16,14 @@
         <div class="table-responsive">
             <table class="table table-bordered table-striped">
                 <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Nama Mahasiswa</th>
-                    <th>Laporan Draft</th>
-                    <th>Status Draft</th>
-                    <th>Catatan</th>
-                    <th>Aksi</th>
-                </tr>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Mahasiswa</th>
+                        <th>Laporan Draft</th>
+                        <th>Status Draft</th>
+                        <th>Catatan</th>
+                        <th>Aksi</th>
+                    </tr>
                 </thead>
                 <tbody>
                     @forelse($sidangList as $index => $sidang)
@@ -53,38 +53,49 @@
                         </td>
 
                         <td>
-                            @if ($sidang->id_dosen1 == auth()->user()->id)
-                                {{ $sidang->status_draft_dosen1 ?? '-' }}
-                            @elseif ($sidang->id_dosen2 == auth()->user()->id)
-                                {{ $sidang->status_draft_dosen2 ?? '-' }}
-                            @else
-                                -
-                            @endif
+                            @php
+                                $status = '-';
+                                if ($sidang->id_dosen1 == auth()->user()->id) {
+                                    $status = $sidang->status_draft_dosen1 ?? '-';
+                                } elseif ($sidang->id_dosen2 == auth()->user()->id) {
+                                    $status = $sidang->status_draft_dosen2 ?? '-';
+                                }
+                            @endphp
+                            {{ $status }}
                         </td>
 
                         <td>
-                            {{ $sidang->catatan_dosen ?? '-' }}
+                            @php
+                                $catatan = $sidang->catatan_dosen ?? '-';
+                            @endphp
+                            {{ $catatan }}
                         </td>
 
                         <td>
-                            <form action="{{ route('dosen.sidang.updateStatusDraft', $sidang->id_sidang) }}" method="POST" id="form-{{ $sidang->id_sidang }}">
+                            @if ($status == '-')
+                            <form action="{{ route('dosen.sidang.updateStatusDraft', $sidang->id_sidang) }}" method="POST">
                                 @csrf
-
                                 <div class="form-group mb-1">
-                                    <textarea name="catatan" class="form-control form-control-sm" rows="2" placeholder="Catatan (opsional)">{{ old('catatan', $sidang->catatan_dosen ?? '') }}</textarea>
+                                    <textarea name="catatan" class="form-control form-control-sm" rows="2" placeholder="Catatan (opsional)"></textarea>
                                 </div>
 
                                 <div class="d-flex gap-2">
                                     <button type="submit" name="status_draft" value="Disetujui" class="btn btn-sm btn-success w-50">
-                                        <i class="fas fa-check-circle"></i> ACC
+                                        <i class="fas fa-check-circle"></i> Setuju
                                     </button>
                                     <button type="submit" name="status_draft" value="Revisi" class="btn btn-sm btn-warning w-50">
                                         <i class="fas fa-edit"></i> Revisi
                                     </button>
                                 </div>
                             </form>
+                            @else
+                                @if ($status == 'Disetujui')
+                                    <span class="badge badge-success">✅ Sudah Disetujui</span>
+                                @elseif ($status == 'Revisi')
+                                    <span class="badge badge-warning">❌ Perlu Revisi</span>
+                                @endif
+                            @endif
                         </td>
-
                     </tr>
                     @empty
                     <tr>

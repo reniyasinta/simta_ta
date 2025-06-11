@@ -24,6 +24,7 @@ use App\Http\Controllers\Panitia\BerkasController as PanitiaBerkasController;
 use App\Http\Controllers\Panitia\PanitiaJadwalController;
 use App\Http\Controllers\Panitia\PanitiaSemproController;
 use App\Http\Controllers\Panitia\PanitiaSidangController;
+use App\Http\Controllers\Panitia\PanitiaDashboardController;
 use App\Exports\TemplateUserExport;
 use App\Exports\TemplateJadwalExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -78,6 +79,8 @@ Route::middleware(['role:panitia'])->prefix('panitia')->group(function () {
 
     // Dashboard
     Route::get('/dashboard', [PanitiaController::class, 'index'])->name('panitia.dashboard');
+    Route::get('/profil', [ProfilPanitiaController::class, 'index'])->name('profil');
+    Route::post('/profil/update', [ProfilPanitiaController::class, 'update'])->name('profil.update');
 
     // Pengajuan
     Route::get('/pengajuan', [PanitiaPengajuanController::class, 'index'])->name('panitia.pengajuan.index');

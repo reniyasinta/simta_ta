@@ -208,7 +208,16 @@
 
                                         {{-- Tombol Kembali --}}
                                         <div class="text-right mt-4">
+<<<<<<< HEAD
                                             <button type="button" class="btn btn-secondary" onclick="$('#modalDosen{{ $dosen->id_dosen }}').modal('hide'); setTimeout(function(){ window.location.href='{{ route('mahasiswa.dashboard') }}'; }, 300)">Kembali</button>
+=======
+<<<<<<< HEAD
+                                            <button type="button" class="btn btn-secondary" onclick="$('#modalDosen{{ $dosen->id_dosen }}').modal('hide'); setTimeout(function(){ window.location.href='{{ route('mahasiswa.dashboard') }}'; }, 300)">Kembali</button>
+
+=======
+                                            <a href="#" class="btn btn-secondary" role="button" data-dismiss="modal">Kembali</a>
+>>>>>>> 1f747bf664d209b6aaf520370a812c667f5c53b7
+>>>>>>> 9be538c208eeb1c1d791b236ffd920ac603a6272
                                         </div>
                                     </div>
                                 </div>

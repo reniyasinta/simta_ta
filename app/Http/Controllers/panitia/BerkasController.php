@@ -59,7 +59,7 @@ class BerkasController extends Controller
         'id_prodi' => $user->id_prodi,
     ]);
 
-    return redirect()->route('panitia.berkas.index')->with('success', 'Berkas berhasil diunggah');
+    return redirect()->route('panitia.berkas.index')->with('success', 'Berkas berhasil diupload');
 }
 
 

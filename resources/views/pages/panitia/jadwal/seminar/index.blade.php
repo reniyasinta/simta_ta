@@ -37,7 +37,6 @@
                         <th>Tanggal</th>
                         <th>Jam</th>
                         <th>Ruangan</th>
-                        <th>NIM</th>
                         <th>Nama Mahasiswa</th>
                         <th>Program Studi</th>
                         <th>Judul TA</th>
@@ -60,7 +59,6 @@
                             {{ $jadwal->jam_selesai ? \Carbon\Carbon::parse($jadwal->jam_selesai)->format('H:i') : '-' }}
                         </td>
                         <td>{{ $jadwal->ruangan }}</td>
-                        <td>{{ $jadwal->pengajuan?->kelompok?->anggota->pluck('nim')->join(', ') ?? $jadwal->nim }}</td>
                         <td>{{ $jadwal->pengajuan?->kelompok?->anggota->pluck('nama_mhs')->join(', ') ?? $jadwal->nama }}</td>
                         <td>{{ $jadwal->pengajuan?->kelompok?->anggota->first()->prodi->nama_prodi ?? '-' }}</td>
                         <td>{{ $jadwal->pengajuan?->judul_ta ?? $jadwal->judul_ta }}</td>
@@ -90,7 +88,6 @@
                             <td>-</td>
                             <td>
                                 @foreach ($pengajuan->kelompok->anggota as $anggota)
-                                    <div>{{ $anggota->nim ?? '-' }}</div>
                                 @endforeach
                             </td>
                             <td>

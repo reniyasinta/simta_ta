@@ -7,13 +7,14 @@
             <h1>Upload Berkas Persyaratan</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="{{ route('dashboard') }}">Dashboard</a></div>
+                <div class="breadcrumb-item active"><a href="{{ route('panitia.berkas.index') }}">Berkas</a></div>
                 <div class="breadcrumb-item">Upload Berkas</div>
             </div>
         </div>
 
         <div class="section-body">
-            <div class="row justify-content-center">
-                <div class="col-12 col-md-10 col-lg-8">
+             <div class="row">
+                <div class="col-12">
                     <div class="card shadow">
                         <div class="card-header">
                             <h4>Form Upload Berkas</h4>
@@ -49,7 +50,7 @@
 
                                 <div class="text-end">
                                     <a href="{{ route('panitia.berkas.index') }}" class="btn btn-secondary">Kembali</a>
-                                    <button type="submit" class="btn btn-primary">Unggah Berkas</button>
+                                    <button type="submit" class="btn btn-primary">Upload Berkas</button>
                                 </div>
                             </form>
                         </div>

@@ -35,14 +35,18 @@
                 <a href="{{ route('panitia.dashboard') }}" class="nav-link">
                     <i class="fas fa-fire"></i> <span>Dashboard</span>
                 </a>
+            <li class="menu-header">General</li>
             </li>
                         <li class="nav-item {{ ($type_menu ?? '') === 'kuota' ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('panitia.kuota.index') }}">
                     <i class="fas fa-user-cog"></i> <span>Manajemen Kuota Dosen</span>
                 </a>
             </li>
-            <li class="menu-header">General</li>
-
+                        <li class="nav-item {{ ($type_menu ?? '') === 'pengajuan' ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('panitia.pengajuan.index') }}">
+                    <i class="fas fa-file-signature"></i> <span>Penentuan Dospem 2</span>
+                </a>
+            </li>
             <li class="nav-item {{ ($type_menu ?? '') === 'berkas' ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('panitia.berkas.index') }}">
                     <i class="fas fa-file-upload"></i> <span>Upload Berkas</span>
@@ -61,12 +65,6 @@
                     <li class="{{ request()->is('panitia/jadwal/yudisium*') ? 'active' : '' }}">
                         <a class="nav-link" href="{{ route('jadwal.yudisium.index') }}">Yudisium</a>
                 </ul>
-            </li>
-
-            <li class="nav-item {{ ($type_menu ?? '') === 'pengajuan' ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('panitia.pengajuan.index') }}">
-                    <i class="fas fa-file-signature"></i> <span>Penentuan Dospem 2</span>
-                </a>
             </li>
             <li class="menu-header">Sempro</li>
             <li class="{{ request()->routeIs('panitia.sempro.index') ? 'active' : '' }}">
@@ -177,19 +175,6 @@
 
             {{-- General --}}
             <li class="menu-header">General</li>
-
-            <li>
-                <a class="nav-link" href="{{ route('mahasiswa.jadwal.seminar') }}">
-                    <i class="fas fa-calendar-alt"></i> <span>Jadwal Seminar</span>
-                </a>
-            </li>
-
-            <li>
-                <a class="nav-link" href="{{ route('mahasiswa.jadwal.sidang') }}">
-                    <i class="fas fa-calendar-check"></i> <span>Jadwal Sidang</span>
-                </a>
-            </li>
-
             <li>
                 <a class="nav-link" href="{{ route('mahasiswa.berkas.index') }}">
                     <i class="fas fa-file-upload"></i> <span>Berkas Persyaratan</span>
@@ -219,7 +204,11 @@
 
             {{-- Seminar Proposal --}}
             <li class="menu-header">Seminar Proposal</li>
-
+            <li>
+                <a class="nav-link" href="{{ route('mahasiswa.jadwal.seminar') }}">
+                    <i class="fas fa-calendar-alt"></i> <span>Jadwal Seminar</span>
+                </a>
+            </li>
             <li>
                 <a class="nav-link" href="{{ route('kelompok.index') }}">
                     <i class="fas fa-users"></i> <span>Data Kelompok</span>
@@ -240,7 +229,11 @@
 
             {{-- Sidang TA --}}
             <li class="menu-header">Tugas Akhir</li>
-
+            <li>
+                <a class="nav-link" href="{{ route('mahasiswa.jadwal.sidang') }}">
+                    <i class="fas fa-calendar-check"></i> <span>Jadwal Sidang</span>
+                </a>
+            </li>
             <li class="{{ request()->routeIs('mahasiswa.sidang.draft') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('mahasiswa.sidang.draft') }}">
                     <i class="fas fa-file-alt"></i> <span>Pra</span>
