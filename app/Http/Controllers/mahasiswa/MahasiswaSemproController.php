@@ -11,22 +11,89 @@ use Illuminate\Support\Facades\Storage;
 
 class MahasiswaSemproController extends Controller
 {
-public function index()
-{
-    $mahasiswa = auth()->user()->mahasiswa;
+    public function index()
+    {
+        $mahasiswa = auth()->user()->mahasiswa;
 
-    $pengajuan = PengajuanPembimbing::with('kelompok.anggota1.mahasiswa', 'kelompok.anggota2.mahasiswa', 'kelompok.anggota3.mahasiswa')
-        ->where('id_kelompok', $mahasiswa->id_kelompok)
-        ->where('status', 'Diterima')
-        ->first();
+        $pengajuan = PengajuanPembimbing::with('kelompok.anggota1.mahasiswa', 'kelompok.anggota2.mahasiswa', 'kelompok.anggota3.mahasiswa')
+            ->where('id_kelompok', $mahasiswa->id_kelompok)
+            ->where('status', 'Diterima')
+            ->first();
 
-    $sempro = null;
-    if ($pengajuan) {
-        $sempro = Sempro::where('id_ajuan', $pengajuan->id_ajuan)->first();
+        $sempro = null;
+        if ($pengajuan) {
+            $sempro = Sempro::where('id_ajuan', $pengajuan->id_ajuan)->first();
+        }
+
+        return view('pages.mahasiswa.sempro.index', compact('pengajuan', 'sempro'));
     }
 
-    return view('pages.mahasiswa.sempro.index', compact('pengajuan', 'sempro'));
-}
+    public function uploadLaporanTa(Request $request)
+    {
+        $request->validate([
+            'laporan_sempro' => 'required|mimes:pdf|max:20480',
+        ]);
+
+        $mahasiswa = Auth::user()->mahasiswa;
+        $pengajuan = PengajuanPembimbing::where('id_kelompok', $mahasiswa->id_kelompok)
+            ->where('status', 'Diterima')
+            ->first();
+
+        if (!$pengajuan) {
+            return redirect()->back()->with('error', 'Pengajuan belum disetujui.');
+        }
+
+        $sempro = Sempro::firstOrCreate(
+            ['id_ajuan' => $pengajuan->id_ajuan],
+            [
+                'form_persetujuan_sempro' => '',
+                'berita_acara_sempro' => '',
+                'status_pengajuan' => 'Belum Diajukan'
+            ]
+        );
+
+        $filePath = $request->file('laporan_sempro')->store('uploads/laporan_sempro', 'public');
+        $sempro->laporan_sempro = 'storage/' . $filePath;
+
+        // Reset status ACC dospem
+        $sempro->status_laporan_ta_dospem1 = 'Menunggu';
+        $sempro->status_laporan_ta_dospem2 = 'Menunggu';
+        $sempro->catatan_dospem1 = null;
+        $sempro->catatan_dospem2 = null;
+
+        $sempro->save();
+
+        return redirect()->route('mahasiswa.sempro.index')->with('success', 'Laporan TA berhasil diupload.');
+    }
+
+    public function deleteLaporanTa()
+    {
+        $mahasiswa = Auth::user()->mahasiswa;
+        $pengajuan = PengajuanPembimbing::where('id_kelompok', $mahasiswa->id_kelompok)
+            ->where('status', 'Diterima')
+            ->first();
+
+        if (!$pengajuan) {
+            return redirect()->back()->with('error', 'Pengajuan belum disetujui.');
+        }
+
+        $sempro = Sempro::where('id_ajuan', $pengajuan->id_ajuan)->first();
+
+        if ($sempro && $sempro->laporan_sempro) {
+            Storage::disk('public')->delete(str_replace('storage/', '', $sempro->laporan_sempro));
+            $sempro->laporan_sempro = null;
+
+            // Reset status ACC dospem
+            $sempro->status_laporan_ta_dospem1 = 'Menunggu';
+            $sempro->status_laporan_ta_dospem2 = 'Menunggu';
+            $sempro->catatan_dospem1 = null;
+            $sempro->catatan_dospem2 = null;
+
+            $sempro->save();
+        }
+
+        return redirect()->route('mahasiswa.sempro.index')->with('success', 'Laporan TA berhasil dihapus.');
+    }
 
     public function uploadForm(Request $request)
     {
@@ -43,24 +110,51 @@ public function index()
             return redirect()->back()->with('error', 'Pengajuan belum disetujui.');
         }
 
-        // cari sempro, kalau belum ada → buat
         $sempro = Sempro::firstOrCreate(
             ['id_ajuan' => $pengajuan->id_ajuan],
-            ['form_persetujuan_sempro' => '', 'hasil_sempro' => '']
+            [
+                'berita_acara_sempro' => '',
+                'status_pengajuan' => 'Belum Diajukan'
+            ]
         );
 
-        // upload file
         $formPath = $request->file('form_persetujuan_sempro')->store('uploads/form_persetujuan_sempro', 'public');
         $sempro->form_persetujuan_sempro = 'storage/' . $formPath;
+
+        $sempro->status_pengajuan = 'Belum Diajukan';
+
         $sempro->save();
 
-        return redirect()->route('mahasiswa.sempro.index')->with('success', 'Form Persetujuan SEMPRO berhasil diupload.');
+        return redirect()->route('mahasiswa.sempro.index')->with('success', 'Form Persetujuan Sempro berhasil diupload.');
+    }
+
+    public function deleteForm()
+    {
+        $mahasiswa = Auth::user()->mahasiswa;
+        $pengajuan = PengajuanPembimbing::where('id_kelompok', $mahasiswa->id_kelompok)
+            ->where('status', 'Diterima')
+            ->first();
+
+        if (!$pengajuan) {
+            return redirect()->back()->with('error', 'Pengajuan belum disetujui.');
+        }
+
+        $sempro = Sempro::where('id_ajuan', $pengajuan->id_ajuan)->first();
+
+        if ($sempro && $sempro->form_persetujuan_sempro) {
+            Storage::disk('public')->delete(str_replace('storage/', '', $sempro->form_persetujuan_sempro));
+            $sempro->form_persetujuan_sempro = null;
+            $sempro->status_pengajuan = 'Belum Diajukan';
+            $sempro->save();
+        }
+
+        return redirect()->route('mahasiswa.sempro.index')->with('success', 'Form Persetujuan Sempro berhasil dihapus.');
     }
 
     public function uploadHasil(Request $request)
     {
         $request->validate([
-            'hasil_sempro' => 'required|mimes:pdf|max:20480',
+            'berita_acara_sempro' => 'required|mimes:pdf|max:20480',
         ]);
 
         $mahasiswa = Auth::user()->mahasiswa;
@@ -72,86 +166,60 @@ public function index()
             return redirect()->back()->with('error', 'Pengajuan belum disetujui.');
         }
 
-        // cari sempro, kalau belum ada → buat
         $sempro = Sempro::firstOrCreate(
-            ['id_ajuan' => $pengajuan->id_ajuan],
-            ['form_persetujuan_sempro' => '', 'hasil_sempro' => '']
+            ['id_ajuan' => $pengajuan->id_ajuan]
         );
 
-        // upload file
-        $hasilPath = $request->file('hasil_sempro')->store('uploads/hasil_sempro', 'public');
-        $sempro->hasil_sempro = 'storage/' . $hasilPath;
+        $hasilPath = $request->file('berita_acara_sempro')->store('uploads/berita_acara_sempro', 'public');
+        $sempro->berita_acara_sempro = 'storage/' . $hasilPath;
+
         $sempro->save();
 
-        return redirect()->route('mahasiswa.sempro.index')->with('success', 'Hasil SEMPRO berhasil diupload.');
-    }
-    public function deleteForm()
-{
-    $mahasiswa = Auth::user()->mahasiswa;
-    $pengajuan = PengajuanPembimbing::where('id_kelompok', $mahasiswa->id_kelompok)
-        ->where('status', 'Diterima')
-        ->first();
-
-    if (!$pengajuan) {
-        return redirect()->back()->with('error', 'Pengajuan belum disetujui.');
+        return redirect()->route('mahasiswa.sempro.index')->with('success', 'Berita Acara berhasil diupload.');
     }
 
-    $sempro = Sempro::where('id_ajuan', $pengajuan->id_ajuan)->first();
+    public function deleteHasil()
+    {
+        $mahasiswa = Auth::user()->mahasiswa;
+        $pengajuan = PengajuanPembimbing::where('id_kelompok', $mahasiswa->id_kelompok)
+            ->where('status', 'Diterima')
+            ->first();
 
-    if ($sempro && $sempro->form_persetujuan_sempro) {
-        Storage::disk('public')->delete(str_replace('storage/', '', $sempro->form_persetujuan_sempro));
-        $sempro->form_persetujuan_sempro = null;
+        if (!$pengajuan) {
+            return redirect()->back()->with('error', 'Pengajuan belum disetujui.');
+        }
+
+        $sempro = Sempro::where('id_ajuan', $pengajuan->id_ajuan)->first();
+
+        if ($sempro && $sempro->berita_acara_sempro) {
+            Storage::disk('public')->delete(str_replace('storage/', '', $sempro->berita_acara_sempro));
+            $sempro->berita_acara_sempro = null;
+            $sempro->save();
+        }
+
+        return redirect()->route('mahasiswa.sempro.index')->with('success', 'Berita Acara berhasil dihapus.');
+    }
+
+    public function ajukan()
+    {
+        $mahasiswa = Auth::user()->mahasiswa;
+        $pengajuan = PengajuanPembimbing::where('id_kelompok', $mahasiswa->id_kelompok)
+            ->where('status', 'Diterima')
+            ->first();
+
+        if (!$pengajuan) {
+            return back()->with('error', 'Pengajuan belum disetujui.');
+        }
+
+        $sempro = Sempro::where('id_ajuan', $pengajuan->id_ajuan)->first();
+
+        if (!$sempro || !$sempro->form_persetujuan_sempro) {
+            return back()->with('error', 'Form Persetujuan belum diupload.');
+        }
+
+        $sempro->status_pengajuan = 'Diajukan';
         $sempro->save();
+
+        return back()->with('success', 'Form Persetujuan berhasil diajukan ke Panitia.');
     }
-
-    return redirect()->route('mahasiswa.sempro.index')->with('success', 'Form Persetujuan SEMPRO berhasil dihapus.');
-}
-
-public function deleteHasil()
-{
-    $mahasiswa = Auth::user()->mahasiswa;
-    $pengajuan = PengajuanPembimbing::where('id_kelompok', $mahasiswa->id_kelompok)
-        ->where('status', 'Diterima')
-        ->first();
-
-    if (!$pengajuan) {
-        return redirect()->back()->with('error', 'Pengajuan belum disetujui.');
-    }
-
-    $sempro = Sempro::where('id_ajuan', $pengajuan->id_ajuan)->first();
-
-    if ($sempro && $sempro->hasil_sempro) {
-        Storage::disk('public')->delete(str_replace('storage/', '', $sempro->hasil_sempro));
-        $sempro->hasil_sempro = null;
-        $sempro->save();
-    }
-
-    return redirect()->route('mahasiswa.sempro.index')->with('success', 'Hasil SEMPRO berhasil dihapus.');
-}
-
-// Controller
-public function ajukan()
-{
-    $mahasiswa = Auth::user()->mahasiswa;
-    $pengajuan = PengajuanPembimbing::where('id_kelompok', $mahasiswa->id_kelompok)
-        ->where('status', 'Diterima')
-        ->first();
-
-    if (!$pengajuan) {
-        return back()->with('error', 'Pengajuan belum disetujui.');
-    }
-
-    $sempro = Sempro::where('id_ajuan', $pengajuan->id_ajuan)->first();
-
-    if (!$sempro || !$sempro->form_persetujuan_sempro) {
-        return back()->with('error', 'Form Persetujuan belum diupload.');
-    }
-
-    $sempro->status_pengajuan = 'Diajukan';
-    $sempro->save();
-
-    return back()->with('success', 'Form Persetujuan berhasil diajukan ke Dosen.');
-}
-
-
 }

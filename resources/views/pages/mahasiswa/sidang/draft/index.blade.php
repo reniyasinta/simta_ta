@@ -22,7 +22,7 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Laporan TA</th>
+                        <th>Proposal TA</th>
                         <th>Lembar Konsultasi</th>
                         <th>Status Dospem 1</th>
                         <th>Status Dospem 2</th>

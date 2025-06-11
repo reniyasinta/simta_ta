@@ -81,14 +81,13 @@
                                 {{-- Status --}}
                                 <td>
                                     @if($item->status === 'Diterima')
-                                        <span class="badge bg-success">Diterima</span>
+                                        <span class="badge bg-success text-white">Acc</span>
                                     @elseif($item->status === 'Ditolak')
-                                        <span class="badge bg-danger">Ditolak</span>
+                                        <span class="badge bg-danger text-white">Ditolak</span>
                                     @else
                                         <span class="badge bg-warning text-dark">Menunggu</span>
                                     @endif
                                 </td>
-
                                 {{-- Keterangan --}}
                                 <td>
                                     @if($item->status === 'Menunggu')
@@ -105,7 +104,7 @@
                                 <td>
                                     @if($item->status === 'Menunggu')
                                         <div class="d-flex gap-2">
-                                            <button form="form-{{ $item->id_ajuan }}" type="submit" name="status" value="Diterima" class="btn btn-sm btn-success">Setujui</button>
+                                            <button form="form-{{ $item->id_ajuan }}" type="submit" name="status" value="Diterima" class="btn btn-sm btn-success">Acc</button>
                                             <button form="form-{{ $item->id_ajuan }}" type="submit" name="status" value="Ditolak" class="btn btn-sm btn-danger">Tolak</button>
                                         </div>
                                     @else

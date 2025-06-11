@@ -14,12 +14,14 @@ return new class extends Migration
         Schema::create('sempro', function (Blueprint $table) {
             $table->id('id_sempro');
             $table->foreignId('id_ajuan')->constrained('pengajuan_pembimbing','id_ajuan');
+            $table->string('laporan_sempro')->nullable();
             $table->string('form_persetujuan_sempro')->nullable();
-            $table->string('hasil_sempro')->nullable();
-            $table->enum('status_dospem1', ['Menunggu', 'Menyetujui', 'Tidak Menyetujui'])->default('Menunggu');
-            $table->enum('status_dospem2', ['Menunggu', 'Menyetujui', 'Tidak Menyetujui'])->default('Menunggu');
+            $table->string('berita_acara_sempro')->nullable();
+            $table->enum('status_laporan_ta_dospem1', ['Menunggu', 'Revisi', 'Disetujui'])->default('Menunggu');
+            $table->enum('status_laporan_ta_dospem2', ['Menunggu', 'Revisi', 'Disetujui'])->default('Menunggu');
             $table->text('catatan_dospem1')->nullable();
             $table->text('catatan_dospem2')->nullable();
+            $table->enum('status_pengajuan', ['Belum Diajukan', 'Diajukan'])->default('Belum Diajukan');
             $table->timestamps();
         });
     }

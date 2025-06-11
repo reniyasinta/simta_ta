@@ -27,7 +27,7 @@ class DosenSemproController extends Controller
     public function submit(Request $request, $id)
     {
         $request->validate([
-            'status' => 'required|in:Disetujui,Ditolak',
+            'status' => 'required|in:Disetujui,Revisi',
             'catatan' => 'nullable|string',
         ]);
 
@@ -36,12 +36,12 @@ class DosenSemproController extends Controller
 
         $pengajuan = $sempro->pengajuan;
 
-        // Cek dospem1 atau dospem2
+        // Cek dospem1 atau dospem2 → update status Laporan TA
         if ($pengajuan->id_dosen1 == $user->id) {
-            $sempro->status_dospem1 = $request->status;
+            $sempro->status_laporan_ta_dospem1 = $request->status;
             $sempro->catatan_dospem1 = $request->catatan;
         } elseif ($pengajuan->id_dosen2 == $user->id) {
-            $sempro->status_dospem2 = $request->status;
+            $sempro->status_laporan_ta_dospem2 = $request->status;
             $sempro->catatan_dospem2 = $request->catatan;
         } else {
             return back()->with('error', 'Anda bukan dosen pembimbing untuk pengajuan ini.');
@@ -49,6 +49,6 @@ class DosenSemproController extends Controller
 
         $sempro->save();
 
-        return back()->with('success', 'Validasi berhasil disimpan.');
+        return back()->with('success', 'Validasi Laporan TA berhasil disimpan.');
     }
 }

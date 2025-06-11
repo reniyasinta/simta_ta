@@ -14,8 +14,9 @@ class Sempro extends Model
 
     protected $fillable = [
         'id_ajuan',
+        'laporan_sempro',
         'form_persetujuan_sempro',
-        'hasil_sempro',
+        'berita_acara_sempro',
         'status_dospem1',
         'status_dospem2',
         'catatan_dospem1',

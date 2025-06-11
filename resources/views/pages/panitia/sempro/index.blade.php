@@ -6,7 +6,7 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>Berkas SEMPRO</h1>
+            <h1>Berkas Sempro</h1>
         </div>
 
         <div class="section-body">
@@ -15,8 +15,9 @@
                 <tr>
                     <th class="text-center" style="width: 50px;">No</th>
                     <th class="text-center">Anggota Kelompok</th>
+                    <th class="text-center">Laporan TA</th>
                     <th class="text-center">Form Persetujuan</th>
-                    <th class="text-center">Hasil SEMPRO</th>
+                    <th class="text-center">Berita Acara</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -41,6 +42,15 @@
                                 </ul>
                             </td>
                             <td class="text-center">
+                                @if ($sempro && $sempro->laporan_sempro)
+                                    <a href="{{ asset($sempro->laporan_sempro) }}" target="_blank" class="btn btn-sm btn-info">
+                                        <i class="fas fa-eye"></i> Lihat
+                                    </a>
+                                @else
+                                    <span class="badge badge-secondary">Belum Upload</span>
+                                @endif
+                            </td>
+                            <td class="text-center">
                                 @if ($sempro && $sempro->form_persetujuan_sempro)
                                     <a href="{{ asset($sempro->form_persetujuan_sempro) }}" target="_blank" class="btn btn-sm btn-info">
                                         <i class="fas fa-eye"></i> Lihat
@@ -50,8 +60,8 @@
                                 @endif
                             </td>
                             <td class="text-center">
-                                @if ($sempro && $sempro->hasil_sempro)
-                                    <a href="{{ asset($sempro->hasil_sempro) }}" target="_blank" class="btn btn-sm btn-info">
+                                @if ($sempro && $sempro->berita_acara_sempro)
+                                    <a href="{{ asset($sempro->berita_acara_sempro) }}" target="_blank" class="btn btn-sm btn-info">
                                         <i class="fas fa-eye"></i> Lihat
                                     </a>
                                 @else

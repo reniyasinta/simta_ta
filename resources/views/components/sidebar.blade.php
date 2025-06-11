@@ -111,7 +111,7 @@
                 </a>
             </li>
 
-            {{-- Validasi SEMPRO --}}
+            {{-- Validasi Sempro --}}
             <li>
                 <a class="nav-link {{ request()->routeIs('dosen.sempro.index') ? 'active' : '' }}" href="{{ route('dosen.sempro.index') }}">
                     <i class="fas fa-file-signature"></i> <span>Validasi Maju Sempro</span>
@@ -239,11 +239,11 @@
             </li>
 
             {{-- Sidang TA --}}
-            <li class="menu-header">Sidang Tugas Akhir</li>
+            <li class="menu-header">Tugas Akhir</li>
 
             <li class="{{ request()->routeIs('mahasiswa.sidang.draft') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('mahasiswa.sidang.draft') }}">
-                    <i class="fas fa-file-alt"></i> <span>Laporan Draft TA</span>
+                    <i class="fas fa-file-alt"></i> <span>Pra</span>
                 </a>
             </li>
 
@@ -255,7 +255,7 @@
 
             <li class="{{ request()->routeIs('mahasiswa.sidang.final') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('mahasiswa.sidang.final') }}">
-                    <i class="fas fa-file-upload"></i> <span>Laporan Final TA</span>
+                    <i class="fas fa-file-upload"></i> <span>Post</span>
                 </a>
             </li>
         </ul>

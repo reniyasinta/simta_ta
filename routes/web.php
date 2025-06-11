@@ -17,14 +17,13 @@ use App\Http\Controllers\Mahasiswa\KelompokController;
 use App\Http\Controllers\Mahasiswa\BerkasController;
 use App\Http\Controllers\Mahasiswa\SuratController as MahasiswaSuratController;
 use App\Http\Controllers\Mahasiswa\UndanganController;
-use App\Http\Controllers\Mahasiswa\LaporanController;
-use App\Http\Controllers\Mahasiswa\LaporanAkhirController;
 use App\Http\Controllers\Mahasiswa\MahasiswaSemproController;
 use App\Http\Controllers\Mahasiswa\MahasiswaSidangController;
 use App\Http\Controllers\Panitia\PanitiaPengajuanController;
 use App\Http\Controllers\Panitia\BerkasController as PanitiaBerkasController;
 use App\Http\Controllers\Panitia\PanitiaJadwalController;
 use App\Http\Controllers\Panitia\PanitiaSemproController;
+use App\Http\Controllers\Panitia\PanitiaSidangController;
 use App\Exports\TemplateUserExport;
 use App\Exports\TemplateJadwalExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -43,10 +42,10 @@ Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-// Optional auth route
-Route::get('password/request', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
-Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-Route::post('register', [RegisterController::class, 'register']);
+// // Optional auth route
+// Route::get('password/request', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+// Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+// Route::post('register', [RegisterController::class, 'register']);
 
 // Setelah login
 Route::middleware(['auth'])->group(function () {
@@ -132,10 +131,15 @@ Route::middleware(['role:panitia'])->prefix('panitia')->group(function () {
     Route::get('/berkas-sempro', [\App\Http\Controllers\Panitia\PanitiaSemproController::class, 'index'])->name('panitia.sempro.index');
 
     // BERKAS SIDANG (Draft, Revisi, Final) — ini tambahan sesuai permintaan
-    Route::prefix('sidang')->name('sidang.')->group(function () {
-        Route::get('/draft', [\App\Http\Controllers\Panitia\PanitiaSidangController::class, 'draft'])->name('draft');
-        Route::get('/revisi', [\App\Http\Controllers\Panitia\PanitiaSidangController::class, 'revisi'])->name('revisi');
-        Route::get('/final', [\App\Http\Controllers\Panitia\PanitiaSidangController::class, 'final'])->name('final');
+Route::prefix('sidang')->name('sidang.')->group(function () {
+    Route::get('/draft', [PanitiaSidangController::class, 'draft'])->name('draft');
+    Route::get('/revisi', [PanitiaSidangController::class, 'revisi'])->name('revisi');
+    Route::get('/final', [PanitiaSidangController::class, 'final'])->name('final');
+    Route::post('/final/{id}/submit', [PanitiaSidangController::class, 'submitFinal'])->name('final.submit');
+
+        // Link Drive
+        Route::get('/link-drive', [\App\Http\Controllers\Panitia\PanitiaSidangController::class, 'taConfig'])->name('panitia.sidang.link_drive');
+        Route::post('/link-drive/update', [\App\Http\Controllers\Panitia\PanitiaSidangController::class, 'taConfigUpdate'])->name('panitia.sidang.link_drive.update');
     });
 
     // Kuota Dosen
@@ -182,6 +186,26 @@ Route::middleware(['role:panitia'])->prefix('panitia')->group(function () {
         Route::post('/mahasiswa/profile/update', [MahasiswaController::class, 'updateProfile'])->name('mahasiswa.profile.update');
         Route::get('/profile/edit', [MahasiswaController::class, 'editProfile'])->name('mahasiswa.profile_edit');
 
+        // Draft
+        Route::get('/draft', [App\Http\Controllers\Mahasiswa\MahasiswaSidangController::class, 'draft'])->name('mahasiswa.sidang.draft');
+        Route::get('/draft/create', [App\Http\Controllers\Mahasiswa\MahasiswaSidangController::class, 'createDraft'])->name('mahasiswa.sidang.draft.create');
+        Route::post('/upload-draft', [App\Http\Controllers\Mahasiswa\MahasiswaSidangController::class, 'uploadDraft'])->name('mahasiswa.sidang.uploadDraft');
+
+        // REVISI
+        Route::get('/revisi', [App\Http\Controllers\Mahasiswa\MahasiswaSidangController::class, 'revisi'])->name('mahasiswa.sidang.revisi');
+        Route::get('/revisi/create', [App\Http\Controllers\Mahasiswa\MahasiswaSidangController::class, 'createRevisi'])->name('mahasiswa.sidang.revisi.create');
+        Route::post('/upload-revisi', [App\Http\Controllers\Mahasiswa\MahasiswaSidangController::class, 'uploadRevisi'])->name('mahasiswa.sidang.uploadRevisi');
+
+        // FINAL
+        Route::get('/final', [MahasiswaSidangController::class, 'final'])->name('mahasiswa.sidang.final');
+        Route::get('/final/create', [MahasiswaSidangController::class, 'createFinal'])->name('mahasiswa.sidang.final.create');
+        Route::post('/final/upload', [MahasiswaSidangController::class, 'uploadFinal'])->name('mahasiswa.sidang.final.upload');
+        Route::delete('/final/delete/{jenis}', [MahasiswaSidangController::class, 'deleteFinal'])->name('mahasiswa.sidang.final.delete');
+        Route::get('/final/edit/{jenis}', [MahasiswaSidangController::class, 'editFinal'])->name('mahasiswa.sidang.final.edit');
+        Route::post('/final/update/{jenis}', [MahasiswaSidangController::class, 'updateFinal'])->name('mahasiswa.sidang.final.update');
+
+        Route::get('/jadwal', [MahasiswaController::class, 'jadwal'])->name('mahasiswa.jadwal.index');
+
         // JADWAL
         Route::get('/mahasiswa/jadwal/seminar', [MahasiswaController::class, 'jadwalSeminar'])->name('mahasiswa.jadwal.seminar');
         Route::get('/mahasiswa/jadwal/sidang', [MahasiswaController::class, 'jadwalSidang'])->name('mahasiswa.jadwal.sidang');
@@ -212,50 +236,21 @@ Route::middleware(['role:panitia'])->prefix('panitia')->group(function () {
         Route::post('/mahasiswa/surat', [MahasiswaSuratController::class, 'store'])->name('mahasiswa.surat.store');
         Route::get('/mahasiswa/surat/download/{id}', [MahasiswaSuratController::class, 'download'])->name('mahasiswa.surat.download');
 
-        // Laporan TA & Revisi
-        Route::get('laporan-ta', [LaporanController::class, 'laporanTA'])->name('mahasiswa.laporan-ta');
-        Route::get('laporan-ta/create', [LaporanController::class, 'createLaporanTA'])->name('mahasiswa.laporan-ta.create');
-        Route::post('laporan-ta/upload', [LaporanController::class, 'uploadLaporanTA'])->name('mahasiswa.laporan-ta.upload');
 
-        Route::get('revisi-laporan', [LaporanController::class, 'revisiLaporan'])->name('mahasiswa.revisi-laporan');
-        Route::get('revisi-laporan/create', [LaporanController::class, 'createRevisiLaporan'])->name('mahasiswa.revisi-laporan.create');
-        Route::post('revisi-laporan/upload', [LaporanController::class, 'uploadRevisiLaporan'])->name('mahasiswa.revisi-laporan.upload');
-
-        // Laporan Akhir
-        Route::get('laporan-akhir', [LaporanAkhirController::class, 'laporanAkhir'])->name('mahasiswa.laporan-akhir');
-        Route::get('laporan-akhir/create', [LaporanAkhirController::class, 'createLaporanAkhir'])->name('mahasiswa.laporan-akhir.create');
-        Route::post('laporan-akhir/upload', [LaporanAkhirController::class, 'uploadLaporanAkhir'])->name('mahasiswa.laporan-akhir.upload');
 
         // Upload undangan oleh mahasiswa
         Route::get('/undangan', [UndanganController::class, 'index'])->name('mahasiswa.undangan.index');
         Route::get('/undangan/create', [UndanganController::class, 'create'])->name('mahasiswa.undangan.create');
         Route::post('/undangan/store', [UndanganController::class, 'store'])->name('mahasiswa.undangan.store');
 
-        //SEMPRO
+        // SEMPRO
         Route::get('sempro', [App\Http\Controllers\Mahasiswa\MahasiswaSemproController::class, 'index'])->name('mahasiswa.sempro.index');
         Route::post('sempro/upload-form', [App\Http\Controllers\Mahasiswa\MahasiswaSemproController::class, 'uploadForm'])->name('mahasiswa.sempro.uploadForm');
         Route::post('sempro/upload-hasil', [App\Http\Controllers\Mahasiswa\MahasiswaSemproController::class, 'uploadHasil'])->name('mahasiswa.sempro.uploadHasil');
-Route::delete('/mahasiswa/sempro/deleteForm', [MahasiswaSemproController::class, 'deleteForm'])->name('mahasiswa.sempro.deleteForm');
-        Route::delete('mahasiswa/sempro/deleteHasil', [MahasiswaSemproController::class, 'deleteHasil'])->name('mahasiswa.sempro.deleteHasil');
-
-    // Draft
-    Route::get('/draft', [App\Http\Controllers\Mahasiswa\MahasiswaSidangController::class, 'draft'])->name('mahasiswa.sidang.draft');
-    Route::get('/draft/create', [App\Http\Controllers\Mahasiswa\MahasiswaSidangController::class, 'createDraft'])->name('mahasiswa.sidang.draft.create');
-    Route::post('/upload-draft', [App\Http\Controllers\Mahasiswa\MahasiswaSidangController::class, 'uploadDraft'])->name('mahasiswa.sidang.uploadDraft');
-
-// REVISI
-Route::get('/revisi', [App\Http\Controllers\Mahasiswa\MahasiswaSidangController::class, 'revisi'])->name('mahasiswa.sidang.revisi');
-Route::get('/revisi/create', [App\Http\Controllers\Mahasiswa\MahasiswaSidangController::class, 'createRevisi'])->name('mahasiswa.sidang.revisi.create');
-Route::post('/upload-revisi', [App\Http\Controllers\Mahasiswa\MahasiswaSidangController::class, 'uploadRevisi'])->name('mahasiswa.sidang.uploadRevisi');
-
-// FINAL
-Route::get('/final', [App\Http\Controllers\Mahasiswa\MahasiswaSidangController::class, 'final'])->name('mahasiswa.sidang.final');
-Route::get('/final/create', [App\Http\Controllers\Mahasiswa\MahasiswaSidangController::class, 'createFinal'])->name('mahasiswa.sidang.final.create');
-Route::post('/upload-final', [App\Http\Controllers\Mahasiswa\MahasiswaSidangController::class, 'uploadFinal'])->name('mahasiswa.sidang.uploadFinal');
-
-// Ajukan Sempro
-Route::post('/sempro/ajukan', [MahasiswaSemproController::class, 'ajukan'])->name('mahasiswa.sempro.ajukan');
-
+        Route::post('sempro/upload-laporan-ta', [App\Http\Controllers\Mahasiswa\MahasiswaSemproController::class, 'uploadLaporanTa'])->name('mahasiswa.sempro.uploadLaporanTa');
+        Route::delete('sempro/deleteForm', [App\Http\Controllers\Mahasiswa\MahasiswaSemproController::class, 'deleteForm'])->name('mahasiswa.sempro.deleteForm');
+        Route::delete('sempro/deleteHasil', [App\Http\Controllers\Mahasiswa\MahasiswaSemproController::class, 'deleteHasil'])->name('mahasiswa.sempro.deleteHasil');
+        Route::delete('sempro/delete-laporan-ta', [App\Http\Controllers\Mahasiswa\MahasiswaSemproController::class, 'deleteLaporanTa'])->name('mahasiswa.sempro.deleteLaporanTa');
 
     });
 
