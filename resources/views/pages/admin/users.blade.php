@@ -51,19 +51,19 @@
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
                                 <td>{{ $user->role->name ?? '-' }}</td>
-<td>
-    @if ($user->role_id == 4)
-        {{ $user->nim ?? '-' }}
-    @elseif (in_array($user->role_id, [1, 2, 3]))
-        {{ $user->nip ?? '-' }}
-    @else
-        -
-    @endif
-</td>
+                                <td>
+                                    @if ($user->role_id == 4)
+                                        {{ $user->nim ?? '-' }}
+                                    @elseif (in_array($user->role_id, [1, 2, 3]))
+                                        {{ $user->nip ?? '-' }}
+                                    @else
+                                        -
+                                    @endif
+                                </td>
                                 <td>{{ $user->prodi->nama_prodi ?? '-' }}</td>
                                 <td>
                                     <a href="{{ route('admin.edit', $user->id) }}"
-                                        class="btn btn-primary btn-action me-1"
+                                        class="btn btn-primary btn-sm btn-action me-1"
                                         data-toggle="tooltip"
                                         title="Edit">
                                         <i class="fas fa-pencil-alt"></i>
@@ -76,7 +76,7 @@
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"
-                                                class="btn btn-danger btn-action"
+                                                class="btn btn-danger btn-sm btn-action"
                                                 data-toggle="tooltip"
                                                 title="Delete">
                                             <i class="fas fa-trash"></i>

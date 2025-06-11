@@ -32,17 +32,23 @@ class SuratController extends Controller
     {
         $mahasiswa = Mahasiswa::where('user_id', Auth::id())->firstOrFail();
 
-        // Ambil pengajuan pembimbing yang sudah diterima
         $pengajuan = PengajuanPembimbing::whereHas('kelompok', function ($q) use ($mahasiswa) {
             $q->whereHas('anggota', function ($qq) use ($mahasiswa) {
                 $qq->where('id_mhs', $mahasiswa->id_mhs);
             });
         })->where('status', 'Diterima')->latest()->first();
 
-        $dospem1 = $pengajuan->dosen1->dosen->nama_dosen ?? 'Belum Ditentukan';
+        // Validasi dospem 1 dan 2 wajib lengkap
+        if (!$pengajuan || !$pengajuan->id_dosen1 || !$pengajuan->id_dosen2) {
+            return redirect()->route('mahasiswa.surat.index')->with('error', 'Dosen Pembimbing 1 dan/atau 2 belum lengkap.');
+        }
+
+        // ✅ TAMBAHKAN INI
+        $dospem1 = $pengajuan->dosen1->dosen->nama_dosen ?? '-';
 
         return view('pages.mahasiswa.surat.create', compact('mahasiswa', 'dospem1'));
     }
+
 
     public function store(Request $request)
     {

@@ -7,7 +7,8 @@
             <div class="section-header">
                 <h2>Tambah Pengguna</h2>
                 <div class="section-header-breadcrumb">
-                    <div class="breadcrumb-item"><a href="{{ route('admin.users') }}">Daftar User</a></div>
+                    <div class="breadcrumb-item active"><a href="{{ url('home') }}">Dashboard</a></div>
+                    <div class="breadcrumb-item"><a href="{{ route('admin.users') }}">Semua User</a></div>
                     <div class="breadcrumb-item active">Tambah User</div>
                 </div>
             </div>

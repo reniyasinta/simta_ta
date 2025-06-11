@@ -53,7 +53,7 @@ return new class extends Migration
 
             // Catatan Dosen
             $table->text('catatan_dosen')->nullable();
-            $table->text('catatan_revisi')->nullable();
+            $table->text('catatan_revisi1')->nullable();
 
             // Catatan per Penguji
             $table->text('catatan_penguji_1')->nullable();

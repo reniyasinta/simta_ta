@@ -3,7 +3,8 @@
 @section('title', 'Manajemen Kuota Dosen')
 
 @push('style')
-<link rel="stylesheet" href="{{ asset('library/summernote/dist/summernote-bs4.css') }}">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 @endpush
 
 @section('main')
@@ -19,7 +20,7 @@
             @endif
 
             <div class="table-responsive">
-                <table class="table table-bordered">
+                <table id="table-kuota-dosen" class="table table-bordered table-striped">
                     <thead>
                         <tr>
                             <th>No</th>
@@ -59,9 +60,9 @@
                                     {{ $sisa }}
                                 </span>
                             </td>
-                               <td>
-        <input type="number" name="kuota_p2" value="{{ $dosen->kuota_p2 ?? 0 }}" class="form-control form-control-sm" style="width: 80px;" min="0">
-    </td>
+                            <td>
+                                <input type="number" name="kuota_p2" value="{{ $dosen->kuota_p2 ?? 0 }}" class="form-control form-control-sm" style="width: 80px;" min="0">
+                            </td>
                             <td>
                                     <button type="submit" class="btn btn-sm btn-primary">Simpan</button>
                                 </form>
@@ -71,7 +72,7 @@
 
                         @if($dosenList->isEmpty())
                         <tr>
-                            <td colspan="7" class="text-center">Tidak ada data dosen.</td>
+                            <td colspan="8" class="text-center">Tidak ada data dosen.</td>
                         </tr>
                         @endif
                     </tbody>
@@ -81,3 +82,24 @@
     </section>
 </div>
 @endsection
+
+@push('scripts')
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#table-kuota-dosen').DataTable({
+                "language": {
+                    "search": "Cari Nama Dosen / Prodi:",
+                    "lengthMenu": "Tampilkan _MENU_ data per halaman",
+                    "zeroRecords": "Data tidak ditemukan",
+                    "info": "Menampilkan _PAGE_ dari _PAGES_",
+                    "infoEmpty": "Tidak ada data",
+                    "infoFiltered": "(difilter dari _MAX_ total data)"
+                },
+                "pageLength": 10
+            });
+        });
+    </script>
+@endpush

@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('berkas', function (Blueprint $table) {
             $table->id('id_berkas');
             $table->string('nama_berkas');
-            $table->string('file_path'); // Nama/path file PDF
+            $table->foreignId('id_prodi')->nullable()->constrained('prodis')->nullOnDelete(); // Nama/path file PDF
+            $table->string('file_path');
             $table->timestamps();
         });
     }

@@ -19,9 +19,9 @@
                         <div class="card-body">
                             <div class="profile-widget-header d-flex justify-content-center mb-3">
                                 <img alt="Foto {{ $mahasiswa->nama_mhs }}"
-                                    src="{{ asset($mahasiswa->foto) }}"
-                                    class="rounded-circle"
-                                    style="width: 120px; height: 120px; object-fit: cover; border: 3px solid #6777ef;">
+                                     src="{{ $mahasiswa->foto ? asset('uploads/foto_mahasiswa/' . $mahasiswa->foto) : asset('img/avatar/avatar-1.png') }}"
+                                     class="rounded-circle"
+                                     style="width: 120px; height: 120px; object-fit: cover; border: 3px solid #6777ef;">
                             </div>
 
                             <h4 class="font-weight-bold mb-2">{{ $mahasiswa->nama_mhs }}</h4>

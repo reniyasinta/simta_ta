@@ -24,8 +24,6 @@
             <li><a class="nav-link" href="{{ route('admin.surat.index') }}"><i class="fas fa-file"></i> <span>Approval Surat</span></a></li>
 
             <li class="menu-header">User Account</li>
-            <li><a class="nav-link" href="{{ url('profil') }}"><i class="fas fa-user"></i> <span>Profil</span></a></li>
-
             <li><a class="nav-link" href="{{ route('admin.users') }}"><i class="fas fa-user"></i> <span>Manage User</span></a></li>
         </ul>
 
@@ -37,16 +35,20 @@
                 <a href="{{ route('panitia.dashboard') }}" class="nav-link">
                     <i class="fas fa-fire"></i> <span>Dashboard</span>
                 </a>
+            <li class="menu-header">General</li>
             </li>
                         <li class="nav-item {{ ($type_menu ?? '') === 'kuota' ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('panitia.kuota.index') }}">
                     <i class="fas fa-user-cog"></i> <span>Manajemen Kuota Dosen</span>
                 </a>
             </li>
-            <li class="menu-header">General</li>
-
+                        <li class="nav-item {{ ($type_menu ?? '') === 'pengajuan' ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('panitia.pengajuan.index') }}">
+                    <i class="fas fa-file-signature"></i> <span>Penentuan Dospem 2</span>
+                </a>
+            </li>
             <li class="nav-item {{ ($type_menu ?? '') === 'berkas' ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('pages.panitia.berkas.index') }}">
+                <a class="nav-link" href="{{ route('panitia.berkas.index') }}">
                     <i class="fas fa-file-upload"></i> <span>Upload Berkas</span>
                 </a>
             </li>
@@ -64,19 +66,12 @@
                         <a class="nav-link" href="{{ route('jadwal.yudisium.index') }}">Yudisium</a>
                 </ul>
             </li>
-
-            <li class="nav-item {{ ($type_menu ?? '') === 'pengajuan' ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('panitia.pengajuan.index') }}">
-                    <i class="fas fa-file-signature"></i> <span>Penentuan Dospem 2</span>
-                </a>
-            </li>
             <li class="menu-header">Sempro</li>
             <li class="{{ request()->routeIs('panitia.sempro.index') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('panitia.sempro.index') }}">
                     <i class="fas fa-file-pdf"></i> <span>Berkas Sempro</span>
                 </a>
             </li>
-<li class="menu-header">Tugas Akhir</li>
 
 <li class="nav-item dropdown {{ request()->routeIs('panitia.sidang.*') ? 'active' : '' }}">
     <a href="#" class="nav-link has-dropdown">
@@ -84,34 +79,19 @@
     </a>
     <ul class="dropdown-menu">
         <li class="{{ request()->routeIs('sidang.draft') ? 'active' : '' }}">
-            <a class="nav-link" href="{{ route('sidang.draft') }}">
-                <i class="fas fa-file-alt"></i> Laporan TA
+            <a class="nav-link" href="{{ route('sidang.draft') }}"></i> Pra
             </a>
         </li>
         <li class="{{ request()->routeIs('sidang.revisi') ? 'active' : '' }}">
-            <a class="nav-link" href="{{ route('sidang.revisi') }}">
-                <i class="fas fa-file-signature"></i> Revisi Laporan TA
+            <a class="nav-link" href="{{ route('sidang.revisi') }}"></i> Revisi
             </a>
         </li>
         <li class="{{ request()->routeIs('sidang.final') ? 'active' : '' }}">
-            <a class="nav-link" href="{{ route('sidang.final') }}">
-                <i class="fas fa-file-upload"></i> Laporan Final TA
-            </a>
+            <a class="nav-link" href="{{ route('sidang.final') }}"></i> Post</a>
         </li>
-        <li>
-            {{-- <a class="nav-link" href="{{ route('panitia.sidang.link_drive') }}"> --}}
-                <i class="fas fa-link"></i> <span>Link Drive Proyek</span>
-            </a>
+        <li class="#">
+            <a class="nav-link" href="#"></i> Upload Link Drive</a>
         </li>
-        </ul>
-    </li>
-
-            <li class="menu-header">Profil</li>
-            <li class="nav-item {{ ($type_menu ?? '') === 'profil' ? 'active' : '' }}">
-                <a class="nav-link" href="{{ url('profil') }}">
-                    <i class="fas fa-user"></i> <span>Profil</span>
-                </a>
-            </li>
         </ul>
 
         {{-- ================= Dosen (role_id = 3) ================= --}}
@@ -182,13 +162,6 @@
                     <i class="fas fa-gavel"></i> <span>Sidang TA</span>
                 </a>
             </li>
-
-            <li class="menu-header">Profil</li>
-            <li>
-                <a class="nav-link {{ request()->routeIs('dosen.profile') ? 'active' : '' }}" href="{{ route('dosen.profile') }}">
-                    <i class="fas fa-user"></i> <span>Profil</span>
-                </a>
-            </li>
         </ul>
 
 
@@ -206,13 +179,6 @@
 
             {{-- General --}}
             <li class="menu-header">General</li>
-
-            <li>
-            <a class="nav-link" href="{{ route('mahasiswa.jadwal.index') }}">
-                    <i class="fas fa-calendar-alt"></i> <span>Jadwal Saya</span>
-                </a>
-            </li>
-
             <li>
                 <a class="nav-link" href="{{ route('mahasiswa.berkas.index') }}">
                     <i class="fas fa-file-upload"></i> <span>Berkas Persyaratan</span>
@@ -242,7 +208,11 @@
 
             {{-- Seminar Proposal --}}
             <li class="menu-header">Seminar Proposal</li>
-
+            <li>
+                <a class="nav-link" href="{{ route('mahasiswa.jadwal.seminar') }}">
+                    <i class="fas fa-calendar-alt"></i> <span>Jadwal Seminar</span>
+                </a>
+            </li>
             <li>
                 <a class="nav-link" href="{{ route('kelompok.index') }}">
                     <i class="fas fa-users"></i> <span>Data Kelompok</span>
@@ -263,7 +233,11 @@
 
             {{-- Sidang TA --}}
             <li class="menu-header">Tugas Akhir</li>
-
+            <li>
+                <a class="nav-link" href="{{ route('mahasiswa.jadwal.sidang') }}">
+                    <i class="fas fa-calendar-check"></i> <span>Jadwal Sidang</span>
+                </a>
+            </li>
             <li class="{{ request()->routeIs('mahasiswa.sidang.draft') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('mahasiswa.sidang.draft') }}">
                     <i class="fas fa-file-alt"></i> <span>Pra</span>
@@ -279,15 +253,6 @@
             <li class="{{ request()->routeIs('mahasiswa.sidang.final') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('mahasiswa.sidang.final') }}">
                     <i class="fas fa-file-upload"></i> <span>Post</span>
-                </a>
-            </li>
-
-            {{-- Profil --}}
-            <li class="menu-header">Profil</li>
-
-            <li>
-                <a class="nav-link" href="{{ route('mahasiswa.profile') }}">
-                    <i class="fas fa-user"></i> <span>Profil</span>
                 </a>
             </li>
         </ul>

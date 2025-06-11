@@ -14,11 +14,27 @@
         @endif
 
         <div class="section-body">
+            <form method="GET" action="{{ route('dosen.validasi') }}" class="mb-4">
+                <div class="row">
+                    <div class="col-md-4">
+                        <select name="prodi" class="form-control" onchange="this.form.submit()">
+                            <option value="">-- Semua Prodi --</option>
+                            @foreach($listProdi as $prodi)
+                                <option value="{{ $prodi->id }}" {{ request('prodi') == $prodi->id ? 'selected' : '' }}>
+                                    {{ $prodi->nama_prodi }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </form>
+
             <div class="table-responsive">
                 <table class="table table-bordered table-striped">
                     <thead>
                         <tr>
                             <th>No</th>
+                            <th>Prodi</th>
                             <th>Anggota Kelompok</th>
                             <th>Judul TA</th>
                             <th>Proposal</th>
@@ -31,6 +47,9 @@
                         @forelse($pengajuan as $key => $item)
                             <tr>
                                 <td>{{ $key + 1 }}</td>
+
+                                {{-- Prodi dari anggota1 --}}
+                                <td>{{ $item->kelompok->anggota1->mahasiswa->prodi->nama_prodi ?? '-' }}</td>
 
                                 {{-- Anggota kelompok --}}
                                 <td>
@@ -95,7 +114,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center">Tidak ada pengajuan.</td>
+                                <td colspan="8" class="text-center">Tidak ada pengajuan.</td>
                             </tr>
                         @endforelse
                     </tbody>

@@ -5,27 +5,65 @@ namespace App\Http\Controllers\Dosen;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\PengajuanPembimbing;
+use App\Models\Prodi;
+use App\Models\Dosen;
 
 class ValidasiPengajuanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Ambil user_id dosen yang login
-        $userId = auth()->id();
+        $user = auth()->user();
+        $userId = $user->id;
+        $idProdiDosen = $user->dosen->id_prodi ?? null;
 
-        $pengajuan = PengajuanPembimbing::with([
-            'kelompok.anggota1.mahasiswa',
+        // Group Mapping Prodi
+        $groupMapping = [
+            [1, 2], // TI & SIKC
+            [3, 4], // Listrik & TRPE
+            [5, 6], // Elka & TRO
+        ];
+
+        $allowedProdis = [];
+
+        if ($idProdiDosen === null) {
+            // Jika dosen tidak memiliki prodi, tampilkan semua
+            $allowedProdis = Prodi::pluck('id')->toArray();
+        } else {
+            // Ambil group yang sesuai dengan prodi dosen
+            $groupProdi = collect($groupMapping)->first(function ($group) use ($idProdiDosen) {
+                return in_array($idProdiDosen, $group);
+            });
+
+            if (!$groupProdi) {
+                abort(403, 'Prodi dosen tidak termasuk dalam grup yang diizinkan.');
+            }
+
+            $allowedProdis = $groupProdi;
+        }
+
+        $query = PengajuanPembimbing::with([
+            'kelompok.anggota1.mahasiswa.prodi',
             'kelompok.anggota2.mahasiswa',
             'kelompok.anggota3.mahasiswa',
             'dosen1.dosen',
         ])
         ->where('id_dosen1', $userId)
-        ->orderBy('created_at', 'desc')
-        ->get();
+        ->whereHas('kelompok.anggota1.mahasiswa', function ($q) use ($allowedProdis) {
+            $q->whereIn('id_prodi', $allowedProdis);
+        });
 
-        return view('pages.dosen.validasi.index', compact('pengajuan'));
+        // Tambahan filter berdasarkan prodi dari request
+        if ($request->filled('prodi')) {
+            $query->whereHas('kelompok.anggota1.mahasiswa', function ($q) use ($request) {
+                $q->where('id_prodi', $request->prodi);
+            });
+        }
+
+        $pengajuan = $query->orderBy('created_at', 'desc')->get();
+        $listProdi = Prodi::whereIn('id', $allowedProdis)->get();
+
+        return view('pages.dosen.validasi.index', compact('pengajuan', 'listProdi'));
     }
-
 
     public function validasi(Request $request, $id)
     {
@@ -42,4 +80,3 @@ class ValidasiPengajuanController extends Controller
         return redirect()->route('dosen.validasi')->with('success', 'Pengajuan berhasil divalidasi.');
     }
 }
-

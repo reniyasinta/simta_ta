@@ -12,44 +12,38 @@ class DosenSidangController extends Controller
     public function draft()
     {
         $user = Auth::user();
-
-        // Ambil sidang di mana dospem 1 atau 2
         $sidangList = Sidang::where(function ($query) use ($user) {
             $query->where('id_dosen1', $user->id)
                   ->orWhere('id_dosen2', $user->id);
-        })->get();
+        })->with('kelompok.anggota1.mahasiswa', 'kelompok.anggota2.mahasiswa', 'kelompok.anggota3.mahasiswa')->get();
 
-        return view('pages.dosen.sidang.draft.index', compact('sidangList', 'user'));
+        return view('pages.dosen.sidang.draft.index', compact('sidangList'));
     }
 
     public function updateStatusDraft(Request $request, $id_sidang)
     {
         $request->validate([
-            'status_draft' => 'required|in:Menunggu,Revisi,Disetujui',
+            'status_draft' => 'required|in:Revisi,Disetujui',
             'catatan' => 'nullable|string',
         ]);
 
         $user = Auth::user();
         $sidang = Sidang::findOrFail($id_sidang);
 
-        // Update status draft sesuai dosen
         if ($sidang->id_dosen1 == $user->id) {
             $sidang->status_draft_dosen1 = $request->status_draft;
         } elseif ($sidang->id_dosen2 == $user->id) {
             $sidang->status_draft_dosen2 = $request->status_draft;
         } else {
-            return back()->with('error', 'Anda bukan dosen pembimbing untuk sidang ini.');
+            return back()->with('error', 'Anda bukan dosen pembimbing sidang ini.');
         }
 
-        // Simpan catatan (opsional)
-        if ($request->filled('catatan')) {
-            $sidang->catatan_dosen = $request->catatan;
-        }
-
+        $sidang->catatan_dosen = $request->catatan;
         $sidang->save();
 
-        return back()->with('success', 'Status Draft berhasil diperbarui.');
+        return back()->with('success', 'Status draft berhasil diperbarui.');
     }
+
 
     public function revisi()
     {

@@ -27,8 +27,7 @@
                         <tr>
                             <th>No</th>
                             <th>Jenis</th>
-                            <th>Preview</th>
-                            <th>Upload</th>
+                            <th>Upload (PDF)</th>
                             <th>Status</th>
                             <th>Aksi</th>
                         </tr>
@@ -40,71 +39,58 @@
                             <td>1</td>
                             <td>Laporan TA</td>
                             <td>
-                                @if($sempro && $sempro->laporan_sempro)
-                                    <a href="{{ asset($sempro->laporan_sempro) }}" target="_blank" class="btn btn-sm btn-success">Lihat</a>
-                                @else
-                                    <span class="text-muted">Belum ada</span>
-                                @endif
-                            </td>
-                            <td>
                                 <form action="{{ route('mahasiswa.sempro.uploadLaporanTa') }}" method="POST" enctype="multipart/form-data">
                                     @csrf
                                     <div class="input-group input-group-sm">
-                                        <input type="file" name="laporan_sempro" class="form-control" required>
+                                        <input type="file" name="laporan_sempro" class="form-control" accept="application/pdf" required>
                                         <button type="submit" class="btn btn-primary" title="Upload">
                                             <i class="fas fa-upload"></i>
                                         </button>
                                     </div>
                                 </form>
                             </td>
-<td>
-    Dospem 1:
-    @if($sempro && $sempro->status_laporan_ta_dospem1 == 'Disetujui')
-        <span class="badge bg-success text-white mb-2 d-inline-block">Acc</span>
-    @else
-        <span class="text-muted">{{ $sempro->status_laporan_ta_dospem1 ?? '-' }}</span>
-    @endif
-    <br>
-    Dospem 2:
-    @if($sempro && $sempro->status_laporan_ta_dospem2 == 'Disetujui')
-        <span class="badge bg-success text-white mb-2 d-inline-block">Acc</span>
-    @else
-        <span class="text-muted">{{ $sempro->status_laporan_ta_dospem2 ?? '-' }}</span>
-    @endif
-</td>
-
-
+                            <td>
+                                Dospem 1:
+                                @if($sempro && $sempro->status_laporan_ta_dospem1 == 'Disetujui')
+                                    <span class="badge bg-success text-white mb-2 d-inline-block">Acc</span>
+                                @else
+                                    <span class="text-muted">{{ $sempro->status_laporan_ta_dospem1 ?? '-' }}</span>
+                                @endif
+                                <br>
+                                Dospem 2:
+                                @if($sempro && $sempro->status_laporan_ta_dospem2 == 'Disetujui')
+                                    <span class="badge bg-success text-white mb-2 d-inline-block">Acc</span>
+                                @else
+                                    <span class="text-muted">{{ $sempro->status_laporan_ta_dospem2 ?? '-' }}</span>
+                                @endif
+                            </td>
                             <td>
                                 @if($sempro && $sempro->laporan_sempro)
-                                    <form action="{{ route('mahasiswa.sempro.deleteLaporanTa') }}" method="POST" onsubmit="return confirm('Hapus Laporan TA?')">
+                                    <a href="{{ asset($sempro->laporan_sempro) }}" target="_blank" class="btn btn-info btn-sm me-1" title="Lihat">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+
+                                    <form action="{{ route('mahasiswa.sempro.deleteLaporanTa') }}" method="POST" class="d-inline" onsubmit="return confirm('Hapus Laporan TA?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
+                                        <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
                                     </form>
                                 @else
                                     <span class="text-muted">Belum ada file</span>
                                 @endif
                             </td>
                         </tr>
+
                         {{-- 2. Form Persetujuan --}}
                         <tr>
                             <td>2</td>
                             <td>Form Persetujuan</td>
                             <td>
-                                @if($sempro && $sempro->form_persetujuan_sempro)
-                                    <a href="{{ asset($sempro->form_persetujuan_sempro) }}" target="_blank" class="btn btn-sm btn-success">Lihat</a>
-                                @else
-                                    <span class="text-muted">Belum ada</span>
-                                @endif
-                            </td>
-                            <td>
                                 @if($sempro && $sempro->status_laporan_ta_dospem1 == 'Disetujui' && $sempro->status_laporan_ta_dospem2 == 'Disetujui')
                                     <form action="{{ route('mahasiswa.sempro.uploadForm') }}" method="POST" enctype="multipart/form-data">
                                         @csrf
                                         <div class="input-group input-group-sm">
-                                            <input type="file" name="form_persetujuan_sempro" class="form-control" required>
+                                            <input type="file" name="form_persetujuan_sempro" class="form-control" accept="application/pdf" required>
                                             <button type="submit" class="btn btn-primary" title="Upload">
                                                 <i class="fas fa-upload"></i>
                                             </button>
@@ -114,22 +100,23 @@
                                     <span class="text-muted">Menunggu ACC Laporan TA</span>
                                 @endif
                             </td>
-<td>
-    @if($sempro && $sempro->form_persetujuan_sempro)
-        <span class="badge bg-success text-white">Sudah Upload</span>
-    @else
-        <span class="text-muted">Belum Upload</span>
-    @endif
-</td>
-
                             <td>
                                 @if($sempro && $sempro->form_persetujuan_sempro)
-                                    <form action="{{ route('mahasiswa.sempro.deleteForm') }}" method="POST" onsubmit="return confirm('Hapus Form Persetujuan?')">
+                                    <span class="badge bg-success text-white">Sudah Upload</span>
+                                @else
+                                    <span class="text-muted">Belum Upload</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if($sempro && $sempro->form_persetujuan_sempro)
+                                    <a href="{{ asset($sempro->form_persetujuan_sempro) }}" target="_blank" class="btn btn-info btn-sm me-1" title="Lihat">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+
+                                    <form action="{{ route('mahasiswa.sempro.deleteForm') }}" method="POST" class="d-inline" onsubmit="return confirm('Hapus Form Persetujuan?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
+                                        <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
                                     </form>
                                 @else
                                     <span class="text-muted">Belum ada file</span>
@@ -142,44 +129,37 @@
                             <td>3</td>
                             <td>Berita Acara</td>
                             <td>
-                                @if($sempro && $sempro->berita_acara_sempro)
-                                    <a href="{{ asset($sempro->berita_acara_sempro) }}" target="_blank" class="btn btn-sm btn-success">Lihat</a>
+                                @if($sempro && $sempro->form_persetujuan_sempro)
+                                    <form action="{{ route('mahasiswa.sempro.uploadHasil') }}" method="POST" enctype="multipart/form-data">
+                                        @csrf
+                                        <div class="input-group input-group-sm">
+                                            <input type="file" name="berita_acara_sempro" class="form-control" accept="application/pdf" required>
+                                            <button type="submit" class="btn btn-primary" title="Upload">
+                                                <i class="fas fa-upload"></i>
+                                            </button>
+                                        </div>
+                                    </form>
                                 @else
-                                    <span class="text-muted">Belum ada</span>
+                                    <span class="text-muted">Menunggu Upload Form Persetujuan</span>
                                 @endif
                             </td>
-<td>
-    @if($sempro && $sempro->form_persetujuan_sempro)
-        <form action="{{ route('mahasiswa.sempro.uploadHasil') }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            <div class="input-group input-group-sm">
-                <input type="file" name="berita_acara_sempro" class="form-control" required>
-                <button type="submit" class="btn btn-primary" title="Upload">
-                    <i class="fas fa-upload"></i>
-                </button>
-            </div>
-        </form>
-    @else
-        <span class="text-muted">Menunggu Upload Form Persetujuan</span>
-    @endif
-</td>
-
-<td>
-    @if($sempro && $sempro->berita_acara_sempro)
-        <span class="badge bg-success text-white">Sudah Upload</span>
-    @else
-        <span class="text-muted">Belum Upload</span>
-    @endif
-</td>
-
                             <td>
                                 @if($sempro && $sempro->berita_acara_sempro)
-                                    <form action="{{ route('mahasiswa.sempro.deleteHasil') }}" method="POST" onsubmit="return confirm('Hapus Berita Acara?')">
+                                    <span class="badge bg-success text-white">Sudah Upload</span>
+                                @else
+                                    <span class="text-muted">Belum Upload</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if($sempro && $sempro->berita_acara_sempro)
+                                    <a href="{{ asset($sempro->berita_acara_sempro) }}" target="_blank" class="btn btn-info btn-sm me-1" title="Lihat">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+
+                                    <form action="{{ route('mahasiswa.sempro.deleteHasil') }}" method="POST" class="d-inline" onsubmit="return confirm('Hapus Berita Acara?')">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
+                                        <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
                                     </form>
                                 @else
                                     <span class="text-muted">Belum ada file</span>

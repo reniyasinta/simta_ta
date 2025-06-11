@@ -5,41 +5,73 @@ namespace App\Http\Controllers\Panitia;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Dosen;
-use App\Models\User;
-use App\Models\Kelompok;
 use App\Models\KuotaBimbinganDosen;
 
 class DosenKuotaController extends Controller
 {
-    public function index()
+public function index()
 {
     $user = auth()->user();
     $idProdiPanitia = $user->id_prodi;
 
-    $dosenList = Dosen::with('user', 'prodi')->get();
+    // Mapping Group Prodi
+    $groupMapping = [
+        [1, 2], // TI & SIKC
+        [3, 4], // Listrik & TRPE
+        [5, 6], // Elka & TRO
+    ];
 
+    if ($idProdiPanitia === null) {
+        // === PANITIA JURUSAN ===
+        // Tampilkan semua dosen semua prodi
+        $dosenList = Dosen::with('user', 'prodi')->get();
+    } else {
+        // === PANITIA PRODI ===
+        // Cari group sesuai prodi panitia
+        $groupProdi = collect($groupMapping)->first(function ($group) use ($idProdiPanitia) {
+            return in_array($idProdiPanitia, $group);
+        });
+
+        if (!$groupProdi) {
+            // Prodi panitia tidak termasuk group
+            abort(403, 'Prodi panitia tidak termasuk dalam grup yang diizinkan.');
+        }
+
+        // Ambil dosen di group prodi
+        $dosenList = Dosen::with('user', 'prodi')
+            ->whereIn('id_prodi', $groupProdi)
+            ->get();
+    }
+
+    // Hitung bimbingan & kuota
     foreach ($dosenList as $dosen) {
         $jumlah = 0;
 
-        // Dosen sebagai Pembimbing 1 → dihitung hanya untuk mahasiswa prodi panitia
+        // Dosen sebagai Pembimbing 1
         $pengajuan1 = \App\Models\PengajuanPembimbing::where('id_dosen1', $dosen->user_id)
             ->where('status', 'Diterima')
-            ->whereHas('kelompok.anggota', function ($query) use ($idProdiPanitia) {
-                $query->where('id_prodi', $idProdiPanitia);
+            ->when($idProdiPanitia !== null, function ($query) use ($idProdiPanitia) {
+                // Filter prodi hanya kalau panitia prodi
+                $query->whereHas('kelompok.anggota', function ($q) use ($idProdiPanitia) {
+                    $q->where('id_prodi', $idProdiPanitia);
+                });
             })
             ->with('kelompok')
             ->get();
 
-        // Dosen sebagai Pembimbing 2 → dihitung hanya untuk mahasiswa prodi panitia
+        // Dosen sebagai Pembimbing 2
         $pengajuan2 = \App\Models\PengajuanPembimbing::where('id_dosen2', $dosen->user_id)
             ->where('status', 'Diterima')
-            ->whereHas('kelompok.anggota', function ($query) use ($idProdiPanitia) {
-                $query->where('id_prodi', $idProdiPanitia);
+            ->when($idProdiPanitia !== null, function ($query) use ($idProdiPanitia) {
+                // Filter prodi hanya kalau panitia prodi
+                $query->whereHas('kelompok.anggota', function ($q) use ($idProdiPanitia) {
+                    $q->where('id_prodi', $idProdiPanitia);
+                });
             })
             ->with('kelompok')
             ->get();
 
-        // Hitung jumlah mahasiswa di setiap kelompok
+        // Hitung jumlah anggota
         foreach ($pengajuan1 as $pengajuan) {
             $jumlah += $pengajuan->kelompok?->jumlah_anggota ?? 0;
         }
@@ -50,10 +82,18 @@ class DosenKuotaController extends Controller
 
         $dosen->bimbingan_terpakai = $jumlah;
 
-        // Ambil kuota per prodi panitia dari kuota_bimbingan_dosen
-        $kuota = \App\Models\KuotaBimbinganDosen::where('id_dosen', $dosen->id_dosen)
-            ->where('id_prodi', $idProdiPanitia)
-            ->first();
+        // Ambil kuota
+        $kuotaQuery = \App\Models\KuotaBimbinganDosen::where('id_dosen', $dosen->id_dosen);
+
+        if ($idProdiPanitia !== null) {
+            // Panitia prodi → ambil kuota per prodi panitia
+            $kuotaQuery->where('id_prodi', $idProdiPanitia);
+        } else {
+            // Panitia jurusan → bebas, ambil kuota pertama saja (jika ada)
+            $kuotaQuery->orderBy('id_prodi');
+        }
+
+        $kuota = $kuotaQuery->first();
 
         $dosen->kuota_bimbingan = $kuota ? $kuota->kuota_bimbingan : 0;
         $dosen->kuota_p2 = $kuota ? $kuota->kuota_p2 : 0;
@@ -80,7 +120,7 @@ class DosenKuotaController extends Controller
         $idProdiPanitia = $user->id_prodi;
 
         // Update / insert ke kuota_bimbingan_dosen
-        $kuota = KuotaBimbinganDosen::updateOrCreate(
+        KuotaBimbinganDosen::updateOrCreate(
             [
                 'id_dosen' => $id,
                 'id_prodi' => $idProdiPanitia

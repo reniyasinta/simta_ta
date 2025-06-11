@@ -65,8 +65,9 @@ public function create()
 
     // Mapping grup prodi (boleh saling lintas dosen)
     $groupMapping = [
-        [1, 2],     // TI & SIKC
-        [4, 5],     // TRPE & Elka
+        [1, 2], // TI & SIKC
+        [3, 4], // Listrik TRPE
+        [5, 6], // Elka TRO
         // nanti kalau mau tambah, tinggal tambah: [x, y, z]
     ];
 

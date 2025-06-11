@@ -39,16 +39,36 @@
                     {{ $user->name }}
                 </div>
             </a>
-            <div class="dropdown-menu dropdown-menu-right">
-                {{-- <a href="{{ route('profile') }}" class="dropdown-item has-icon"><i class="far fa-user"></i> Profil Saya</a> --}}
-                <a href="#" class="dropdown-item has-icon text-danger"
-                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </a>
-                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                    @csrf
-                </form>
-            </div>
+@php
+    $roleId = auth()->user()->role_id;
+    if ($roleId == 1) {
+        $profileRoute = url('profil'); // Admin
+    } elseif ($roleId == 2) {
+        $profileRoute = url('profil'); // Panitia
+    } elseif ($roleId == 3) {
+        $profileRoute = route('dosen.profile');
+    } elseif ($roleId == 4) {
+        $profileRoute = route('mahasiswa.profile');
+    } else {
+        $profileRoute = '#'; // fallback
+    }
+@endphp
+
+<div class="dropdown-menu dropdown-menu-right">
+    
+    <a href="{{ $profileRoute }}" class="dropdown-item has-icon text-blue">
+        <i class="far fa-user"></i> Profil
+    </a>
+    <div class="dropdown-divider"></div>
+    <a href="#" class="dropdown-item has-icon text-danger"
+       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+        <i class="fas fa-sign-out-alt"></i> Logout
+    </a>
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+        @csrf
+    </form>
+</div>
+
         </li>
     </ul>
 </nav>

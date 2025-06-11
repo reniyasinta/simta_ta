@@ -24,6 +24,7 @@ use App\Http\Controllers\Panitia\BerkasController as PanitiaBerkasController;
 use App\Http\Controllers\Panitia\PanitiaJadwalController;
 use App\Http\Controllers\Panitia\PanitiaSemproController;
 use App\Http\Controllers\Panitia\PanitiaSidangController;
+use App\Http\Controllers\Panitia\PanitiaDashboardController;
 use App\Exports\TemplateUserExport;
 use App\Exports\TemplateJadwalExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -78,6 +79,8 @@ Route::middleware(['role:panitia'])->prefix('panitia')->group(function () {
 
     // Dashboard
     Route::get('/dashboard', [PanitiaController::class, 'index'])->name('panitia.dashboard');
+    Route::get('/profil', [ProfilPanitiaController::class, 'index'])->name('profil');
+    Route::post('/profil/update', [ProfilPanitiaController::class, 'update'])->name('profil.update');
 
     // Pengajuan
     Route::get('/pengajuan', [PanitiaPengajuanController::class, 'index'])->name('panitia.pengajuan.index');
@@ -85,12 +88,14 @@ Route::middleware(['role:panitia'])->prefix('panitia')->group(function () {
     Route::put('/pengajuan/{id}', [PanitiaPengajuanController::class, 'update'])->name('panitia.pengajuan.update');
 
     // Berkas
-    Route::get('/berkas', [PanitiaBerkasController::class, 'index'])->name('pages.panitia.berkas.index');
-    Route::get('/berkas/create', [PanitiaBerkasController::class, 'create'])->name('pages.panitia.berkas.create');
+    Route::get('/berkas', [PanitiaBerkasController::class, 'index'])->name('panitia.berkas.index');
+    Route::get('/berkas/create', [PanitiaBerkasController::class, 'create'])->name('panitia.berkas.create');
     Route::post('/berkas', [PanitiaBerkasController::class, 'store'])->name('panitia.berkas.store');
-    Route::get('/berkas/{id}/edit', [PanitiaBerkasController::class, 'edit'])->name('pages.panitia.berkas.edit');
+    Route::get('/berkas/{id}/edit', [PanitiaBerkasController::class, 'edit'])->name('panitia.berkas.edit');
     Route::put('/berkas/{id}', [PanitiaBerkasController::class, 'update'])->name('panitia.berkas.update');
     Route::delete('/berkas/{id}', [PanitiaBerkasController::class, 'destroy'])->name('panitia.berkas.destroy');
+    Route::get('/berkas/{id}/download', [PanitiaBerkasController::class, 'download'])->name('panitia.berkas.download');
+
 
     // JADWAL
     Route::prefix('jadwal')->name('jadwal.')->group(function () {
@@ -203,6 +208,9 @@ Route::prefix('sidang')->name('sidang.')->group(function () {
 
         Route::get('/jadwal', [MahasiswaController::class, 'jadwal'])->name('mahasiswa.jadwal.index');
 
+        // JADWAL
+        Route::get('/mahasiswa/jadwal/seminar', [MahasiswaController::class, 'jadwalSeminar'])->name('mahasiswa.jadwal.seminar');
+        Route::get('/mahasiswa/jadwal/sidang', [MahasiswaController::class, 'jadwalSidang'])->name('mahasiswa.jadwal.sidang');
 
         // Berkas
         Route::get('/mahasiswa/berkas', [BerkasController::class, 'index'])->name('mahasiswa.berkas.index');

@@ -2,6 +2,11 @@
 
 @section('title', 'Daftar Berkas Persyaratan')
 
+@push('style')
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+@endpush
+
 @section('main')
 <div class="main-content">
     <section class="section">
@@ -9,7 +14,7 @@
             <h1>Daftar Berkas Persyaratan</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="{{ url('home') }}">Dashboard</a></div>
-                <div class="breadcrumb-item">Upload Berkas</div>
+                <div class="breadcrumb-item">Berkas</div>
             </div>
         </div>
 
@@ -18,17 +23,17 @@
         @endif
 
         <div class="mb-3 text-right">
-            <a href="{{ route('pages.panitia.berkas.create') }}" class="btn btn-success">+ Upload Berkas</a>
+            <a href="{{ route('panitia.berkas.create') }}" class="btn btn-success">+ Upload Berkas</a>
         </div>
 
         <div class="table-responsive">
-            <table class="table table-bordered table-striped">
+            <table id="table-berkas" class="table table-bordered table-striped text-center">
                 <thead>
                     <tr>
-                        <th>No</th>
-                        <th>Nama Berkas</th>
-                        <th>Preview</th>
-                        <th>Aksi</th>
+                       <th class="text-center">No</th>
+                        <th class="text-center">Nama Berkas</th>
+                        <th class="text-center">Preview</th>
+                        <th class="text-center">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -54,7 +59,6 @@
                                         'rar' => 'fas fa-file-archive text-muted',
                                     ];
                                     $icon = $icons[strtolower($extension)] ?? 'fas fa-file';
-
                                     $canPreview = in_array(strtolower($extension), ['pdf', 'jpg', 'jpeg', 'png', 'txt']);
                                     $canGoogleViewer = in_array(strtolower($extension), ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx']);
                                     $fileUrl = Storage::url($item->file_path);
@@ -76,17 +80,29 @@
                                 @endif
                             </td>
                             <td>
-                                <a href="{{ route('pages.panitia.berkas.edit', $item->id_berkas) }}" class="btn btn-warning btn-sm">Edit</a>
-                                <form action="{{ route('panitia.berkas.destroy', $item->id_berkas) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Yakin ingin menghapus berkas ini?')">
+                                <a href="{{ route('panitia.berkas.edit', $item->id_berkas) }}"
+                                   class="btn btn-warning btn-sm me-1"
+                                   title="Edit">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </a>
+
+                                <form action="{{ route('panitia.berkas.destroy', $item->id_berkas) }}"
+                                      method="POST"
+                                      class="d-inline"
+                                      onsubmit="return confirm('Yakin ingin menghapus berkas ini?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                    <button type="submit"
+                                            class="btn btn-danger btn-sm"
+                                            title="Hapus">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
                                 </form>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="text-center">Belum ada berkas diunggah.</td>
+                            <td colspan="4" class="text-center">Belum ada berkas diunggah.</td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -95,3 +111,24 @@
     </section>
 </div>
 @endsection
+
+@push('scripts')
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#table-berkas').DataTable({
+                "language": {
+                    "search": "Cari Nama Berkas:",
+                    "lengthMenu": "Tampilkan _MENU_ data per halaman",
+                    "zeroRecords": "Data tidak ditemukan",
+                    "info": "Menampilkan _PAGE_ dari _PAGES_",
+                    "infoEmpty": "Tidak ada data",
+                    "infoFiltered": "(difilter dari _MAX_ total data)"
+                },
+                "pageLength": 10
+            });
+        });
+    </script>
+@endpush

@@ -2,9 +2,6 @@
 
 @section('title', 'Suart Penelitian Mahasiswa')
 
-@push('style')
-    <!-- CSS Libraries -->
-@endpush
 
 @section('main')
 
