@@ -1,34 +1,24 @@
 @extends('layouts.app')
-@section('title', 'Edit Profil Mahasiswa')
+@section('title', 'Edit Profil Panitia')
 
 @section('main')
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>Edit Profil Mahasiswa</h1>
+            <h1>Edit Profil Panitia</h1>
         </div>
 
         <div class="section-body">
             <div class="row">
                 <div class="col-12 col-md-8 mx-auto">
                     <div class="card">
-                        <form method="POST" action="{{ route('mahasiswa.profile.update') }}" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('panitia.profile.update') }}" enctype="multipart/form-data">
                             @csrf
 
                             <div class="card-body">
                                 <div class="form-group">
-                                    <label>Nama Mahasiswa</label>
-                                    <input type="text" name="nama_mhs" class="form-control" value="{{ old('nama_mhs', $mahasiswa->nama_mhs) }}" required>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>NIM</label>
-                                    <input type="text" name="nim_mhs" class="form-control" value="{{ old('nim_mhs', $mahasiswa->nim_mhs) }}" required>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Semester</label>
-                                    <input type="number" name="semester" class="form-control" value="{{ old('semester', $mahasiswa->semester) }}" required>
+                                    <label>Nama Panitia</label>
+                                    <input type="text" name="name" class="form-control" value="{{ old('name', $user->name) }}" required>
                                 </div>
 
                                 <div class="form-group">
@@ -37,19 +27,23 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label>No. Telepon</label>
-                                    <input type="text" name="no_telp" class="form-control @error('no_telp') is-invalid @enderror" value="{{ old('no_telp', $mahasiswa->no_telp) }}">
-                                    @error('no_telp')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                    <label>Prodi</label>
+                                    <select name="id_prodi" class="form-control" required>
+                                        <option value="">-- Pilih Prodi --</option>
+                                        @foreach($prodis as $prodi)
+                                            <option value="{{ $prodi->id_prodi }}" {{ old('id_prodi', $user->id_prodi) == $prodi->id_prodi ? 'selected' : '' }}>
+                                                {{ $prodi->nama_prodi }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
 
                                 <div class="form-group">
                                     <label>Upload Foto</label>
                                     <input type="file" name="foto" class="form-control-file">
-                                    @if ($mahasiswa->foto)
+                                    @if ($user->foto)
                                         <div class="mt-2">
-                                            <img src="{{ asset('storage/uploads/foto_mahasiswa/' . $mahasiswa->foto) }}" alt="Foto Mahasiswa"
+                                            <img src="{{ asset($user->foto) }}" alt="Foto Panitia"
                                                 style="width: 100px; height: 100px; object-fit: cover;" class="rounded-circle">
                                         </div>
                                     @endif
@@ -57,7 +51,7 @@
                             </div>
 
                             <div class="card-footer text-right">
-                                <a href="{{ route('mahasiswa.profile') }}" class="btn btn-secondary">Batal</a>
+                                <a href="{{ route('panitia.profile') }}" class="btn btn-secondary">Batal</a>
                                 <button class="btn btn-primary" type="submit">Simpan Perubahan</button>
                             </div>
                         </form>

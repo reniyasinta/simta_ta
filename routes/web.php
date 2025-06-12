@@ -79,8 +79,9 @@ Route::middleware(['role:panitia'])->prefix('panitia')->group(function () {
 
     // Dashboard
     Route::get('/dashboard', [PanitiaController::class, 'index'])->name('panitia.dashboard');
-    Route::get('/profil', [ProfilPanitiaController::class, 'index'])->name('profil');
-    Route::post('/profil/update', [ProfilPanitiaController::class, 'update'])->name('profil.update');
+    Route::get('/panitia/profile', [PanitiaController::class, 'profile'])->name('panitia.profile');
+    Route::post('/panitia/profile/update', [PanitiaController::class, 'updateProfile'])->name('panitia.profile.update');
+    Route::get('/profile/edit', [PanitiaController::class, 'editProfile'])->name('panitia.profile_edit');
 
     // Pengajuan
     Route::get('/pengajuan', [PanitiaPengajuanController::class, 'index'])->name('panitia.pengajuan.index');

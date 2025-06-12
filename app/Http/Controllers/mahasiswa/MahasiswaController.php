@@ -116,14 +116,17 @@ class MahasiswaController extends Controller
         $user->save();
 
         // Handle upload foto baru
-        if ($request->hasFile('foto')) {
-            if ($mahasiswa->foto && Storage::exists(str_replace('storage/', '', $mahasiswa->foto))) {
-                Storage::delete(str_replace('storage/', '', $mahasiswa->foto));
-            }
+if ($request->hasFile('foto')) {
+    // Hapus file lama kalau ada
+    if ($mahasiswa->foto && Storage::disk('public')->exists('uploads/foto_mahasiswa/'.$mahasiswa->foto)) {
+        Storage::disk('public')->delete('uploads/foto_mahasiswa/'.$mahasiswa->foto);
+    }
 
-            $path = $request->file('foto')->store('uploads/foto_mahasiswa', 'public');
-            $mahasiswa->foto = 'storage/' . $path;
-        }
+    $fileName = uniqid() . '.' . $request->file('foto')->getClientOriginalExtension();
+    $request->file('foto')->storeAs('uploads/foto_mahasiswa', $fileName, 'public');
+    $mahasiswa->foto = $fileName; // hanya simpan nama file
+}
+
 
         // Update tabel mahasiswa
         $mahasiswa->nama_mhs = $request->nama_mhs;

@@ -60,7 +60,7 @@
             </div>
         </div>
 
-        {{-- PENGAJUAN TERBARU --}}
+        {{-- PENGAJUAN TERBARU
         <div class="section mt-5">
             <div class="section-header">
                 <h4>Pengajuan Dospem Terbaru</h4>
@@ -94,7 +94,7 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        </div> --}}
 
     </section>
 </div>
