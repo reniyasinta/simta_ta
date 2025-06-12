@@ -32,13 +32,14 @@ class DosenSidangController extends Controller
 
         if ($sidang->id_dosen1 == $user->id) {
             $sidang->status_draft_dosen1 = $request->status_draft;
+            $sidang->catatan_draft_dosen1 = $request->catatan;
         } elseif ($sidang->id_dosen2 == $user->id) {
             $sidang->status_draft_dosen2 = $request->status_draft;
+            $sidang->catatan_draft_dosen2 = $request->catatan;
         } else {
             return back()->with('error', 'Anda bukan dosen pembimbing sidang ini.');
         }
 
-        $sidang->catatan_dosen = $request->catatan;
         $sidang->save();
 
         return back()->with('success', 'Status draft berhasil diperbarui.');

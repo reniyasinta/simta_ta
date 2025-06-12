@@ -9,6 +9,7 @@
 @section('main')
 <div class="main-content">
     <section class="section">
+
 @if (session('success'))
     <div class="alert alert-success alert-dismissible show fade">
         <div class="alert-body">
@@ -38,12 +39,14 @@
                         <th>Berita Acara</th>
                         <th>Buku Manual</th>
                         <th>Pengesahan</th>
+                        <th>Link Drive</th>
                         <th>Status</th>
                         <th>Catatan</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
-               <tbody>
+
+                <tbody>
 @forelse ($sidangList as $sidangIndex => $sidang)
 <tr>
     <td>{{ $sidangIndex + 1 }}</td>
@@ -121,6 +124,15 @@
         @endif
     </td>
 
+    {{-- Link Drive --}}
+    <td>
+        @if ($sidang->link_drive_proyek)
+            <a href="{{ $sidang->link_drive_proyek }}" target="_blank" class="btn btn-sm btn-info">Lihat</a>
+        @else
+            <a href="{{ route('panitia.sidang.drive', $sidang->id_sidang) }}" class="btn btn-sm btn-primary">Input</a>
+        @endif
+    </td>
+
     {{-- Status --}}
     <td>
         @if ($sidang->status_final == 'Disetujui')
@@ -134,24 +146,41 @@
 
     {{-- Catatan --}}
     <td>
-        <form action="{{ route('sidang.final.submit', $sidang->id_sidang) }}" method="POST" class="d-flex align-items-center gap-2">
-            @csrf
-            <textarea name="catatan_final" class="form-control me-2" rows="1" placeholder="Catatan (opsional)" style="width: 100%;">{{ $sidang->catatan_final ?? '' }}</textarea>
+        @if($sidang->status_final === 'Menunggu')
+            <form action="{{ route('sidang.final.submit', $sidang->id_sidang) }}" method="POST" id="form-{{ $sidang->id_sidang }}">
+                @csrf
+                <textarea name="catatan_final" class="form-control form-control-sm" rows="2" placeholder="Isi catatan (opsional)">{{ $sidang->catatan_final ?? '' }}</textarea>
+            </form>
+        @else
+            {{ $sidang->catatan_final ?? '-' }}
+        @endif
     </td>
 
     {{-- Aksi --}}
-    <td class="d-flex gap-1 align-items-center">
-            <button name="status_final" value="Disetujui" class="btn btn-success btn-sm">ACC</button>
-            <button name="status_final" value="Ditolak" class="btn btn-danger btn-sm">Tolak</button>
-        </form>
+    <td>
+        @if($sidang->status_final === 'Menunggu')
+            <div class="d-flex gap-2">
+                <button form="form-{{ $sidang->id_sidang }}" type="submit" name="status_final" value="Disetujui" class="btn btn-sm btn-success">ACC</button>
+                <button form="form-{{ $sidang->id_sidang }}" type="submit" name="status_final" value="Ditolak" class="btn btn-sm btn-danger">Tolak</button>
+            </div>
+        @else
+            <span class="text-muted">Sudah divalidasi</span>
+        @endif
     </td>
+    
+    <td class="text-center">
+    <a href="{{ route('panitia.sidang.drive', $sidang->id_sidang) }}" class="btn btn-sm btn-info">
+        <i class="fas fa-link"></i> Link Drive
+    </a>
+</td>
+
 </tr>
 @empty
 <tr>
-    <td colspan="13" class="text-center text-danger">Belum ada data.</td>
+    <td colspan="14" class="text-center text-danger">Belum ada data.</td>
 </tr>
 @endforelse
-</tbody>
+                </tbody>
             </table>
         </div>
     </section>

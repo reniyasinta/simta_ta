@@ -33,7 +33,7 @@
                                     @csrf
                                     <div class="form-group">
                                         <label for="kode_barang">File Excel</label>
-                                        <input type="file" name="file_excel" required>
+                                        <input type="file" name="file_excel"  accept=".xls,.xlsx" required>
                                     </div>
                                     <button type="submit" class="btn btn-info">Submit</button>
                                     <a href="{{ route('admin.users') }}" class="btn btn-secondary">Kembali</a>

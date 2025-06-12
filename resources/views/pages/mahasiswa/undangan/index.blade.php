@@ -48,7 +48,7 @@
                                     <td>{{ $penguji->name }}</td>
                                     <td>
                                         @if ($existingUndangan)
-                                            <a href="{{ Storage::url($existingUndangan->file_path) }}" target="_blank" class="btn btn-sm btn-info">Preview</a>
+                                            <a href="{{ Storage::url($existingUndangan->file_path) }}" target="_blank" >Lihat</a>
                                         @else
                                             <span class="text-muted">Belum ada berkas</span>
                                         @endif

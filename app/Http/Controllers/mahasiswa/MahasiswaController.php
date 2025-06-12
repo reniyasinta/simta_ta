@@ -12,6 +12,7 @@ use App\Models\PengajuanPembimbing;
 use Illuminate\Support\Facades\Storage;
 use App\Models\KuotaBimbinganDosen;
 
+
 class MahasiswaController extends Controller
 {
     // ===== Mahasiswa Dashboard =====
@@ -93,27 +94,24 @@ class MahasiswaController extends Controller
         return view('pages.mahasiswa.profile_edit', compact('user', 'mahasiswa'));
     }
 
-    // ===== Update Profile Mahasiswa =====
-    public function updateProfile(Request $request)
-    {
-        $user = Auth::user();
-        $mahasiswa = Mahasiswa::where('user_id', $user->id)->firstOrFail();
+   public function updateProfile(Request $request)
+{
+    $user = Auth::user();
+    $mahasiswa = Mahasiswa::where('user_id', $user->id)->firstOrFail();
 
-        // Validasi input
-        $request->validate([
-            'nama_mhs' => 'required|string|max:255',
-            'nim_mhs' => 'required|string|max:255|unique:users,nim,' . $user->id,
-            'semester' => 'required|integer',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'no_telp' => 'required|string|max:20',
-        ]);
+    $request->validate([
+        'nama_mhs' => 'required|string|max:255',
+        'nim_mhs' => 'required|string|max:255|unique:mahasiswa,nim_mhs,' . $mahasiswa->id_mahasiswa,
+        'semester' => 'required|integer',
+        'email' => 'required|email|unique:users,email,' . $user->id,
+        'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        'no_telp' => 'required|string|max:20',
+    ]);
 
-        // Sinkron ke tabel users
-        $user->email = $request->email;
-        $user->name = $request->nama_mhs;
-        $user->nim = $request->nim_mhs;
-        $user->save();
+    // Update tabel users
+    $user->email = $request->email;
+    $user->name = $request->nama_mhs;
+    $user->save();
 
         // Handle upload foto baru
 if ($request->hasFile('foto')) {
@@ -136,8 +134,9 @@ if ($request->hasFile('foto')) {
         $mahasiswa->no_telp = $request->no_telp;
         $mahasiswa->save();
 
-        return redirect()->route('mahasiswa.profile')->with('success', 'Profil berhasil diperbarui.');
-    }
+
+    return redirect()->route('mahasiswa.profile')->with('success', 'Profil berhasil diperbarui.');
+}
 
     // ===== Jadwal Mahasiswa =====
     public function jadwalSeminar()

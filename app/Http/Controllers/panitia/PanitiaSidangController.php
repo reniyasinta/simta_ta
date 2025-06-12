@@ -65,20 +65,46 @@ public function taConfigUpdate(Request $request)
 
     return redirect()->route('panitia.sidang.link_drive')->with('success', 'Link Drive berhasil disimpan.');
 }
-public function submitFinal(Request $request, $id)
+
+public function submitFinal(Request $request, $id_sidang)
 {
     $request->validate([
-        'status_final' => 'required|in:Lengkap,Ditolak',
-        'catatan_final' => 'nullable|string|max:255',
+        'status_final' => 'required|in:Disetujui,Ditolak',
+        'catatan_final' => 'nullable|string',
+    ]);
+
+    $sidang = Sidang::findOrFail($id_sidang);
+    $sidang->status_final = $request->status_final;
+    $sidang->catatan_final = $request->catatan_final;
+    $sidang->save();
+
+    return redirect()->back()->with('success', 'Validasi final berhasil.');
+}
+public function formDrive($id)
+{
+    $sidang = Sidang::findOrFail($id);
+    return view('pages.panitia.sidang.drive', compact('sidang'));
+}
+
+public function saveDrive(Request $request, $id)
+{
+    $request->validate([
+        'link_drive_proyek' => 'required|url'
     ]);
 
     $sidang = Sidang::findOrFail($id);
-    $sidang->status_final = $request->status_final;
-    $sidang->catatan_final = $request->catatan_final ?? '-';
+    $sidang->link_drive_proyek = $request->link_drive_proyek;
     $sidang->save();
 
-    return redirect()->back()->with('success', 'Status sidang final berhasil diperbarui.');
+    return redirect()->route('sidang.final')->with('success', 'Link Drive berhasil disimpan.');
 }
+public function deleteDrive($id_sidang)
+{
+    $sidang = Sidang::findOrFail($id_sidang);
+    $sidang->link_drive_proyek = null;
+    $sidang->save();
 
+    return redirect()->route('sidang.final')->with('success', 'Link drive berhasil dihapus.');
+}
 
 }

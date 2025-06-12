@@ -38,15 +38,17 @@
 
                                 <div class="form-group">
                                     <label>No. Telepon</label>
-                                    <input type="text" name="no_telp" class="form-control @error('no_telp') is-invalid @enderror" value="{{ old('no_telp', $mahasiswa->no_telp) }}">
-                                    @error('no_telp')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                    <input type="text" name="no_telp" class="form-control" value="{{ old('no_telp', $mahasiswa->no_telp) }}">
                                 </div>
 
                                 <div class="form-group">
+<<<<<<< HEAD
                                     <label>Upload Foto</label>
+=======
+                                    <label>Foto</label>
+>>>>>>> 5ae23dda23a03bc9e17ee6e09ab8e796757f0f61
                                     <input type="file" name="foto" class="form-control-file">
+
                                     @if ($mahasiswa->foto)
                                         <div class="mt-2">
                                             <img src="{{ asset('storage/uploads/foto_mahasiswa/' . $mahasiswa->foto) }}" alt="Foto Mahasiswa"

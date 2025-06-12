@@ -28,7 +28,7 @@
                             <th>No</th>
                             <th>Jenis</th>
                             <th>Upload (PDF)</th>
-                            <th>Status</th>
+                            <th>Status & Catatan</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -50,19 +50,29 @@
                                 </form>
                             </td>
                             <td>
+                                {{-- STATUS & CATATAN DOSPEM 1 --}}
                                 Dospem 1:
                                 @if($sempro && $sempro->status_laporan_ta_dospem1 == 'Disetujui')
-                                    <span class="badge bg-success text-white mb-2 d-inline-block">Acc</span>
+                                    <span class="badge bg-success text-white mb-1">Acc</span>
+                                @elseif($sempro && $sempro->status_laporan_ta_dospem1 == 'Revisi')
+                                    <span class="badge bg-warning text-dark mb-1">Revisi</span>
                                 @else
-                                    <span class="text-muted">{{ $sempro->status_laporan_ta_dospem1 ?? '-' }}</span>
+                                    <span class="text-muted mb-1">Menunggu</span>
                                 @endif
                                 <br>
-                                Dospem 2:
+                                <small><strong>Catatan:</strong> {{ $sempro->catatan_dospem1 ?? '-' }}</small>
+
+                                {{-- STATUS & CATATAN DOSPEM 2 --}}
+                                <br>Dospem 2:
                                 @if($sempro && $sempro->status_laporan_ta_dospem2 == 'Disetujui')
-                                    <span class="badge bg-success text-white mb-2 d-inline-block">Acc</span>
+                                    <span class="badge bg-success text-white mb-1">Acc</span>
+                                @elseif($sempro && $sempro->status_laporan_ta_dospem2 == 'Revisi')
+                                    <span class="badge bg-warning text-dark mb-1">Revisi</span>
                                 @else
-                                    <span class="text-muted">{{ $sempro->status_laporan_ta_dospem2 ?? '-' }}</span>
+                                    <span class="text-muted mb-1">Menunggu</span>
                                 @endif
+                                <br>
+                                <small><strong>Catatan:</strong> {{ $sempro->catatan_dospem2 ?? '-' }}</small>
                             </td>
                             <td>
                                 @if($sempro && $sempro->laporan_sempro)

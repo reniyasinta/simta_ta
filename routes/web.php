@@ -141,10 +141,15 @@ Route::prefix('sidang')->name('sidang.')->group(function () {
     Route::get('/final', [PanitiaSidangController::class, 'final'])->name('final');
     Route::post('/final/{id}/submit', [PanitiaSidangController::class, 'submitFinal'])->name('final.submit');
 
-        // Link Drive
-        Route::get('/link-drive', [\App\Http\Controllers\Panitia\PanitiaSidangController::class, 'taConfig'])->name('panitia.sidang.link_drive');
-        Route::post('/link-drive/update', [\App\Http\Controllers\Panitia\PanitiaSidangController::class, 'taConfigUpdate'])->name('panitia.sidang.link_drive.update');
-    });
+    // Halaman form input/edit link drive
+    Route::get('/drive/{id_sidang}', [PanitiaSidangController::class, 'formDrive'])->name('drive');
+
+    // Simpan/update link drive
+    Route::post('/drive/save/{id_sidang}', [PanitiaSidangController::class, 'saveDrive'])->name('drive.save');
+
+    // Hapus link drive
+    Route::delete('/drive/delete/{id_sidang}', [PanitiaSidangController::class, 'deleteDrive'])->name('drive.delete');
+        });
 
     // Kuota Dosen
     Route::get('/kuota-dosen', [DosenKuotaController::class, 'index'])->name('panitia.kuota.index');

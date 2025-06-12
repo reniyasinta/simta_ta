@@ -26,12 +26,14 @@
                         <th>Lembar Konsultasi</th>
                         <th>Status Dospem 1</th>
                         <th>Status Dospem 2</th>
-                        <th>Catatan</th>
+                        <th>Catatan Dospem 1</th>
+                        <th>Catatan Dospem 2</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td>1</td>
+
                         <td>
                             @if ($sidang && $sidang->laporan_TA)
                                 <a href="{{ asset($sidang->laporan_TA) }}" target="_blank">Lihat</a>
@@ -57,7 +59,11 @@
                         </td>
 
                         <td>
-                            {{ $sidang->catatan_dosen ?? '-' }}
+                            {{ $sidang->catatan_draft_dosen1 ?? '-' }}
+                        </td>
+
+                        <td>
+                            {{ $sidang->catatan_draft_dosen2 ?? '-' }}
                         </td>
                     </tr>
                 </tbody>

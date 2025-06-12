@@ -13,7 +13,7 @@
             <h1>Pengajuan Dosen Pembimbing 1</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item active"><a href="{{ url('home') }}">Dashboard</a></div>
-                <div class="breadcrumb-item">pengajuan dospem1</div>
+                <div class="breadcrumb-item">Pengajuan Dospem 1</div>
             </div>
         </div>
 
@@ -27,7 +27,7 @@
         @endif
 
         <div class="table-responsive">
-            <table class="table">
+            <table class="table table-bordered table-striped">
                 <thead>
                     <tr>
                         <th>No</th>
@@ -53,7 +53,6 @@
                             </td>
                             <td>{{ $item->dosen1->dosen->nama_dosen ?? '-' }}</td>
                             <td>{{ $item->dosen2->dosen->nama_dosen ?? '-' }}</td>
-                            {{-- Judul TA --}}
                             <td>{{ $item->judul_ta }}</td>
                             <td>
                                 @if ($item->proposal)
@@ -71,14 +70,16 @@
                                     <span class="badge bg-warning text-dark">Menunggu</span>
                                 @endif
                             </td>
+                            <td>{{ $item->keterangan ?? '-' }}</td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="text-center">Belum ada pengajuan.</td>
+                            <td colspan="8" class="text-center">Belum ada pengajuan.</td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
+
             @if (!isset($error))
                 @php
                     $adaMenunggu = $pengajuan->contains(function ($item) {
@@ -96,6 +97,7 @@
                     </div>
                 @endif
             @endif
+
         </div>
     </section>
 </div>

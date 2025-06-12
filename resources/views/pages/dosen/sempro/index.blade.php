@@ -83,7 +83,7 @@
                         <span class="badge bg-secondary text-white">Menunggu</span>
                     @endif
                 </td>
-                
+
                 {{-- CATATAN --}}
                 <td>
                     @php
