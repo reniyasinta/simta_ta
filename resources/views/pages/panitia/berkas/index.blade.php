@@ -27,13 +27,13 @@
         </div>
 
         <div class="table-responsive">
-            <table id="table-berkas" class="table table-bordered table-striped text-center">
+            <table id="table-berkas" class="table table-bordered table-striped">
                 <thead>
                     <tr>
-                       <th class="text-center">No</th>
-                        <th class="text-center">Nama Berkas</th>
-                        <th class="text-center">Preview</th>
-                        <th class="text-center">Aksi</th>
+                        <th>No</th>
+                        <th>Nama Berkas</th>
+                        <th>Preview</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -59,42 +59,34 @@
                                         'rar' => 'fas fa-file-archive text-muted',
                                     ];
                                     $icon = $icons[strtolower($extension)] ?? 'fas fa-file';
-                                    $canPreview = in_array(strtolower($extension), ['pdf', 'jpg', 'jpeg', 'png', 'txt']);
+
+                                    $canPreviewDirect = in_array(strtolower($extension), ['pdf', 'jpg', 'jpeg', 'png', 'txt']);
                                     $canGoogleViewer = in_array(strtolower($extension), ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx']);
                                     $fileUrl = Storage::url($item->file_path);
                                     $googleViewerUrl = 'https://docs.google.com/gview?url=' . urlencode(asset('storage/' . $item->file_path)) . '&embedded=true';
+                                    $viewerLink = $canPreviewDirect ? $fileUrl : ($canGoogleViewer ? $googleViewerUrl : $fileUrl);
                                 @endphp
                                 <i class="{{ $icon }}"></i> {{ $item->nama_berkas }}
                             </td>
                             <td>
                                 @if(Storage::disk('public')->exists($item->file_path))
-                                    @if($canPreview)
-                                        <a href="{{ $fileUrl }}" target="_blank" class="btn btn-info btn-sm">Lihat</a>
-                                    @elseif($canGoogleViewer)
-                                        <a href="{{ $googleViewerUrl }}" target="_blank" class="btn btn-secondary btn-sm">Preview</a>
-                                    @else
-                                        <span class="text-muted">Tidak tersedia preview</span>
-                                    @endif
+                                    <a href="{{ $viewerLink }}" target="_blank" class="btn btn-info btn-sm">Lihat</a>
                                 @else
                                     <span class="text-danger">File tidak ditemukan</span>
                                 @endif
                             </td>
                             <td>
                                 <a href="{{ route('panitia.berkas.edit', $item->id_berkas) }}"
-                                   class="btn btn-warning btn-sm me-1"
-                                   title="Edit">
+                                   class="btn btn-warning btn-sm me-1" title="Edit">
                                     <i class="fas fa-pencil-alt"></i>
                                 </a>
 
                                 <form action="{{ route('panitia.berkas.destroy', $item->id_berkas) }}"
-                                      method="POST"
-                                      class="d-inline"
+                                      method="POST" class="d-inline"
                                       onsubmit="return confirm('Yakin ingin menghapus berkas ini?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit"
-                                            class="btn btn-danger btn-sm"
-                                            title="Hapus">
+                                    <button type="submit" class="btn btn-danger btn-sm" title="Hapus">
                                         <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </form>
@@ -113,9 +105,7 @@
 @endsection
 
 @push('scripts')
-    <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-
     <script>
         $(document).ready(function() {
             $('#table-berkas').DataTable({

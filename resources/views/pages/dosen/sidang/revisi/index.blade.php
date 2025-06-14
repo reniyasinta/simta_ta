@@ -45,10 +45,15 @@
                             {!! implode('<br>', $anggotaList) !!}
                         </td>
 
+                        {{-- Bagian file revisi diubah sesuai versioning --}}
                         <td>
-                            @if($sidang->revisi_laporan)
-                                <a href="{{ asset($sidang->revisi_laporan) }}" target="_blank" class="btn btn-sm btn-info">
-                                    <i class="fas fa-eye"></i>
+                            @php
+                                $latestRevisi = $sidang->revisiUploads()->latest('uploaded_at')->first();
+                            @endphp
+
+                            @if($latestRevisi)
+                                <a href="{{ asset($latestRevisi->file_path) }}" target="_blank" class="btn btn-sm btn-info">
+                                    <i class="fas fa-eye"></i> Lihat
                                 </a>
                             @else
                                 <span class="text-muted">Belum Upload</span>
@@ -81,7 +86,6 @@
 
                         <td>
                             @php
-                                // Tentukan penguji_ke
                                 $penguji_ke = null;
                                 if ($sidang->penguji_1_id == auth()->user()->id) {
                                     $penguji_ke = 1;

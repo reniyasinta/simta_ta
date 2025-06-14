@@ -37,12 +37,12 @@
                         {{-- 1. Laporan TA --}}
                         <tr>
                             <td>1</td>
-                            <td>Laporan TA</td>
+                            <td>Proposal TA</td>
                             <td>
                                 <form action="{{ route('mahasiswa.sempro.uploadLaporanTa') }}" method="POST" enctype="multipart/form-data">
                                     @csrf
                                     <div class="input-group input-group-sm">
-                                        <input type="file" name="laporan_sempro" class="form-control" accept="application/pdf" required>
+                                        <input type="file" name="proposal_ta" class="form-control" accept="application/pdf" required>
                                         <button type="submit" class="btn btn-primary" title="Upload">
                                             <i class="fas fa-upload"></i>
                                         </button>
@@ -52,9 +52,9 @@
                             <td>
                                 {{-- STATUS & CATATAN DOSPEM 1 --}}
                                 Dospem 1:
-                                @if($sempro && $sempro->status_laporan_ta_dospem1 == 'Disetujui')
+                                @if($sempro && $sempro->status_proposal_ta_dospem1 == 'Disetujui')
                                     <span class="badge bg-success text-white mb-1">Acc</span>
-                                @elseif($sempro && $sempro->status_laporan_ta_dospem1 == 'Revisi')
+                                @elseif($sempro && $sempro->status_proposal_ta_dospem1 == 'Revisi')
                                     <span class="badge bg-warning text-dark mb-1">Revisi</span>
                                 @else
                                     <span class="text-muted mb-1">Menunggu</span>
@@ -64,9 +64,9 @@
 
                                 {{-- STATUS & CATATAN DOSPEM 2 --}}
                                 <br>Dospem 2:
-                                @if($sempro && $sempro->status_laporan_ta_dospem2 == 'Disetujui')
+                                @if($sempro && $sempro->status_proposal_ta_dospem2 == 'Disetujui')
                                     <span class="badge bg-success text-white mb-1">Acc</span>
-                                @elseif($sempro && $sempro->status_laporan_ta_dospem2 == 'Revisi')
+                                @elseif($sempro && $sempro->status_proposal_ta_dospem2 == 'Revisi')
                                     <span class="badge bg-warning text-dark mb-1">Revisi</span>
                                 @else
                                     <span class="text-muted mb-1">Menunggu</span>
@@ -75,8 +75,8 @@
                                 <small><strong>Catatan:</strong> {{ $sempro->catatan_dospem2 ?? '-' }}</small>
                             </td>
                             <td>
-                                @if($sempro && $sempro->laporan_sempro)
-                                    <a href="{{ asset($sempro->laporan_sempro) }}" target="_blank" class="btn btn-info btn-sm me-1" title="Lihat">
+                                @if($sempro && $sempro->proposal_ta)
+                                    <a href="{{ asset($sempro->proposal_ta) }}" target="_blank" class="btn btn-info btn-sm me-1" title="Lihat">
                                         <i class="fas fa-eye"></i>
                                     </a>
 
@@ -96,7 +96,7 @@
                             <td>2</td>
                             <td>Form Persetujuan</td>
                             <td>
-                                @if($sempro && $sempro->status_laporan_ta_dospem1 == 'Disetujui' && $sempro->status_laporan_ta_dospem2 == 'Disetujui')
+                                @if($sempro && $sempro->status_proposal_ta_dospem1 == 'Disetujui' && $sempro->status_proposal_ta_dospem2 == 'Disetujui')
                                     <form action="{{ route('mahasiswa.sempro.uploadForm') }}" method="POST" enctype="multipart/form-data">
                                         @csrf
                                         <div class="input-group input-group-sm">

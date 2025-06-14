@@ -208,12 +208,8 @@
 
                                         {{-- Tombol Kembali --}}
                                         <div class="text-right mt-4">
-<<<<<<< HEAD
                                             <button type="button" class="btn btn-secondary" onclick="$('#modalDosen{{ $dosen->id_dosen }}').modal('hide'); setTimeout(function(){ window.location.href='{{ route('mahasiswa.dashboard') }}'; }, 300)">Kembali</button>
 
-=======
-                                            <a href="#" class="btn btn-secondary" role="button" data-dismiss="modal">Kembali</a>
->>>>>>> 1f747bf664d209b6aaf520370a812c667f5c53b7
                                         </div>
                                     </div>
                                 </div>
@@ -229,12 +225,9 @@
 </div>
 @endsection
 
-<<<<<<< HEAD
 @push('scripts')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 
 @endpush
-=======
->>>>>>> 1f747bf664d209b6aaf520370a812c667f5c53b7
 

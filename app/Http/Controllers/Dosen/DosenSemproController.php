@@ -36,12 +36,11 @@ class DosenSemproController extends Controller
 
         $pengajuan = $sempro->pengajuan;
 
-        // Cek dospem1 atau dospem2 → update status Laporan TA
         if ($pengajuan->id_dosen1 == $user->id) {
-            $sempro->status_laporan_ta_dospem1 = $request->status;
+            $sempro->status_proposal_ta_dospem1 = $request->status;
             $sempro->catatan_dospem1 = $request->catatan;
         } elseif ($pengajuan->id_dosen2 == $user->id) {
-            $sempro->status_laporan_ta_dospem2 = $request->status;
+            $sempro->status_proposal_ta_dospem2 = $request->status;
             $sempro->catatan_dospem2 = $request->catatan;
         } else {
             return back()->with('error', 'Anda bukan dosen pembimbing untuk pengajuan ini.');

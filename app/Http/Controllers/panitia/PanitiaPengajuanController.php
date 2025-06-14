@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\PengajuanPembimbing;
 use App\Models\Dosen;
 use App\Models\User;
+use App\Exports\PengajuanPembimbingExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 
 class PanitiaPengajuanController extends Controller
@@ -81,5 +83,9 @@ public function update(Request $request, $id)
 
     return redirect()->route('panitia.pengajuan.index')->with('success', 'Dosen Pembimbing 2 berhasil ditetapkan.');
 }
-
+    public function export()
+    {
+        $user = auth()->user();
+        return Excel::download(new PengajuanPembimbingExport($user), 'pengajuan_mahasiswa.xlsx');
+    }
 }

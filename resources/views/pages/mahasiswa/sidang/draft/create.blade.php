@@ -36,18 +36,19 @@
                             </div>
                             <div class="card-body">
                                 <form action="{{ route('mahasiswa.sidang.uploadDraft') }}" method="POST" enctype="multipart/form-data">
-                                    @csrf
-                                    <div class="form-group">
-                                        <label>Laporan TA (PDF)</label>
-                                        <input type="file" name="laporan_TA" class="form-control" required accept="application/pdf">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Lembar Konsultasi (PDF)</label>
-                                        <input type="file" name="lembar_konsultasi" class="form-control" required accept="application/pdf">
-                                    </div>
-                                    <button type="submit" class="btn btn-info">Upload</button>
-                                    <a href="{{ route('mahasiswa.sidang.draft') }}" class="btn btn-secondary">Kembali</a>
-                                </form>
+    @csrf
+    <div class="form-group">
+        <label>Laporan TA (PDF)</label>
+        <input type="file" name="laporan_TA" class="form-control" required accept="application/pdf">
+    </div>
+    <div class="form-group">
+        <label>Lembar Konsultasi (PDF)</label>
+        <input type="file" name="lembar_konsultasi" class="form-control" required accept="application/pdf">
+    </div>
+    <button type="submit" class="btn btn-info">Upload</button>
+    <a href="{{ route('mahasiswa.sidang.draft') }}" class="btn btn-secondary">Kembali</a>
+</form>
+
                             </div>
                         </div>
                     </div>

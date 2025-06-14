@@ -2,6 +2,10 @@
 
 @section('title', 'Daftar Berkas Persyaratan')
 
+@push('style')
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+@endpush
+
 @section('main')
 <div class="main-content">
     <section class="section">
@@ -18,7 +22,7 @@
         @endif
 
         <div class="table-responsive">
-            <table class="table table-bordered table-striped">
+            <table id="table-berkas" class="table table-bordered table-striped">
                 <thead>
                     <tr>
                         <th>No</th>
@@ -60,13 +64,17 @@
                             </td>
                             <td>
                                 @if(Storage::disk('public')->exists($item->file_path))
-                                    @if($canPreview)
-                                        <a href="{{ $fileUrl }}" target="_blank" class="btn btn-info btn-sm">Lihat</a>
-                                    @elseif($canGoogleViewer)
-                                        <a href="{{ $googleViewerUrl }}" target="_blank" class="btn btn-secondary btn-sm">Preview</a>
-                                    @else
-                                        <span class="text-muted">Tidak tersedia preview</span>
-                                    @endif
+                                    @php
+                                        $extension = pathinfo($item->file_path, PATHINFO_EXTENSION);
+                                        $canPreviewDirect = in_array(strtolower($extension), ['pdf', 'jpg', 'jpeg', 'png', 'txt']);
+                                        $canGoogleViewer = in_array(strtolower($extension), ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx']);
+                                        $fileUrl = Storage::url($item->file_path);
+                                        $googleViewerUrl = 'https://docs.google.com/gview?url=' . urlencode(asset('storage/' . $item->file_path)) . '&embedded=true';
+                                    @endphp
+
+                                    <a href="{{ $canPreviewDirect ? $fileUrl : ($canGoogleViewer ? $googleViewerUrl : $fileUrl) }}" target="_blank" class="btn btn-info btn-sm">
+                                        Lihat
+                                    </a>
                                 @else
                                     <span class="text-danger">File tidak ditemukan</span>
                                 @endif
@@ -86,3 +94,22 @@
     </section>
 </div>
 @endsection
+
+@push('scripts')
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#table-berkas').DataTable({
+            language: {
+                search: "Cari Nama Berkas:",
+                lengthMenu: "Tampilkan _MENU_ data per halaman",
+                zeroRecords: "Data tidak ditemukan",
+                info: "Menampilkan _PAGE_ dari _PAGES_",
+                infoEmpty: "Tidak ada data",
+                infoFiltered: "(filtered from _MAX_ total records)"
+            },
+            pageLength: 10
+        });
+    });
+</script>
+@endpush

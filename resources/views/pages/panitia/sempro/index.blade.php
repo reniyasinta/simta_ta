@@ -15,7 +15,7 @@
                 <tr>
                     <th class="text-center" style="width: 50px;">No</th>
                     <th class="text-center">Anggota Kelompok</th>
-                    <th class="text-center">Laporan TA</th>
+                    <th class="text-center">Proposal TA</th>
                     <th class="text-center">Form Persetujuan</th>
                     <th class="text-center">Berita Acara</th>
                 </tr>
@@ -42,8 +42,8 @@
                                 </ul>
                             </td>
                             <td class="text-center">
-                                @if ($sempro && $sempro->laporan_sempro)
-                                    <a href="{{ asset($sempro->laporan_sempro) }}" target="_blank" class="btn btn-sm btn-info">
+                                @if ($sempro && $sempro->proposal_ta)
+                                    <a href="{{ asset($sempro->proposal_ta) }}" target="_blank" class="btn btn-sm btn-info">
                                         <i class="fas fa-eye"></i> Lihat
                                     </a>
                                 @else

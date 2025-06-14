@@ -79,13 +79,12 @@ Route::middleware(['role:panitia'])->prefix('panitia')->group(function () {
 
     // Dashboard
     Route::get('/dashboard', [PanitiaController::class, 'index'])->name('panitia.dashboard');
-    Route::get('/profil', [ProfilPanitiaController::class, 'index'])->name('profil');
-    Route::post('/profil/update', [ProfilPanitiaController::class, 'update'])->name('profil.update');
 
     // Pengajuan
     Route::get('/pengajuan', [PanitiaPengajuanController::class, 'index'])->name('panitia.pengajuan.index');
     Route::get('/pengajuan/{id}/edit', [PanitiaPengajuanController::class, 'edit'])->name('panitia.pengajuan.edit');
     Route::put('/pengajuan/{id}', [PanitiaPengajuanController::class, 'update'])->name('panitia.pengajuan.update');
+    Route::get('/pengajuan/export', [PanitiaPengajuanController::class, 'export'])->name('panitia.pengajuan.export');
 
     // Berkas
     Route::get('/berkas', [PanitiaBerkasController::class, 'index'])->name('panitia.berkas.index');
@@ -139,15 +138,8 @@ Route::prefix('sidang')->name('sidang.')->group(function () {
     Route::get('/revisi', [PanitiaSidangController::class, 'revisi'])->name('revisi');
     Route::get('/final', [PanitiaSidangController::class, 'final'])->name('final');
     Route::post('/final/{id}/submit', [PanitiaSidangController::class, 'submitFinal'])->name('final.submit');
+    Route::post('/final/upload', [MahasiswaSidangController::class, 'uploadFinal'])->name('mahasiswa.sidang.final.upload');
 
-    // Halaman form input/edit link drive
-    Route::get('/drive/{id_sidang}', [PanitiaSidangController::class, 'formDrive'])->name('drive');
-
-    // Simpan/update link drive
-    Route::post('/drive/save/{id_sidang}', [PanitiaSidangController::class, 'saveDrive'])->name('drive.save');
-
-    // Hapus link drive
-    Route::delete('/drive/delete/{id_sidang}', [PanitiaSidangController::class, 'deleteDrive'])->name('drive.delete');
         });
 
     // Kuota Dosen
@@ -194,9 +186,10 @@ Route::prefix('sidang')->name('sidang.')->group(function () {
         Route::get('/profile/edit', [MahasiswaController::class, 'editProfile'])->name('mahasiswa.profile_edit');
 
         // Draft
-        Route::get('/draft', [App\Http\Controllers\Mahasiswa\MahasiswaSidangController::class, 'draft'])->name('mahasiswa.sidang.draft');
-        Route::get('/draft/create', [App\Http\Controllers\Mahasiswa\MahasiswaSidangController::class, 'createDraft'])->name('mahasiswa.sidang.draft.create');
-        Route::post('/upload-draft', [App\Http\Controllers\Mahasiswa\MahasiswaSidangController::class, 'uploadDraft'])->name('mahasiswa.sidang.uploadDraft');
+
+    Route::get('/draft', [MahasiswaSidangController::class, 'draft'])->name('mahasiswa.sidang.draft');
+    Route::get('/draft/create', [MahasiswaSidangController::class, 'createDraft'])->name('mahasiswa.sidang.draft.create');
+    Route::post('/upload-draft', [MahasiswaSidangController::class, 'uploadDraft'])->name('mahasiswa.sidang.uploadDraft');
 
         // REVISI
         Route::get('/revisi', [App\Http\Controllers\Mahasiswa\MahasiswaSidangController::class, 'revisi'])->name('mahasiswa.sidang.revisi');

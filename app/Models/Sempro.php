@@ -14,13 +14,14 @@ class Sempro extends Model
 
     protected $fillable = [
         'id_ajuan',
-        'laporan_sempro',
+        'proposal_ta',
         'form_persetujuan_sempro',
         'berita_acara_sempro',
-        'status_dospem1',
-        'status_dospem2',
+        'status_proposal_ta_dospem1',
+        'status_proposal_ta_dospem2',
         'catatan_dospem1',
         'catatan_dospem2',
+        'status_pengajuan',
     ];
 
     // Relasi ke pengajuan
