@@ -32,6 +32,8 @@ class LoginController extends Controller
                     return redirect()->route('dosen.dashboard');
                 case 'mahasiswa':
                     return redirect()->route('mahasiswa.dashboard');
+                case 'pimpinan':
+                    return redirect()->route('pimpinan.dashboard');
                 default:
                     return redirect()->route('dashboard');
             }
@@ -51,6 +53,7 @@ class LoginController extends Controller
             'dosen' => '/dosen/dashboard',
             'panitia' => '/panitia/dashboard',
             'mahasiswa' => '/mahasiswa/dashboard',
+            'pimpinan' => '/pimpinan/dashboard',
             default => '/',
         };
     }

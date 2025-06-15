@@ -73,6 +73,7 @@ class User extends Authenticatable
             2 => 'panitia',
             3 => 'dosen',
             4 => 'mahasiswa',
+            5 => 'pimpinan',
             default => 'unknown',
         };
     }
@@ -87,6 +88,7 @@ class User extends Authenticatable
             2 => route('panitia.dashboard'),
             3 => route('dosen.dashboard'),
             4 => route('mahasiswa.dashboard'),
+             5 => route('pimpinan.dashboard'),
             default => '/',
         };
     }

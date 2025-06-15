@@ -33,6 +33,11 @@ use App\Http\Controllers\Dosen\ValidasiPengajuanController;
 use App\Http\Controllers\Panitia\DosenKuotaController;
 use App\Http\Controllers\Dosen\BimbinganController;
 use App\Http\Controllers\Dosen\DosenSemproController;
+use App\Http\Controllers\Pimpinan\PimpinanPengajuanController;
+use App\Http\Controllers\Pimpinan\PimpinanKuotaController;
+use App\Http\Controllers\Pimpinan\PimpinanJadwalController;
+use App\Http\Controllers\Pimpinan\PimpinanSuratController;
+use App\Http\Controllers\Pimpinan\PimpinanController;
 
 // Halaman login
 Route::get('/', function () {
@@ -253,6 +258,19 @@ Route::prefix('sidang')->name('sidang.')->group(function () {
         Route::delete('sempro/delete-laporan-ta', [App\Http\Controllers\Mahasiswa\MahasiswaSemproController::class, 'deleteLaporanTa'])->name('mahasiswa.sempro.deleteLaporanTa');
 
     });
+
+    // Group route untuk role pimpinan
+Route::middleware(['auth'])->prefix('pimpinan')->name('pimpinan.')->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\Pimpinan\PimpinanController::class, 'index'])->name('dashboard');
+
+Route::get('/pengajuan', [\App\Http\Controllers\Pimpinan\PimpinanPengajuanController::class, 'index'])->name('pengajuan.index');
+    Route::get('/kuota', [\App\Http\Controllers\Pimpinan\PimpinanKuotaController::class, 'index'])->name('kuota.index');
+    Route::get('/jadwal/seminar', [\App\Http\Controllers\Pimpinan\PimpinanJadwalController::class, 'seminar'])->name('jadwal.seminar');
+    Route::get('/jadwal/sidang', [\App\Http\Controllers\Pimpinan\PimpinanJadwalController::class, 'sidang'])->name('jadwal.sidang');
+    Route::get('/jadwal/yudisium', [\App\Http\Controllers\Pimpinan\PimpinanJadwalController::class, 'yudisium'])->name('jadwal.yudisium');
+    Route::get('/surat', [\App\Http\Controllers\Pimpinan\PimpinanSuratController::class, 'index'])->name('surat.index');
+});
+
 
     // Template user
     Route::get('/template-user', function () {

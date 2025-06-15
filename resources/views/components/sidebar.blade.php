@@ -255,6 +255,52 @@
             <i class="fas fa-envelope-open-text"></i> <span>Undangan Sidang</span>
         </a>
     </li>
+{{-- ================= Pimpinan (role_id = 5) ================= --}}
+@elseif($roleId == 5)
+<ul class="sidebar-menu">
+    <li class="menu-header">Dashboard</li>
+    <li class="{{ request()->routeIs('pimpinan.dashboard') ? 'active' : '' }}">
+        <a href="{{ route('pimpinan.dashboard') }}" class="nav-link">
+            <i class="fas fa-fire"></i> <span>Dashboard</span>
+        </a>
+    </li>
+
+    <li class="menu-header">Monitoring</li>
+
+    <li class="{{ request()->routeIs('pimpinan.pengajuan.index') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('pimpinan.pengajuan.index') }}">
+            <i class="fas fa-file-signature"></i> <span>Pengajuan Pembimbing</span>
+        </a>
+    </li>
+
+    <li class="{{ request()->routeIs('pimpinan.kuota.index') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('pimpinan.kuota.index') }}">
+            <i class="fas fa-users-cog"></i> <span>Monitoring Kuota</span>
+        </a>
+    </li>
+
+    <li class="nav-item dropdown {{ request()->is('pimpinan/jadwal*') ? 'active' : '' }}">
+        <a href="#" class="nav-link has-dropdown">
+            <i class="fas fa-calendar-alt"></i> <span>Monitoring Jadwal</span>
+        </a>
+        <ul class="dropdown-menu">
+            <li class="{{ request()->routeIs('pimpinan.jadwal.seminar') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('pimpinan.jadwal.seminar') }}">Seminar Proposal</a>
+            </li>
+            <li class="{{ request()->routeIs('pimpinan.jadwal.sidang') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('pimpinan.jadwal.sidang') }}">Sidang TA</a>
+            </li>
+            <li class="{{ request()->routeIs('pimpinan.jadwal.yudisium') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('pimpinan.jadwal.yudisium') }}">Yudisium</a>
+            </li>
+        </ul>
+    </li>
+
+    <li class="{{ request()->routeIs('pimpinan.surat.index') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('pimpinan.surat.index') }}">
+            <i class="fas fa-envelope"></i> <span>Monitoring Surat</span>
+        </a>
+    </li>
 
 </ul>
 @endif
