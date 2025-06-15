@@ -39,8 +39,23 @@ class PengajuanPembimbing extends Model
     }
     public function sempro()
     {
-        return $this->hasOne(\App\Models\Sempro::class, 'id_ajuan');
+        return $this->hasOne(\App\Models\Sempro::class, 'id_ajuan', 'id_ajuan');
     }
 
+    public function sidang()
+    {
+        return $this->hasOneThrough(
+            Sidang::class,       // Target model
+            Sempro::class,       // Perantara model
+            'id_ajuan',          // Foreign key di Sempro (yang menunjuk ke pengajuan)
+            'id_sempro',         // Foreign key di Sidang (yang menunjuk ke sempro)
+            'id_ajuan',          // Local key di PengajuanPembimbing
+            'id_sempro'          // Local key di Sempro
+        );
+    }
+
+    public function jadwals() {
+        return $this->hasMany(Jadwal::class, 'id_ajuan', 'id_ajuan');
+    }
 
 }

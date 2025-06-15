@@ -5,28 +5,60 @@ namespace App\Http\Controllers\Panitia;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Imports\JadwalSeminarImport;
 use App\Models\Jadwal;
 use App\Models\User;
 use App\Models\PengajuanPembimbing;
-use App\Models\Dosen;
+use App\Models\Sempro;
+use App\Exports\JadwalTemplateExport;
+use App\Imports\JadwalTemplateImport;
 use App\Models\Sidang;
 
 class PanitiaJadwalController extends Controller
 {
     public function index()
     {
-        return redirect()->route('pages.panitia.jadwal.seminar.index');
+        return redirect()->route ('panitia.jadwal.jenis.index', ['jenis' => 'seminar']);
     }
 
-    // ======= VIEW PER JENIS ACARA =======
-
-public function seminar()
+public function indexJenis($jenis)
 {
-    $jadwals = Jadwal::where('jenis_acara', 'seminar')
-        ->orderBy('tanggal', 'desc')
-        ->orderBy('jam_mulai')
-        ->with([
+    if (!in_array($jenis, ['seminar', 'sidang'])) abort(404);
+
+    if ($jenis === 'seminar') {
+        // --- QUERY SEMINAR ---
+        $approvedAjuanIds = Sempro::where('status_laporan_ta_dospem1', 'Disetujui')
+            ->where('status_laporan_ta_dospem2', 'Disetujui')
+            ->pluck('id_ajuan');
+
+        $pengajuans = PengajuanPembimbing::with(['kelompok.anggota', 'dosen1', 'dosen2'])
+            ->whereIn('id_ajuan', $approvedAjuanIds)
+            ->whereNotNull('id_dosen2')
+            ->whereHas('kelompok')
+            ->get();
+    }
+
+    if ($jenis === 'sidang') {
+        // --- QUERY SIDANG ---
+
+        // Ambil semua pengajuan yang:
+        // - Sudah punya jadwal seminar
+        // - Draft sidang dosen 1 & 2 sudah disetujui
+
+        $pengajuans = PengajuanPembimbing::with(['kelompok.anggota', 'dosen1', 'dosen2'])
+            ->whereHas('jadwals', function ($q) {
+                $q->where('jenis_acara', 'seminar');
+            })
+            ->whereHas('sidang', function ($q) {
+                $q->where('status_draft_dosen1', 'Disetujui')
+                  ->where('status_draft_dosen2', 'Disetujui');
+            })
+            ->whereNotNull('id_dosen2')
+            ->whereHas('kelompok')
+            ->get();
+    }
+
+    // Ambil jadwal yang sudah ada (untuk semua jenis)
+    $jadwals = Jadwal::with([
             'pengajuan.kelompok.anggota.prodi',
             'pengajuan.dosen1',
             'pengajuan.dosen2',
@@ -34,101 +66,66 @@ public function seminar()
             'penguji2',
             'penguji3',
         ])
-        ->get();
-
-    $pengajuans = PengajuanPembimbing::with(['kelompok.anggota.prodi', 'dosen1', 'dosen2'])
-        ->get()
-        ->filter(function ($item) {
-            return $item->dosen2 !== null && $item->kelompok !== null;
-        });
-
-    return view('pages.panitia.jadwal.seminar.index', [
-        'jadwals' => $jadwals,
-        'pengajuans' => $pengajuans,
-        'jenis' => 'seminar'
-    ]);
-}
-
-
-public function sidang()
-{
-    $jadwals = Jadwal::where('jenis_acara', 'sidang')
+        ->where('jenis_acara', $jenis)
         ->orderBy('tanggal', 'desc')
-        ->orderBy('jam_mulai')
-        ->with('pengajuan.dosen1', 'pengajuan.dosen2', 'pengajuan.mahasiswa')
+        ->orderBy('jam_mulai', 'asc')
         ->get();
 
-    return view('pages.panitia.jadwal.sidang.index', [
-        'jadwals' => $jadwals,
-        'jenis' => 'sidang'
-    ]);
+    // Filter pengajuan yang belum terjadwal
+    $pengajuanBelumTerjadwal = $pengajuans->filter(function($pengajuan) use ($jadwals) {
+        return !$jadwals->contains('id_ajuan', $pengajuan->id_ajuan);
+    });
+
+    return view("pages.panitia.jadwal.$jenis.index", compact('jadwals', 'pengajuanBelumTerjadwal', 'jenis'));
 }
 
 
-public function yudisium()
+
+public function create($jenis)
 {
-    $jadwals = Jadwal::where('jenis_acara', 'yudisium')
-        ->orderBy('tanggal', 'desc')
-        ->orderBy('jam_mulai')
-        ->with('pengajuan.dosen1', 'pengajuan.dosen2', 'pengajuan.mahasiswa')
-        ->get();
+    if (!in_array($jenis, ['seminar', 'sidang'])) abort(404);
 
-    return view('pages.panitia.jadwal.yudisium.index', [
-        'jadwals' => $jadwals,
-        'jenis' => 'yudisium'
-    ]);
-}
+    // Ambil dosen penguji
+    $users = User::where('role_id', 3)->get(); // anggap role_id 3 = dosen
 
+    // Pengajuan disiapkan khusus per jenis acara
+    if ($jenis == 'seminar') {
+        // Untuk SEMINAR
+        $pengajuans = PengajuanPembimbing::whereHas('sempro', function ($q) {
+                $q->where('status_laporan_ta_dospem1', 'Disetujui')
+                  ->where('status_laporan_ta_dospem2', 'Disetujui');
+            })
+            ->whereDoesntHave('jadwals', function ($q) {
+                $q->where('jenis_acara', 'seminar');
+            })
+            ->with(['kelompok.anggota.prodi', 'dosen1', 'dosen2'])
+            ->get();
 
-    // ======= TAMBAH JADWAL =======
-    public function create(Request $request)
-    {
-        $jenis = $request->get('jenis', 'seminar');
-
-        if (!in_array($jenis, ['seminar', 'yudisium', 'sidang'])) {
-            abort(404);
-        }
-
-        $users = User::whereHas('role', fn($q) => $q->where('name', 'dosen'))->get();
-
-        $pengajuans = PengajuanPembimbing::with(['kelompok.anggota', 'dosen1', 'dosen2'])
-            ->get()
-            ->filter(function ($item) {
-                return $item->dosen2 !== null && $item->kelompok !== null;
-            });
-
-        return view("pages.panitia.jadwal.$jenis.create", compact('users', 'pengajuans', 'jenis'));
+    } elseif ($jenis == 'sidang') {
+        // Untuk SIDANG
+        $pengajuans = PengajuanPembimbing::whereHas('jadwals', function ($q) {
+                $q->where('jenis_acara', 'seminar');
+            })
+            ->whereHas('sidang', function ($q) {
+                $q->where('status_draft_dosen1', 'Disetujui')
+                  ->where('status_draft_dosen2', 'Disetujui');
+            })
+            ->whereDoesntHave('jadwals', function ($q) {
+                $q->where('jenis_acara', 'sidang');
+            })
+            ->with(['kelompok.anggota.prodi', 'dosen1', 'dosen2'])
+            ->get();
     }
 
-public function store(Request $request)
+    return view('pages.panitia.jadwal.'.$jenis.'.create', compact('jenis', 'pengajuans', 'users'));
+}
+
+
+    public function store(Request $request)
 {
     $jenis = $request->input('jenis_acara');
+    if (!in_array($jenis, ['seminar', 'sidang'])) abort(404);
 
-    // === VALIDASI UNTUK YUDISIUM ===
-    if ($jenis === 'yudisium') {
-        $validated = $request->validate([
-            'jenis_acara' => 'required|in:yudisium',
-            'tanggal'     => 'required|date',
-            'jam_mulai'   => 'required|date_format:H:i',
-            'jam_selesai' => 'nullable|date_format:H:i|after:jam_mulai',
-            'ruangan'     => 'required|string|max:255',
-        ]);
-
-        $validated += [
-            'judul_ta'      => '-',
-            'nim'           => '-',
-            'nama'          => '-',
-            'prodi'         => '-',
-            'pembimbing_1'  => '-',
-            'pembimbing_2'  => '-',
-        ];
-
-        Jadwal::create($validated);
-
-        return redirect()->route('jadwal.yudisium.index')->with('success', 'Jadwal Yudisium berhasil disimpan.');
-    }
-
-    // === VALIDASI UNTUK SEMINAR DAN SIDANG ===
     $validated = $request->validate([
         'jenis_acara'   => 'required|in:seminar,sidang',
         'tanggal'       => 'required|date',
@@ -140,6 +137,45 @@ public function store(Request $request)
         'penguji_2_id'  => 'nullable|exists:users,id',
         'penguji_3_id'  => 'nullable|exists:users,id',
     ]);
+
+    if ($jenis === 'seminar') {
+        $isApproved = Sempro::where('id_ajuan', $validated['id_ajuan'])
+            ->where('status_laporan_ta_dospem1', 'Disetujui')
+            ->where('status_laporan_ta_dospem2', 'Disetujui')
+            ->exists();
+
+        if (!$isApproved) {
+            return back()->with('error', 'Pengajuan belum memenuhi syarat SEMPRO.');
+        }
+    }
+
+    if ($jenis === 'sidang') {
+
+    // Ambil id_sempro berdasarkan id_ajuan
+    $sempro = Sempro::where('id_ajuan', $validated['id_ajuan'])->first();
+
+    if (!$sempro) {
+        return back()->with('error', 'Data sempro tidak ditemukan.');
+    }
+
+    $isApprovedSidang = Sidang::where('id_sempro', $sempro->id_sempro)
+        ->where('status_draft_dosen1', 'Disetujui')
+        ->where('status_draft_dosen2', 'Disetujui')
+        ->exists();
+
+    if (!$isApprovedSidang) {
+        return back()->with('error', 'Pengajuan belum memenuhi syarat SIDANG.');
+    }
+
+        // Cek apakah sudah seminar
+        $isAlreadySeminar = Jadwal::where('id_ajuan', $validated['id_ajuan'])
+            ->where('jenis_acara', 'seminar')
+            ->exists();
+
+        if (!$isAlreadySeminar) {
+            return back()->with('error', 'Mahasiswa belum mengikuti SEMINAR, tidak bisa input SIDANG.');
+        }
+    }
 
     $pengajuan = PengajuanPembimbing::with(['kelompok.anggota.prodi', 'dosen1', 'dosen2'])->findOrFail($validated['id_ajuan']);
     $anggota = $pengajuan->kelompok->anggota;
@@ -153,7 +189,7 @@ public function store(Request $request)
         'ruangan'        => $validated['ruangan'],
         'id_mhs'         => $firstAnggota->id_mhs ?? null,
         'id_ajuan'       => $validated['id_ajuan'],
-        'nim'            => $anggota->pluck('nim')->join(', '),
+        'nim'            => $anggota->pluck('nim_mhs')->join(', '),
         'nama'           => $anggota->pluck('nama_mhs')->join(', '),
         'prodi'          => $firstAnggota->prodi->nama_prodi ?? '-',
         'judul_ta'       => $pengajuan->judul_ta,
@@ -164,95 +200,141 @@ public function store(Request $request)
         'penguji_3_id'   => $validated['penguji_3_id'] ?? null,
     ]);
 
-    return redirect()->route('jadwal.' . $validated['jenis_acara'] . '.index')->with('success', 'Jadwal berhasil disimpan.');
+    return redirect()->route('panitia.jadwal.jenis.index', ['jenis' => $validated['jenis_acara']])->with('success', 'Jadwal berhasil disimpan.');
 }
 
 
-public function edit($id)
-{
-    $jadwal = Jadwal::findOrFail($id);
-    $jenis = $jadwal->jenis_acara;
 
-    // Ambil daftar dosen sebagai penguji
-    $users = User::whereHas('role', fn($q) => $q->where('name', 'dosen'))->get();
+    public function edit($id)
+    {
+        $jadwal = Jadwal::findOrFail($id);
+        $jenis = $jadwal->jenis_acara;
 
-    // Kirim data ke view sesuai jenis acara
-    return view("pages.panitia.jadwal.$jenis.edit", compact('jadwal', 'users', 'jenis'));
-}
+        if ($jenis === 'yudisium') {
+            return view('pages.panitia.jadwal.yudisium.edit', compact('jadwal'));
+        }
 
-
-public function update(Request $request, $id)
-{
-    $jadwal = Jadwal::findOrFail($id);
-
-    // Validasi umum
-    $validated = $request->validate([
-        'tanggal'     => 'required|date',
-        'jam_mulai'   => 'required|date_format:H:i',
-        'jam_selesai' => 'nullable|date_format:H:i|after:jam_mulai',
-        'ruangan'     => 'required|string|max:255',
-    ]);
-
-    if ($jadwal->jenis_acara === 'yudisium') {
-        // Tambahan default agar sesuai saat update
-        $validated += [
-            'judul_ta'      => '-',
-            'nim'           => '-',
-            'nama'          => '-',
-            'prodi'         => '-',
-            'pembimbing_1'  => '-',
-            'pembimbing_2'  => '-',
-        ];
-    } else {
-        // Validasi penguji hanya untuk seminar/sidang
-        $validatedPenguji = $request->validate([
-            'penguji_1_id' => 'required|exists:users,id',
-            'penguji_2_id' => 'nullable|exists:users,id',
-            'penguji_3_id' => 'nullable|exists:users,id',
-        ]);
-
-        $validated = array_merge($validated, $validatedPenguji);
+        $users = User::whereHas('role', fn($q) => $q->where('name', 'dosen'))->get();
+        return view("pages.panitia.jadwal.$jenis.edit", compact('jadwal', 'users', 'jenis'));
     }
 
-    $jadwal->update($validated);
+    public function update(Request $request, $id)
+    {
+        $jadwal = Jadwal::findOrFail($id);
+        $jenis = $jadwal->jenis_acara;
 
-    return redirect()
-        ->route('jadwal.' . $jadwal->jenis_acara . '.index')
-        ->with('success', 'Jadwal berhasil diperbarui.');
-}
+        $validated = $request->validate([
+            'tanggal'     => 'required|date',
+            'jam_mulai'   => 'required|date_format:H:i',
+            'jam_selesai' => 'nullable|date_format:H:i|after:jam_mulai',
+            'ruangan'     => 'required|string|max:255',
+        ]);
+
+        if ($jenis !== 'yudisium') {
+            $penguji = $request->validate([
+                'penguji_1_id' => 'required|exists:users,id',
+                'penguji_2_id' => 'nullable|exists:users,id',
+                'penguji_3_id' => 'nullable|exists:users,id',
+            ]);
+            $validated = array_merge($validated, $penguji);
+        }
+
+        $jadwal->update($validated);
+        return redirect()->route('panitia.jadwal.jenis.index', ['jenis' => $jenis])->with('success', 'Jadwal berhasil diperbarui.');
+    }
 
     public function destroy($id)
     {
         $jadwal = Jadwal::findOrFail($id);
+        $jenis = $jadwal->jenis_acara;
         $jadwal->delete();
-        return redirect()->route('jadwal.yudisium.index')->with('success', 'Jadwal Yudisium berhasil dihapus.');
+
+        return redirect()->route('panitia.jadwal.jenis.index', ['jenis' => $jenis])->with('success', 'Jadwal berhasil dihapus.');
     }
 
-    // ======= IMPORT JADWAL =======
-    public function importForm(Request $request)
+    // === BAGIAN EXPORT / IMPORT HANYA UNTUK SEMINAR & SIDANG ===
+
+    public function export($jenis)
     {
-        $jenis = $request->get('jenis', 'seminar');
+        if (!in_array($jenis, ['seminar', 'sidang'])) abort(404);
+        return Excel::download(new JadwalTemplateExport($jenis), "template-jadwal-{$jenis}.xlsx");
+    }
+
+    public function importForm($jenis)
+    {
+        if (!in_array($jenis, ['seminar', 'sidang'])) abort(404);
         return view('pages.panitia.jadwal.import', compact('jenis'));
-    }
-
-    public function importView()
-    {
-        return view('pages.panitia.jadwal.import');
     }
 
     public function importJadwal(Request $request)
     {
-        $jenis = $request->get('jenis', 'seminar');
+        $jenis = $request->input('jenis');
+        if (!in_array($jenis, ['seminar', 'sidang'])) abort(404);
 
         $request->validate([
             'file' => 'required|file|mimes:xlsx,xls',
         ]);
 
         try {
-            Excel::import(new JadwalSeminarImport, $request->file('file'));
-            return redirect()->route('jadwal.' . $jenis . '.index')->with('success', 'Jadwal berhasil diimpor.');
+            Excel::import(new JadwalTemplateImport($jenis), $request->file('file'));
+            return redirect()->route('panitia.jadwal.jenis.index', ['jenis' => $jenis])->with('success', 'Jadwal berhasil diimpor.');
         } catch (\Exception $e) {
             return back()->with('error', 'Gagal impor: ' . $e->getMessage());
         }
+    }
+
+    // === YUDISIUM TERPISAH ===
+
+    public function indexYudisium()
+    {
+        $jadwals = Jadwal::where('jenis_acara', 'yudisium')
+            ->orderBy('tanggal', 'desc')
+            ->orderBy('jam_mulai')
+            ->get();
+
+        return view('pages.panitia.jadwal.yudisium.index', compact('jadwals'));
+    }
+
+    public function storeYudisium(Request $request)
+    {
+        $validated = $request->validate([
+            'tanggal'     => 'required|date',
+            'jam_mulai'   => 'required|date_format:H:i',
+            'jam_selesai' => 'nullable|date_format:H:i|after:jam_mulai',
+            'ruangan'     => 'required|string|max:255',
+        ]);
+
+        Jadwal::create(array_merge($validated, [
+            'jenis_acara' => 'yudisium',
+            'judul_ta' => '-', 'nim' => '-', 'nama' => '-', 'prodi' => '-',
+            'pembimbing_1' => '-', 'pembimbing_2' => '-',
+        ]));
+
+        return redirect()->route('panitia.jadwal.yudisium.index')->with('success', 'Jadwal Yudisium berhasil disimpan.');
+    }
+
+        public function editYudisium($id)
+    {
+        $jadwal = Jadwal::findOrFail($id);
+        return view('pages.panitia.jadwal.yudisium.edit', compact('jadwal'));
+    }
+
+    public function updateYudisium(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'tanggal'     => 'required|date',
+            'jam_mulai'   => 'required|date_format:H:i',
+            'jam_selesai' => 'nullable|date_format:H:i|after:jam_mulai',
+            'ruangan'     => 'required|string|max:255',
+        ]);
+
+        Jadwal::findOrFail($id)->update($validated);
+        return redirect()->route('panitia.jadwal.yudisium.index')->with('success', 'Jadwal Yudisium berhasil diperbarui.');
+    }
+
+    public function destroyYudisium($id)
+    {
+        Jadwal::findOrFail($id)->delete();
+        return redirect()->route('panitia.jadwal.yudisium.index')->with('success', 'Jadwal Yudisium berhasil dihapus.');
     }
 }

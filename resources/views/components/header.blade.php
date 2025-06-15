@@ -7,11 +7,6 @@
                     <i class="fas fa-bars"></i>
                 </a>
             </li>
-            <li>
-                <a href="#" data-toggle="search" class="nav-link nav-link-lg d-sm-none">
-                    <i class="fas fa-search"></i>
-                </a>
-            </li>
         </ul>
     </form>
 
@@ -44,7 +39,7 @@
         // Handle route profil per role
         switch ($user->role_id) {
             case 1: // Admin
-                $profileRoute = route('admin.profile');
+                $profileRoute = url('admin.profile');
                 break;
             case 2: // Panitia
                 $profileRoute = route('panitia.profile');

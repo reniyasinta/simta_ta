@@ -9,7 +9,7 @@
             <h1>Input Jadwal {{ ucfirst($jenis) }}</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item"><a href="{{ route('panitia.dashboard') }}">Dashboard</a></div>
-                <div class="breadcrumb-item"><a href="{{ route('jadwal.' . $jenis . '.index') }}">Jadwal {{ ucfirst($jenis) }}</a></div>
+                <div class="breadcrumb-item"><a href="{{ route('panitia.jadwal.jenis.index', ['jenis' => $jenis]) }}">Jadwal {{ ucfirst($jenis) }}</a></div>
                 <div class="breadcrumb-item active">Input</div>
             </div>
         </div>
@@ -20,7 +20,7 @@
             <div class="alert alert-danger">{{ session('error') }}</div>
         @endif
 
-        <form action="{{ route('jadwal.store') }}" method="POST">
+        <form action="{{ route('panitia.jadwal.store') }}" method="POST">
             @csrf
             <input type="hidden" name="jenis_acara" value="{{ $jenis }}">
 
@@ -92,7 +92,7 @@
 
             <div class="text-end">
                 <button type="submit" class="btn btn-primary">Simpan Jadwal</button>
-                <a href="{{ route('jadwal.' . $jenis . '.index') }}" class="btn btn-secondary">Kembali</a>
+                <a href="{{ route('panitia.jadwal.jenis.index', ['jenis' => $jenis]) }}" class="btn btn-secondary">Kembali</a>
             </div>
         </form>
     </section>

@@ -17,9 +17,9 @@
             <div class="alert alert-danger">{{ session('error') }}</div>
         @endif
 
-        <form action="{{ route('jadwal.import', ['jenis' => $jenis]) }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            <input type="hidden" name="jenis" value="{{ $jenis }}">
+    <form action="{{ route('panitia.jadwal.import') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        <input type="hidden" name="jenis" value="{{ $jenis }}">
 
             <div class="form-group mb-3">
                 <label>File Excel</label>
@@ -31,7 +31,7 @@
 
             <div class="text-end">
                 <button type="submit" class="btn btn-primary">Upload</button>
-                <a href="{{ route('jadwal.' . $jenis . '.index') }}" class="btn btn-secondary">Kembali</a>
+                <a href="{{ route('panitia.jadwal.jenis.index', ['jenis' => $jenis]) }}" class="btn btn-secondary">Kembali</a>
             </div>
         </form>
     </section>

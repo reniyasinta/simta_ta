@@ -56,7 +56,6 @@ public function updateProfile(Request $request)
 {
     $user = Auth::user();
 
-    // Validasi input
     $request->validate([
         'name' => 'required|string|max:255',
         'email' => 'required|email|unique:users,email,' . $user->id,
@@ -64,17 +63,17 @@ public function updateProfile(Request $request)
         'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
     ]);
 
-    // Update data user
     $user->name = $request->name;
     $user->email = $request->email;
     $user->id_prodi = $request->id_prodi;
 
-    // Handle upload foto baru
     if ($request->hasFile('foto')) {
-        if ($user->foto && Storage::exists(str_replace('storage/', '', $user->foto))) {
-            Storage::delete(str_replace('storage/', '', $user->foto));
+        // Hapus foto lama (jika ada)
+        if ($user->foto && Storage::disk('public')->exists(str_replace('storage/', '', $user->foto))) {
+            Storage::disk('public')->delete(str_replace('storage/', '', $user->foto));
         }
 
+        // Upload foto baru
         $path = $request->file('foto')->store('uploads/foto_panitia', 'public');
         $user->foto = 'storage/' . $path;
     }
@@ -83,6 +82,7 @@ public function updateProfile(Request $request)
 
     return redirect()->route('panitia.profile')->with('success', 'Profil berhasil diperbarui.');
 }
+
 
 
 }
