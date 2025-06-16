@@ -22,8 +22,9 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Proposal TA</th>
+                        <th>File Draft</th>
                         <th>Lembar Konsultasi</th>
+                        <th>Waktu Upload</th>
                         <th>Status Dospem 1</th>
                         <th>Status Dospem 2</th>
                         <th>Catatan Dospem 1</th>
@@ -31,41 +32,26 @@
                     </tr>
                 </thead>
                 <tbody>
+
+                @if ($sidang)
+                    @foreach($sidang->uploads()->where('jenis_upload', 'draft')->orderBy('uploaded_at', 'desc')->get() as $index => $upload)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td><a href="{{ asset($upload->file_path) }}" target="_blank">Lihat</a></td>
+                            <td><a href="{{ asset($upload->file_path_2) }}" target="_blank">Lihat</a></td>
+                            <td>{{ $upload->uploaded_at ?? '-' }}</td>
+                            <td>{{ $sidang->status_draft_dosen1 ?? '-' }}</td>
+                            <td>{{ $sidang->status_draft_dosen2 ?? '-' }}</td>
+                            <td>{{ $sidang->catatan_draft_dosen1 ?? '-' }}</td>
+                            <td>{{ $sidang->catatan_draft_dosen2 ?? '-' }}</td>
+                        </tr>
+                    @endforeach
+                @else
                     <tr>
-                        <td>1</td>
-
-                        <td>
-                            @if ($sidang && $sidang->laporan_TA)
-                                <a href="{{ asset($sidang->laporan_TA) }}" target="_blank">Lihat</a>
-                            @else
-                                Belum Upload
-                            @endif
-                        </td>
-
-                        <td>
-                            @if ($sidang && $sidang->lembar_konsultasi)
-                                <a href="{{ asset($sidang->lembar_konsultasi) }}" target="_blank">Lihat</a>
-                            @else
-                                Belum Upload
-                            @endif
-                        </td>
-
-                        <td>
-                            {{ $sidang->status_draft_dosen1 ?? '-' }}
-                        </td>
-
-                        <td>
-                            {{ $sidang->status_draft_dosen2 ?? '-' }}
-                        </td>
-
-                        <td>
-                            {{ $sidang->catatan_draft_dosen1 ?? '-' }}
-                        </td>
-
-                        <td>
-                            {{ $sidang->catatan_draft_dosen2 ?? '-' }}
-                        </td>
+                        <td colspan="8" class="text-center text-danger">Belum ada data sidang.</td>
                     </tr>
+                @endif
+
                 </tbody>
             </table>
         </div>

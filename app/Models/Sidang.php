@@ -39,11 +39,11 @@ class Sidang extends Model
         'catatan_penguji_2',
         'catatan_penguji_3',
         'laporan_akhir_pdf',
-        
         'laporan_akhir_word',
         'berita_acara',
         'buku_manual',
         'halaman_pengesahan',
+        'link_drive_proyek',
     ];
 
     // Relasi ke mahasiswa (via kelompok)
@@ -84,4 +84,18 @@ class Sidang extends Model
     {
         return $this->belongsTo(User::class, 'penguji_3_id');
     }
+    public function uploads()
+    {
+        return $this->hasMany(SidangUpload::class, 'id_sidang');
+    }
+    public function draftUploads()
+    {
+        return $this->uploads()->where('jenis_upload', 'draft');
+    }
+    public function revisiUploads()
+    {
+        return $this->uploads()->where('jenis_upload', 'revisi');
+    }
+
+
 }

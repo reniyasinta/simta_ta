@@ -56,8 +56,8 @@
 
                 {{-- Laporan TA --}}
                 <td>
-                    @if($item->laporan_sempro)
-                        <a href="{{ asset($item->laporan_sempro) }}" target="_blank" class="btn btn-sm btn-link">Lihat</a>
+                    @if($item->proposal_ta)
+                        <a href="{{ asset($item->proposal_ta) }}" target="_blank" class="btn btn-sm btn-link">Lihat</a>
                     @else
                         <span class="text-muted">Belum ada</span>
                     @endif
@@ -67,9 +67,9 @@
                 <td>
                     @php
                         if ($item->pengajuan->id_dosen1 == $user->id) {
-                            $status = $item->status_laporan_ta_dospem1;
+                            $status = $item->status_proposal_ta_dospem1;
                         } elseif ($item->pengajuan->id_dosen2 == $user->id) {
-                            $status = $item->status_laporan_ta_dospem2;
+                            $status = $item->status_proposal_ta_dospem2;
                         } else {
                             $status = 'Menunggu';
                         }

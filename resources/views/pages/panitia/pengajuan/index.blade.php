@@ -22,6 +22,7 @@
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
 
+
         <div class="table-responsive">
             <table id="table-pengajuan" class="table table-bordered table-striped table-hover">
                 <thead>
@@ -40,13 +41,11 @@
                             <td>{{ $key + 1 }}</td>
                             <td>
                                 <ul>
-                                    @if($p->kelompok && $p->kelompok->anggota && $p->kelompok->anggota->count())
-                                        @foreach($p->kelompok->anggota as $mhs)
-                                            <li>{{ $mhs->nama_mhs }} ({{ $mhs->nim_mhs }})</li>
-                                        @endforeach
-                                    @else
+                                    @forelse($p->kelompok->anggota ?? [] as $mhs)
+                                        <li>{{ $mhs->nama_mhs }} ({{ $mhs->nim_mhs }})</li>
+                                    @empty
                                         <li><em>Tidak ada anggota</em></li>
-                                    @endif
+                                    @endforelse
                                 </ul>
                             </td>
                             <td>{{ $p->judul_ta }}</td>
@@ -65,6 +64,10 @@
                     @endforelse
                 </tbody>
             </table>
+                    <!-- Tombol Export -->
+        <a href="{{ route('panitia.pengajuan.export') }}" class="btn btn-success mb-3">
+            Export Excel
+        </a>
         </div>
     </section>
 </div>
@@ -77,15 +80,15 @@
 <script>
     $(document).ready(function() {
         $('#table-pengajuan').DataTable({
-            "language": {
-                "search": "Cari Mahasiswa / NIM / Judul:",
-                "lengthMenu": "Tampilkan _MENU_ data per halaman",
-                "zeroRecords": "Data tidak ditemukan",
-                "info": "Menampilkan _PAGE_ dari _PAGES_",
-                "infoEmpty": "Tidak ada data",
-                "infoFiltered": "(difilter dari _MAX_ total data)"
+            language: {
+                search: "Cari Mahasiswa / NIM / Judul:",
+                lengthMenu: "Tampilkan _MENU_ data per halaman",
+                zeroRecords: "Data tidak ditemukan",
+                info: "Menampilkan _PAGE_ dari _PAGES_",
+                infoEmpty: "Tidak ada data",
+                infoFiltered: "(difilter dari _MAX_ total data)"
             },
-            "pageLength": 10
+            pageLength: 10
         });
     });
 </script>

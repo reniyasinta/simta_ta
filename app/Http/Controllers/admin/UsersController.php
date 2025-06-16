@@ -9,10 +9,10 @@ use App\Models\Mahasiswa;
 use App\Models\Dosen;
 use App\Models\Prodi;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\UsersImport;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rule;
 
 class UsersController extends Controller
 {
@@ -57,7 +57,7 @@ class UsersController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:4',
-            'role_id' => 'required|in:1,2,3,4',
+            'role_id' => 'required|in:1,2,3,4,5',
             'nim' => 'required_if:role_id,4|nullable|unique:users,nim',
             'nip' => 'required_unless:role_id,4|nullable|unique:users,nip',
             'id_prodi' => 'nullable|exists:prodis,id',
@@ -116,7 +116,7 @@ class UsersController extends Controller
                 'email',
                 Rule::unique('users')->ignore($id),
             ],
-            'role_id' => 'required|in:1,2,3,4',
+            'role_id' => 'required|in:1,2,3,4,5',
             'password' => 'nullable|min:4',
             'id_prodi' => 'nullable|exists:prodis,id',
             'nip' => [
@@ -124,7 +124,7 @@ class UsersController extends Controller
                 Rule::unique('users')->ignore($id),
                 function ($attribute, $value, $fail) use ($request) {
                     if (in_array($request->role_id, [1, 2, 3]) && !$value) {
-                        $fail('NIP wajib diisi untuk peran Admin, Dosen, atau Panitia.');
+                        $fail('NIP wajib diisi untuk Admin, Dosen, atau Panitia.');
                     }
                 }
             ],
@@ -133,7 +133,7 @@ class UsersController extends Controller
                 Rule::unique('users')->ignore($id),
                 function ($attribute, $value, $fail) use ($request) {
                     if ((int)$request->role_id === 4 && !$value) {
-                        $fail('NIM wajib diisi untuk peran Mahasiswa.');
+                        $fail('NIM wajib diisi untuk Mahasiswa.');
                     }
                 }
             ],
@@ -150,7 +150,6 @@ class UsersController extends Controller
 
         $user->nip = in_array($request->role_id, [1, 2, 3]) ? $request->nip : null;
         $user->nim = $request->role_id == 4 ? $request->nim : null;
-
         $user->save();
 
         if ($user->role_id == 4) {
@@ -187,7 +186,7 @@ class UsersController extends Controller
             }
         }
 
-        return redirect()->route('admin.users')->with('success', 'User & data terkait berhasil diperbarui.');
+        return redirect()->route('admin.users')->with('success', 'User berhasil diperbarui.');
     }
 
     public function destroy($id)
@@ -196,21 +195,5 @@ class UsersController extends Controller
         $user->delete();
 
         return redirect()->route('admin.users')->with('success', 'User berhasil dihapus.');
-    }
-
-    public function importForm()
-    {
-        return view('pages.admin.import');
-    }
-
-    public function importStore(Request $request)
-    {
-        $request->validate([
-            'file_excel' => 'required|file|mimes:xlsx,xls',
-        ]);
-
-        Excel::import(new UsersImport, $request->file('file_excel'));
-
-        return redirect()->route('admin.users')->with('success', 'Data pengguna berhasil diimport!');
     }
 }

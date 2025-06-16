@@ -26,10 +26,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($sidangList as $index => $sidang)
+                @forelse($sidangList as $index => $sidang)
                     <tr>
                         <td>{{ $index + 1 }}</td>
-
                         <td>
                             @php
                                 $anggotaList = [];
@@ -43,10 +42,12 @@
                         </td>
 
                         <td>
-                            @if($sidang->laporan_TA)
-                                <a href="{{ asset($sidang->laporan_TA) }}" target="_blank" class="btn btn-sm btn-info">
-                                    <i class="fas fa-eye"></i> Lihat
-                                </a>
+                            @php
+                                $latestDraft = $sidang->draftUploads()->latest('uploaded_at')->first();
+                            @endphp
+
+                            @if($latestDraft)
+                                <a href="{{ asset($latestDraft->file_path) }}" target="_blank" class="btn btn-sm btn-info">Lihat</a>
                             @else
                                 <span class="text-muted">Belum Upload</span>
                             @endif
@@ -66,12 +67,11 @@
 
                         <td>
                             @php
+                                $catatan = '-';
                                 if ($sidang->id_dosen1 == auth()->user()->id) {
                                     $catatan = $sidang->catatan_draft_dosen1 ?? '-';
                                 } elseif ($sidang->id_dosen2 == auth()->user()->id) {
                                     $catatan = $sidang->catatan_draft_dosen2 ?? '-';
-                                } else {
-                                    $catatan = '-';
                                 }
                             @endphp
                             {{ $catatan }}
@@ -81,33 +81,22 @@
                             @if ($status == '-' || $status == 'Menunggu')
                             <form action="{{ route('dosen.sidang.updateStatusDraft', $sidang->id_sidang) }}" method="POST">
                                 @csrf
-                                <div class="form-group mb-1">
-                                    <textarea name="catatan" class="form-control form-control-sm" rows="2" placeholder="Catatan (opsional)"></textarea>
-                                </div>
-
+                                <textarea name="catatan" class="form-control form-control-sm mb-2" placeholder="Catatan (opsional)"></textarea>
                                 <div class="d-flex gap-2">
-                                    <button type="submit" name="status_draft" value="Disetujui" class="btn btn-sm btn-success w-50">
-                                        <i class="fas fa-check-circle"></i> Setuju
-                                    </button>
-                                    <button type="submit" name="status_draft" value="Revisi" class="btn btn-sm btn-warning w-50">
-                                        <i class="fas fa-edit"></i> Revisi
-                                    </button>
+                                    <button type="submit" name="status_draft" value="Disetujui" class="btn btn-sm btn-success">Setuju</button>
+                                    <button type="submit" name="status_draft" value="Revisi" class="btn btn-sm btn-warning">Revisi</button>
                                 </div>
                             </form>
                             @else
-                                @if ($status == 'Disetujui')
-                                    <span class="badge badge-success">✅ Sudah Disetujui</span>
-                                @elseif ($status == 'Revisi')
-                                    <span class="badge badge-warning">❌ Perlu Revisi</span>
-                                @endif
+                                <span class="badge badge-success">Sudah Dinilai</span>
                             @endif
                         </td>
                     </tr>
-                    @empty
+                @empty
                     <tr>
-                        <td colspan="6" class="text-center">Tidak ada data.</td>
+                        <td colspan="6" class="text-center">Tidak ada data</td>
                     </tr>
-                    @endforelse
+                @endforelse
                 </tbody>
             </table>
         </div>

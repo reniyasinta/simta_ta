@@ -17,6 +17,7 @@ class UsersTableSeeder extends Seeder
         $panitiaRole   = Role::where('name', 'panitia')->first();
         $dosenRole     = Role::where('name', 'dosen')->first();
         $mahasiswaRole = Role::where('name', 'mahasiswa')->first();
+        $pimpinanRole = Role::where('name', 'pimpinan')->first();
 
         // Admin
         User::updateOrCreate(
@@ -68,6 +69,17 @@ class UsersTableSeeder extends Seeder
             ]
         );
 
+        User::updateOrCreate(
+            ['email' => 'pimpinan@gmail.com'],
+            [
+                'name' => 'Pimpinan',
+                'password' => Hash::make('55'),
+                'role_id' => $pimpinanRole->id,
+                'nip' => 'PIM001',
+                'id_prodi' => null,  // global bisa lihat semua prodi
+            ]
+        );
+
         // Panitia per prodi
         $prodis = Prodi::all();
         foreach ($prodis as $index => $prodi) {
@@ -86,4 +98,5 @@ class UsersTableSeeder extends Seeder
             );
         }
     }
+
 }

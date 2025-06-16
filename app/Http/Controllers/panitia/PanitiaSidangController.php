@@ -37,35 +37,6 @@ class PanitiaSidangController extends Controller
     }
 
 
-public function taConfig()
-{
-    $prodiId = Auth::user()->prodi_id;
-    $linkConfig = TAConfig::where('id_prodi', $prodiId)
-        ->where('nama_konfigurasi', 'link_drive_proyek_zip')
-        ->first();
-
-    return view('pages.panitia.sidang.link_drive', compact('linkConfig'));
-}
-
-public function taConfigUpdate(Request $request)
-{
-    $request->validate([
-        'config_value' => 'required|url'
-    ]);
-
-    $prodiId = Auth::user()->prodi_id;
-
-    $config = TAConfig::firstOrNew([
-        'id_prodi' => $prodiId,
-        'nama_konfigurasi' => 'link_drive_proyek_zip'
-    ]);
-
-    $config->config_value = $request->input('config_value');
-    $config->save();
-
-    return redirect()->route('panitia.sidang.link_drive')->with('success', 'Link Drive berhasil disimpan.');
-}
-
 public function submitFinal(Request $request, $id_sidang)
 {
     $request->validate([
@@ -86,25 +57,5 @@ public function formDrive($id)
     return view('pages.panitia.sidang.drive', compact('sidang'));
 }
 
-public function saveDrive(Request $request, $id)
-{
-    $request->validate([
-        'link_drive_proyek' => 'required|url'
-    ]);
-
-    $sidang = Sidang::findOrFail($id);
-    $sidang->link_drive_proyek = $request->link_drive_proyek;
-    $sidang->save();
-
-    return redirect()->route('sidang.final')->with('success', 'Link Drive berhasil disimpan.');
-}
-public function deleteDrive($id_sidang)
-{
-    $sidang = Sidang::findOrFail($id_sidang);
-    $sidang->link_drive_proyek = null;
-    $sidang->save();
-
-    return redirect()->route('sidang.final')->with('success', 'Link drive berhasil dihapus.');
-}
 
 }

@@ -31,7 +31,7 @@ class MahasiswaSemproController extends Controller
     public function uploadLaporanTa(Request $request)
     {
         $request->validate([
-            'laporan_sempro' => 'required|mimes:pdf|max:20480',
+            'proposal_ta' => 'required|mimes:pdf|max:20480',
         ]);
 
         $mahasiswa = Auth::user()->mahasiswa;
@@ -52,12 +52,12 @@ class MahasiswaSemproController extends Controller
             ]
         );
 
-        $filePath = $request->file('laporan_sempro')->store('uploads/laporan_sempro', 'public');
-        $sempro->laporan_sempro = 'storage/' . $filePath;
+        $filePath = $request->file('proposal_ta')->store('uploads/proposal_ta', 'public');
+        $sempro->proposal_ta = 'storage/' . $filePath;
 
         // Reset status ACC dospem
-        $sempro->status_laporan_ta_dospem1 = 'Menunggu';
-        $sempro->status_laporan_ta_dospem2 = 'Menunggu';
+        $sempro->status_proposal_ta_dospem1= 'Menunggu';
+        $sempro->status_proposal_ta_dospem2 = 'Menunggu';
         $sempro->catatan_dospem1 = null;
         $sempro->catatan_dospem2 = null;
 
@@ -79,13 +79,13 @@ class MahasiswaSemproController extends Controller
 
         $sempro = Sempro::where('id_ajuan', $pengajuan->id_ajuan)->first();
 
-        if ($sempro && $sempro->laporan_sempro) {
-            Storage::disk('public')->delete(str_replace('storage/', '', $sempro->laporan_sempro));
-            $sempro->laporan_sempro = null;
+        if ($sempro && $sempro->proposal_ta) {
+            Storage::disk('public')->delete(str_replace('storage/', '', $sempro->proposal_ta));
+            $sempro->proposal_ta = null;
 
             // Reset status ACC dospem
-            $sempro->status_laporan_ta_dospem1 = 'Menunggu';
-            $sempro->status_laporan_ta_dospem2 = 'Menunggu';
+            $sempro->status_proposal_ta_dospem1 = 'Menunggu';
+            $sempro->status_proposal_ta_dospem2 = 'Menunggu';
             $sempro->catatan_dospem1 = null;
             $sempro->catatan_dospem2 = null;
 

@@ -124,15 +124,6 @@
         @endif
     </td>
 
-    {{-- Link Drive --}}
-    <td>
-        @if ($sidang->link_drive_proyek)
-            <a href="{{ $sidang->link_drive_proyek }}" target="_blank" class="btn btn-sm btn-info">Lihat</a>
-        @else
-            <a href="{{ route('panitia.sidang.drive', $sidang->id_sidang) }}" class="btn btn-sm btn-primary">Input</a>
-        @endif
-    </td>
-
     {{-- Status --}}
     <td>
         @if ($sidang->status_final == 'Disetujui')
@@ -167,7 +158,7 @@
             <span class="text-muted">Sudah divalidasi</span>
         @endif
     </td>
-    
+
     <td class="text-center">
     <a href="{{ route('panitia.sidang.drive', $sidang->id_sidang) }}" class="btn btn-sm btn-info">
         <i class="fas fa-link"></i> Link Drive
