@@ -11,8 +11,11 @@ use App\Models\Prodi;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Redirect;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\UsersImport;
+
 
 class UsersController extends Controller
 {
@@ -65,6 +68,7 @@ class UsersController extends Controller
             'nim.required_if' => 'NIM wajib diisi untuk mahasiswa.',
             'nip.required_unless' => 'NIP wajib diisi untuk selain mahasiswa.',
         ]);
+            $idProdi = $request->role_id == 5 ? null : $request->id_prodi;
 
         $user = User::create([
             'name' => $request->name,
@@ -138,6 +142,8 @@ class UsersController extends Controller
                 }
             ],
         ]);
+        
+        $idProdi = $request->role_id == 5 ? null : $request->id_prodi;
 
         $user->name = $request->name;
         $user->email = $request->email;
@@ -196,4 +202,23 @@ class UsersController extends Controller
 
         return redirect()->route('admin.users')->with('success', 'User berhasil dihapus.');
     }
+    public function importForm()
+    {
+        return view('pages.admin.import');
+    }
+    public function importStore(Request $request)
+    {
+        $request->validate([
+            'file_excel' => 'required|file|mimes:xlsx,xls,csv',
+        ]);
+
+        try {
+            Excel::import(new UsersImport, $request->file('file_excel'));
+
+            return redirect()->route('admin.users')->with('success', 'Data user berhasil diimport.');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.users')->with('error', 'Terjadi kesalahan saat mengimpor: ' . $e->getMessage());
+        }
+    }
+
 }
