@@ -12,6 +12,7 @@ use App\Models\PengajuanPembimbing;
 use Illuminate\Support\Facades\Storage;
 use App\Models\KuotaBimbinganDosen;
 
+
 class MahasiswaController extends Controller
 {
     // ===== Mahasiswa Dashboard =====
@@ -112,21 +113,27 @@ class MahasiswaController extends Controller
     $user->name = $request->nama_mhs;
     $user->save();
 
-    // Upload Foto
-    if ($request->hasFile('foto')) {
-        if ($mahasiswa->foto && Storage::disk('public')->exists(str_replace('storage/', '', $mahasiswa->foto))) {
-            Storage::disk('public')->delete(str_replace('storage/', '', $mahasiswa->foto));
-        }
-        $path = $request->file('foto')->store('uploads/foto_mahasiswa', 'public');
-        $mahasiswa->foto = 'storage/' . $path;
+        // Handle upload foto baru
+if ($request->hasFile('foto')) {
+    // Hapus file lama kalau ada
+    if ($mahasiswa->foto && Storage::disk('public')->exists('uploads/foto_mahasiswa/'.$mahasiswa->foto)) {
+        Storage::disk('public')->delete('uploads/foto_mahasiswa/'.$mahasiswa->foto);
     }
 
-    // Update tabel mahasiswa
-    $mahasiswa->nama_mhs = $request->nama_mhs;
-    $mahasiswa->nim_mhs = $request->nim_mhs;
-    $mahasiswa->semester = $request->semester;
-    $mahasiswa->no_telp = $request->no_telp;
-    $mahasiswa->save();
+    $fileName = uniqid() . '.' . $request->file('foto')->getClientOriginalExtension();
+    $request->file('foto')->storeAs('uploads/foto_mahasiswa', $fileName, 'public');
+    $mahasiswa->foto = $fileName; // hanya simpan nama file
+}
+
+
+        // Update tabel mahasiswa
+        $mahasiswa->nama_mhs = $request->nama_mhs;
+        $mahasiswa->nim_mhs = $request->nim_mhs;
+        $mahasiswa->semester = $request->semester;
+        $mahasiswa->id_prodi = $user->id_prodi;
+        $mahasiswa->no_telp = $request->no_telp;
+        $mahasiswa->save();
+
 
     return redirect()->route('mahasiswa.profile')->with('success', 'Profil berhasil diperbarui.');
 }

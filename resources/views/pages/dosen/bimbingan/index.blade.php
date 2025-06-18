@@ -14,16 +14,14 @@
         <div class="section-body">
 
             {{-- Filter Prodi --}}
-            <form action="{{ route('dosen.bimbingan') }}" method="GET" class="mb-4">
-                <div class="form-inline">
-                    <label class="mr-2 font-weight-bold">Filter Prodi:</label>
-                    <select name="prodi" class="form-control mr-2" onchange="this.form.submit()">
-                        <option value="">-- Semua Prodi --</option>
-                        <option value="TI" {{ request('prodi') == 'TI' ? 'selected' : '' }}>Teknik Informatika</option>
-                        <option value="SIKC" {{ request('prodi') == 'SIKC' ? 'selected' : '' }}>Sistem Informasi Kota Cerdas</option>
-                    </select>
-                </div>
-            </form>
+            <select name="prodi" class="form-control mr-2" onchange="this.form.submit()">
+                <option value="">-- Semua Prodi --</option>
+                @foreach ($listProdi as $prodi)
+                    <option value="{{ $prodi->id }}" {{ request('prodi') == $prodi->id ? 'selected' : '' }}>
+                        {{ $prodi->nama_prodi }}
+                    </option>
+                @endforeach
+            </select>
 
             {{-- Info Kuota --}}
             <div class="mb-4">

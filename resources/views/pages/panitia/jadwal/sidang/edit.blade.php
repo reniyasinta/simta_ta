@@ -60,46 +60,45 @@
                 @enderror
             </div>
 
-            @if ($jadwal->jenis_acara !== 'yudisium')
-                <div class="form-group">
-                    <label for="penguji_1_id">Penguji 1</label>
-                    <select name="penguji_1_id" class="form-control @error('penguji_1_id') is-invalid @enderror" required>
-                        <option value="">-- Pilih Penguji 1 --</option>
-                        @foreach($users as $user)
-                            <option value="{{ $user->id }}" {{ old('penguji_1_id', $jadwal->penguji_1_id) == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
-                        @endforeach
-                    </select>
-                    @error('penguji_1_id')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
+            {{-- Karena ini sidang, tampilkan form penguji --}}
+            <div class="form-group">
+                <label for="penguji_1_id">Penguji 1</label>
+                <select name="penguji_1_id" class="form-control @error('penguji_1_id') is-invalid @enderror" required>
+                    <option value="">-- Pilih Penguji 1 --</option>
+                    @foreach($users as $user)
+                        <option value="{{ $user->id }}" {{ old('penguji_1_id', $jadwal->penguji_1_id) == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
+                    @endforeach
+                </select>
+                @error('penguji_1_id')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
 
-                <div class="form-group">
-                    <label for="penguji_2_id">Penguji 2 (Opsional)</label>
-                    <select name="penguji_2_id" class="form-control @error('penguji_2_id') is-invalid @enderror">
-                        <option value="">-- Pilih Penguji 2 --</option>
-                        @foreach($users as $user)
-                            <option value="{{ $user->id }}" {{ old('penguji_2_id', $jadwal->penguji_2_id) == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
-                        @endforeach
-                    </select>
-                    @error('penguji_2_id')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
+            <div class="form-group">
+                <label for="penguji_2_id">Penguji 2 (Opsional)</label>
+                <select name="penguji_2_id" class="form-control @error('penguji_2_id') is-invalid @enderror">
+                    <option value="">-- Pilih Penguji 2 --</option>
+                    @foreach($users as $user)
+                        <option value="{{ $user->id }}" {{ old('penguji_2_id', $jadwal->penguji_2_id) == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
+                    @endforeach
+                </select>
+                @error('penguji_2_id')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
 
-                <div class="form-group">
-                    <label for="penguji_3_id">Penguji 3 (Opsional)</label>
-                    <select name="penguji_3_id" class="form-control @error('penguji_3_id') is-invalid @enderror">
-                        <option value="">-- Pilih Penguji 3 --</option>
-                        @foreach($users as $user)
-                            <option value="{{ $user->id }}" {{ old('penguji_3_id', $jadwal->penguji_3_id) == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
-                        @endforeach
-                    </select>
-                    @error('penguji_3_id')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-            @endif
+            <div class="form-group">
+                <label for="penguji_3_id">Penguji 3 (Opsional)</label>
+                <select name="penguji_3_id" class="form-control @error('penguji_3_id') is-invalid @enderror">
+                    <option value="">-- Pilih Penguji 3 --</option>
+                    @foreach($users as $user)
+                        <option value="{{ $user->id }}" {{ old('penguji_3_id', $jadwal->penguji_3_id) == $user->id ? 'selected' : '' }}>{{ $user->name }}</option>
+                    @endforeach
+                </select>
+                @error('penguji_3_id')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+            </div>
 
             <div class="text-end mt-3">
                 <button type="submit" class="btn btn-primary">Update Jadwal</button>

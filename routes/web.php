@@ -80,76 +80,68 @@ Route::middleware(['auth'])->group(function () {
     });
 
 // PANITIA
-Route::middleware(['role:panitia'])->prefix('panitia')->group(function () {
+Route::middleware(['role:panitia'])->prefix('panitia')->name('panitia.')->group(function () {
 
     // Dashboard
-    Route::get('/dashboard', [PanitiaController::class, 'index'])->name('panitia.dashboard');
+    Route::get('/dashboard', [PanitiaController::class, 'index'])->name('dashboard');
+    Route::get('/profile', [PanitiaController::class, 'profile'])->name('profile');
+    Route::post('/profile/update', [PanitiaController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/profile/edit', [PanitiaController::class, 'editProfile'])->name('profile_edit');
 
     // Pengajuan
-    Route::get('/pengajuan', [PanitiaPengajuanController::class, 'index'])->name('panitia.pengajuan.index');
-    Route::get('/pengajuan/{id}/edit', [PanitiaPengajuanController::class, 'edit'])->name('panitia.pengajuan.edit');
-    Route::put('/pengajuan/{id}', [PanitiaPengajuanController::class, 'update'])->name('panitia.pengajuan.update');
-    Route::get('/pengajuan/export', [PanitiaPengajuanController::class, 'export'])->name('panitia.pengajuan.export');
+    Route::get('/pengajuan', [PanitiaPengajuanController::class, 'index'])->name('pengajuan.index');
+    Route::get('/pengajuan/{id}/edit', [PanitiaPengajuanController::class, 'edit'])->name('pengajuan.edit');
+    Route::put('/pengajuan/{id}', [PanitiaPengajuanController::class, 'update'])->name('pengajuan.update');
+    Route::get('/pengajuan/export', [PanitiaPengajuanController::class, 'export'])->name('pengajuan.export');
 
     // Berkas
-    Route::get('/berkas', [PanitiaBerkasController::class, 'index'])->name('panitia.berkas.index');
-    Route::get('/berkas/create', [PanitiaBerkasController::class, 'create'])->name('panitia.berkas.create');
-    Route::post('/berkas', [PanitiaBerkasController::class, 'store'])->name('panitia.berkas.store');
-    Route::get('/berkas/{id}/edit', [PanitiaBerkasController::class, 'edit'])->name('panitia.berkas.edit');
-    Route::put('/berkas/{id}', [PanitiaBerkasController::class, 'update'])->name('panitia.berkas.update');
-    Route::delete('/berkas/{id}', [PanitiaBerkasController::class, 'destroy'])->name('panitia.berkas.destroy');
-    Route::get('/berkas/{id}/download', [PanitiaBerkasController::class, 'download'])->name('panitia.berkas.download');
-
+    Route::get('/berkas', [PanitiaBerkasController::class, 'index'])->name('berkas.index');
+    Route::get('/berkas/create', [PanitiaBerkasController::class, 'create'])->name('berkas.create');
+    Route::post('/berkas', [PanitiaBerkasController::class, 'store'])->name('berkas.store');
+    Route::get('/berkas/{id}/edit', [PanitiaBerkasController::class, 'edit'])->name('berkas.edit');
+    Route::put('/berkas/{id}', [PanitiaBerkasController::class, 'update'])->name('berkas.update');
+    Route::delete('/berkas/{id}', [PanitiaBerkasController::class, 'destroy'])->name('berkas.destroy');
+    Route::get('/berkas/{id}/download', [PanitiaBerkasController::class, 'download'])->name('berkas.download');
 
     // JADWAL
-    Route::prefix('jadwal')->name('jadwal.')->group(function () {
-
-        // List
-        Route::get('/', [PanitiaJadwalController::class, 'index'])->name('index');
-        Route::get('/seminar', [PanitiaJadwalController::class, 'seminar'])->name('seminar.index');
-        Route::get('/sidang', [PanitiaJadwalController::class, 'sidang'])->name('sidang.index');
-        Route::get('/yudisium', [PanitiaJadwalController::class, 'yudisium'])->name('yudisium.index');
-
-        // Tambah
-        Route::get('/create', [PanitiaJadwalController::class, 'create'])->name('create');
-        Route::post('/', [PanitiaJadwalController::class, 'store'])->name('store');
-
-        // Edit / Hapus
-        Route::get('/{id}/edit', [PanitiaJadwalController::class, 'edit'])->name('edit');
-        Route::put('/{id}', [PanitiaJadwalController::class, 'update'])->name('update');
-        Route::delete('/{id}', [PanitiaJadwalController::class, 'destroy'])->name('destroy');
-
-        // Import
-        Route::get('/import', [PanitiaJadwalController::class, 'importForm'])->name('import.form');
-        Route::post('/import', [PanitiaJadwalController::class, 'importJadwal'])->name('import');
-
-        // Template
-        Route::get('/template/download', function (Request $request) {
-            $jenis = $request->get('jenis', 'seminar');
-            $filename = 'template_jadwal_' . $jenis . '.xlsx';
-            return Excel::download(new TemplateJadwalExport, $filename);
-        })->name('template');
-
+    Route::prefix('jadwal/yudisium')->name('jadwal.yudisium.')->group(function () {
+        Route::get('/', [PanitiaJadwalController::class, 'indexYudisium'])->name('index');
+        Route::post('/', [PanitiaJadwalController::class, 'storeYudisium'])->name('store');
+        Route::get('/{id}/edit', [PanitiaJadwalController::class, 'editYudisium'])->name('edit');
+        Route::put('/{id}', [PanitiaJadwalController::class, 'updateYudisium'])->name('update');
+        Route::delete('/{id}', [PanitiaJadwalController::class, 'destroyYudisium'])->name('destroy');
     });
 
-    // SEMPRO (Ditaruh di sini, BUKAN di dalam JADWAL)
-    Route::get('/sempro/create', [\App\Http\Controllers\Panitia\PanitiaSemproController::class, 'create'])->name('panitia.sempro.create');
-    Route::post('/sempro/store', [\App\Http\Controllers\Panitia\PanitiaSemproController::class, 'store'])->name('panitia.sempro.store');
-    Route::get('/berkas-sempro', [\App\Http\Controllers\Panitia\PanitiaSemproController::class, 'index'])->name('panitia.sempro.index');
+    // Route Seminar & Sidang (dinamis pakai jenis)
+    Route::prefix('jadwal')->name('jadwal.')->group(function () {
+        Route::get('/{jenis}', [PanitiaJadwalController::class, 'indexJenis'])->name('jenis.index');
+        Route::get('/create/{jenis}', [PanitiaJadwalController::class, 'create'])->name('create');
+        Route::post('/', [PanitiaJadwalController::class, 'store'])->name('store');
+        Route::get('/edit/{jadwal}', [PanitiaJadwalController::class, 'edit'])->name('edit');
+        Route::put('/{jadwal}', [PanitiaJadwalController::class, 'update'])->name('update');
+        Route::delete('/{jadwal}', [PanitiaJadwalController::class, 'destroy'])->name('destroy');
+        Route::get('/export/{jenis}', [PanitiaJadwalController::class, 'export'])->name('export');
+        Route::get('/import/{jenis}', [PanitiaJadwalController::class, 'importForm'])->name('import.form');
+        Route::post('/import', [PanitiaJadwalController::class, 'importJadwal'])->name('import');
+    });
 
-    // BERKAS SIDANG (Draft, Revisi, Final) — ini tambahan sesuai permintaan
-Route::prefix('sidang')->name('sidang.')->group(function () {
-    Route::get('/draft', [PanitiaSidangController::class, 'draft'])->name('draft');
-    Route::get('/revisi', [PanitiaSidangController::class, 'revisi'])->name('revisi');
-    Route::get('/final', [PanitiaSidangController::class, 'final'])->name('final');
-    Route::post('/final/{id}/submit', [PanitiaSidangController::class, 'submitFinal'])->name('final.submit');
-    Route::post('/final/upload', [MahasiswaSidangController::class, 'uploadFinal'])->name('mahasiswa.sidang.final.upload');
+    // SEMPRO
+    Route::get('/sempro/create', [PanitiaSemproController::class, 'create'])->name('sempro.create');
+    Route::post('/sempro/store', [PanitiaSemproController::class, 'store'])->name('sempro.store');
+    Route::get('/berkas-sempro', [PanitiaSemproController::class, 'index'])->name('sempro.index');
 
-        });
+    // SIDANG
+    Route::prefix('sidang')->name('sidang.')->group(function () {
+        Route::get('/draft', [PanitiaSidangController::class, 'draft'])->name('draft');
+        Route::get('/revisi', [PanitiaSidangController::class, 'revisi'])->name('revisi');
+        Route::get('/final', [PanitiaSidangController::class, 'final'])->name('final');
+        Route::post('/final/{id}/submit', [PanitiaSidangController::class, 'submitFinal'])->name('final.submit');
+        Route::post('/final/upload', [MahasiswaSidangController::class, 'uploadFinal'])->name('mahasiswa.sidang.final.upload');
+    });
 
-    // Kuota Dosen
-    Route::get('/kuota-dosen', [DosenKuotaController::class, 'index'])->name('panitia.kuota.index');
-    Route::post('/kuota-dosen/{id}', [DosenKuotaController::class, 'update'])->name('panitia.kuota.update');
+    // KUOTA
+    Route::get('/kuota-dosen', [DosenKuotaController::class, 'index'])->name('kuota.index');
+    Route::post('/kuota-dosen/{id}', [DosenKuotaController::class, 'update'])->name('kuota.update');
 });
 
 
@@ -166,9 +158,10 @@ Route::prefix('sidang')->name('sidang.')->group(function () {
 
         Route::get('sidang/verifikasi', [\App\Http\Controllers\Dosen\SidangController::class, 'index'])->name('dosen.sidang.index');
         Route::post('sidang/verifikasi/{id}', [\App\Http\Controllers\Dosen\SidangController::class, 'verifikasi'])->name('dosen.sidang.verifikasi');
+
         // bimbingan mahasiswa
-        Route::get('/bimbingan', [DosenController::class, 'bimbingan'])->name('dosen.bimbingan');
-        Route::get('/mahasiswa/{id}', [\App\Http\Controllers\Dosen\MahasiswaController::class, 'show'])->name('dosen.mahasiswa.show');
+        Route::get('/bimbingan', [MahasiswaController::class, 'index'])->name('dosen.bimbingan');
+        Route::get('/mahasiswa/{id}', [MahasiswaController::class, 'show'])->name('dosen.mahasiswa.show');
 
         // PERSETUJUAN SEMPRO
         Route::get('sempro', [DosenSemproController::class, 'index'])->name('dosen.sempro.index');
@@ -276,4 +269,5 @@ Route::get('/pengajuan', [\App\Http\Controllers\Pimpinan\PimpinanPengajuanContro
     Route::get('/template-user', function () {
         return Excel::download(new TemplateUserExport, 'template_user.xlsx');
     })->name('template.user');
+
 });

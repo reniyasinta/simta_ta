@@ -13,62 +13,100 @@
             </div>
         </div>
 
-        @if(session('success'))
-            <div class="alert alert-success">{{ session('success') }}</div>
-        @endif
-
-        <div class="d-flex justify-content-end mb-3" style="gap: 10px;">
-            <a href="{{ route('jadwal.create', ['jenis' => $jenis]) }}" class="btn btn-primary">+ Tambah Jadwal</a>
-            <a href="{{ route('jadwal.import.form', ['jenis' => $jenis]) }}" class="btn btn-primary">Import Jadwal</a>
-            <a href="{{ route('jadwal.template', ['jenis' => $jenis]) }}" class="btn btn-primary">Download Template</a>
-        </div>
-
-        <div class="card-body table-responsive">
-            <table class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Judul TA</th>
-                        <th>Nama Mahasiswa</th>
-                        <th>Program Studi</th>
-                        <th>Kelas</th>
-                        <th>Jenis Acara</th>
-                        <th>Tanggal Mulai</th>
-                        <th>Tanggal Selesai</th>
-                        <th>Tempat</th>
-                        <th>Pembimbing 1</th>
-                        <th>Pembimbing 2</th>
-                        <th>Penguji 1</th>
-                        <th>Penguji 2</th>
-                        <th>Penguji 3</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($jadwals as $index => $jadwal)
+        {{-- Tabel Mahasiswa Belum Dijadwalkan Sidang --}}
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4>Mahasiswa Belum Dijadwalkan Sidang</h4>
+                <div>
+                    <a href="{{ route('panitia.jadwal.export', ['jenis' => $jenis]) }}" class="btn btn-success btn-sm"><i class="fas fa-file-export"></i> Export</a>
+                </div>
+            </div>
+            <div class="card-body table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead class="text-center">
+                        <tr>
+                            <th>No</th>
+                            <th>Mahasiswa</th>
+                            <th>Judul TA</th>
+                            <th>Pembimbing 1</th>
+                            <th>Pembimbing 2</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($pengajuanBelumTerjadwal as $index => $pengajuan)
                         <tr>
                             <td>{{ $index + 1 }}</td>
-                            <td>{{ $jadwal->judul_ta }}</td>
-                            <td>{{ $jadwal->nama }}</td>
-                            <td>{{ $jadwal->prodi }}</td>
-                            <td>{{ $jadwal->kelas }}</td>
-                            <td>{{ ucfirst($jadwal->jenis_acara) }}</td>
-                            <td>{{ \Carbon\Carbon::parse($jadwal->tanggal_mulai)->format('d M Y, H:i') }}</td>
-                            <td>{{ $jadwal->tanggal_selesai ? \Carbon\Carbon::parse($jadwal->tanggal_selesai)->format('d M Y, H:i') : '-' }}</td>
-                            <td>{{ $jadwal->tempat }}</td>
-                            <td>{{ $jadwal->pembimbing_1 }}</td>
-                            <td>{{ $jadwal->pembimbing_2 ?? '-' }}</td>
-                            <td>{{ $jadwal->penguji1->name ?? '-' }}</td>
-                            <td>{{ $jadwal->penguji2->name ?? '-' }}</td>
-                            <td>{{ $jadwal->penguji3->name ?? '-' }}</td>
+                            <td>{{ $pengajuan->kelompok->anggota->pluck('nama_mhs')->join(', ') }}</td>
+                            <td>{{ $pengajuan->judul_ta }}</td>
+                            <td>{{ $pengajuan->dosen1->name ?? '-' }}</td>
+                            <td>{{ $pengajuan->dosen2->name ?? '-' }}</td>
+                            <td>
+                                <a href="{{ route('panitia.jadwal.create', ['jenis' => $jenis]) }}" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-plus"></i> Input
+                                </a>
+                            </td>
                         </tr>
-                    @empty
-                        <tr>
-                            <td colspan="14" class="text-center">Belum ada jadwal {{ $jenis }}.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                        @empty
+                        <tr><td colspan="6" class="text-center">Semua pengajuan sudah dijadwalkan sidang</td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
+
+        {{-- Tabel Mahasiswa Sudah Dijadwalkan Sidang --}}
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4>Mahasiswa Sudah Dijadwalkan Sidang</h4>
+                <div>
+                    <a href="{{ route('panitia.jadwal.import.form', ['jenis' => $jenis]) }}" class="btn btn-success btn-sm"><i class="fas fa-file-import"></i> Import</a>
+                </div>
+            </div>
+            <div class="card-body table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead class="text-center">
+                        <tr>
+                            <th>No</th>
+                            <th>Tanggal</th>
+                            <th>Jam</th>
+                            <th>Ruangan</th>
+                            <th>Mahasiswa</th>
+                            <th>Judul TA</th>
+                            <th>Pembimbing 1</th>
+                            <th>Pembimbing 2</th>
+                            <th>Penguji 1</th>
+                            <th>Penguji 2</th>
+                            <th>Penguji 3</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($jadwals as $index => $jadwal)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ \Carbon\Carbon::parse($jadwal->tanggal)->format('d M Y') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($jadwal->jam_mulai)->format('H:i') }} - {{ $jadwal->jam_selesai ? \Carbon\Carbon::parse($jadwal->jam_selesai)->format('H:i') : '-' }}</td>
+                            <td>{{ $jadwal->ruangan }}</td>
+                            <td>{{ $jadwal->pengajuan?->kelompok?->anggota->pluck('nama_mhs')->join(', ') ?? '-' }}</td>
+                            <td>{{ $jadwal->pengajuan?->judul_ta ?? '-' }}</td>
+                            <td>{{ $jadwal->pengajuan?->dosen1?->name ?? '-' }}</td>
+                            <td>{{ $jadwal->pengajuan?->dosen2?->name ?? '-' }}</td>
+                            <td>{{ $jadwal->penguji1?->name ?? '-' }}</td>
+                            <td>{{ $jadwal->penguji2?->name ?? '-' }}</td>
+                            <td>{{ $jadwal->penguji3?->name ?? '-' }}</td>
+                            <td class="text-center">
+                                <a href="{{ route('panitia.jadwal.edit', $jadwal->id) }}" class="btn btn-sm btn-warning"><i class="fas fa-edit"></i></a>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr><td colspan="12" class="text-center">Belum ada jadwal sidang</td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </section>
 </div>
 @endsection

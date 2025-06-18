@@ -64,13 +64,37 @@ public function index()
          + $sebagaiPembimbing2->sum(fn($p) => $p->kelompok?->anggota->count() ?? 0);
         $kuota = $dosen->kuota_bimbingan ?? 0;
 
+        $groupMapping = [
+            [1, 2], // TI & SIKC
+            [3, 4], // Listrik & TRPE
+            [5, 6], // Elka & TRO
+        ];
+
+        $idProdiDosen = $dosen->id_prodi ?? null;
+        $allowedProdis = [];
+
+        if ($idProdiDosen === null) {
+            $allowedProdis = \App\Models\Prodi::pluck('id')->toArray();
+        } else {
+            $groupProdi = collect($groupMapping)->first(function ($group) use ($idProdiDosen) {
+                return in_array($idProdiDosen, $group);
+            });
+
+            $allowedProdis = $groupProdi ?: [];
+        }
+
+        $listProdi = \App\Models\Prodi::whereIn('id', $allowedProdis)->get();
+
+
         return view('pages.dosen.bimbingan.index', compact(
             'sebagaiPembimbing1',
             'sebagaiPembimbing2',
             'totalBimbingan',
-            'kuota'
+            'kuota',
+            'listProdi' // ✅ penting!
         ));
     }
+    
 public function kuotaPerProdi()
 {
     $prodis = \App\Models\Prodi::with(['dosens' => function ($query) {
