@@ -22,52 +22,58 @@
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
 
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">Tabel Pengajuan Mahasiswa</h4>
+                <a href="{{ route('panitia.pengajuan.export') }}" class="btn btn-success btn-sm">
+                    Export Excel
+                </a>
+            </div>
 
-        <div class="table-responsive">
-            <table id="table-pengajuan" class="table table-bordered table-striped table-hover">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Kelompok</th>
-                        <th>Judul</th>
-                        <th>Dosen 1</th>
-                        <th>Dosen 2</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($pengajuanList as $key => $p)
-                        <tr>
-                            <td>{{ $key + 1 }}</td>
-                            <td>
-                                <ul>
-                                    @forelse($p->kelompok->anggota ?? [] as $mhs)
-                                        <li>{{ $mhs->nama_mhs }} ({{ $mhs->nim_mhs }})</li>
-                                    @empty
-                                        <li><em>Tidak ada anggota</em></li>
-                                    @endforelse
-                                </ul>
-                            </td>
-                            <td>{{ $p->judul_ta }}</td>
-                            <td>{{ $p->dosen1->dosen->nama_dosen ?? '-' }}</td>
-                            <td>{{ $p->dosen2->dosen->nama_dosen ?? 'Belum ditetapkan' }}</td>
-                            <td>
-                                <a href="{{ route('panitia.pengajuan.edit', $p->id_ajuan) }}" class="btn btn-sm btn-primary">
-                                    Tentukan Dosen 2
-                                </a>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6" class="text-center">Belum ada pengajuan.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-                    <!-- Tombol Export -->
-        <a href="{{ route('panitia.pengajuan.export') }}" class="btn btn-success mb-3">
-            Export Excel
-        </a>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="table-pengajuan" class="table table-bordered table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Kelompok</th>
+                                <th>Judul</th>
+                                <th>Dosen 1</th>
+                                <th>Dosen 2</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($pengajuanList as $key => $p)
+                                <tr>
+                                    <td>{{ $key + 1 }}</td>
+                                    <td>
+                                        <ul>
+                                            @forelse($p->kelompok->anggota ?? [] as $mhs)
+                                                <li>{{ $mhs->nama_mhs }} ({{ $mhs->nim_mhs }})</li>
+                                            @empty
+                                                <li><em>Tidak ada anggota</em></li>
+                                            @endforelse
+                                        </ul>
+                                    </td>
+                                    <td>{{ $p->judul_ta }}</td>
+                                    <td>{{ $p->dosen1->dosen->nama_dosen ?? '-' }}</td>
+                                    <td>{{ $p->dosen2->dosen->nama_dosen ?? 'Belum ditetapkan' }}</td>
+                                    <td>
+                                        <a href="{{ route('panitia.pengajuan.edit', $p->id_ajuan) }}" class="btn btn-sm btn-primary">
+                                            Tentukan Dosen 2
+                                        </a>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="text-center">Belum ada pengajuan.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </section>
 </div>

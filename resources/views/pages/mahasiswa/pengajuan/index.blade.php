@@ -28,6 +28,9 @@
 
         {{-- Card --}}
         <div class="card">
+            <div class="card-header">
+                <h4 class="card-title mb-0">Pengajuan Dosen Pembimbing 1 dan 2</h4>
+            </div>
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped">

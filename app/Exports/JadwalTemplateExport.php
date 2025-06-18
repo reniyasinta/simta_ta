@@ -51,8 +51,8 @@ public function collection()
 
     // Mahasiswa yang belum punya jadwal sama sekali
     if ($this->jenis == 'seminar') {
-        $approvedAjuanIds = Sempro::where('status_laporan_ta_dospem1', 'Disetujui')
-            ->where('status_laporan_ta_dospem2', 'Disetujui')
+        $approvedAjuanIds = Sempro::where('status_proposal_ta_dospem1', 'Disetujui')
+            ->where('status_proposal_ta_dospem2', 'Disetujui')
             ->pluck('id_ajuan');
 
         $pengajuansBelumAdaJadwal = PengajuanPembimbing::whereIn('id_ajuan', $approvedAjuanIds)

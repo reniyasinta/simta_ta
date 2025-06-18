@@ -74,7 +74,7 @@
 
                 </div>
                 <div class="card-footer text-right">
-                    <a href="{{ route('panitia.pengajuan.index') }}" class="btn btn-secondary">Batal</a>
+                    <a href="{{ route('panitia.pengajuan.index') }}" class="btn btn-secondary">Kembali</a>
                     <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
             </div>

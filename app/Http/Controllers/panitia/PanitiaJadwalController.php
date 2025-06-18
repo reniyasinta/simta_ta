@@ -26,8 +26,8 @@ public function indexJenis($jenis)
 
     if ($jenis === 'seminar') {
         // --- QUERY SEMINAR ---
-        $approvedAjuanIds = Sempro::where('status_laporan_ta_dospem1', 'Disetujui')
-            ->where('status_laporan_ta_dospem2', 'Disetujui')
+        $approvedAjuanIds = Sempro::where('status_proposal_ta_dospem1', 'Disetujui')
+            ->where('status_proposal_ta_dospem2', 'Disetujui')
             ->pluck('id_ajuan');
 
         $pengajuans = PengajuanPembimbing::with(['kelompok.anggota', 'dosen1', 'dosen2'])
@@ -92,8 +92,8 @@ public function create($jenis)
     if ($jenis == 'seminar') {
         // Untuk SEMINAR
         $pengajuans = PengajuanPembimbing::whereHas('sempro', function ($q) {
-                $q->where('status_laporan_ta_dospem1', 'Disetujui')
-                  ->where('status_laporan_ta_dospem2', 'Disetujui');
+                $q->where('status_proposal_ta_dospem1', 'Disetujui')
+                  ->where('status_proposal_ta_dospem2', 'Disetujui');
             })
             ->whereDoesntHave('jadwals', function ($q) {
                 $q->where('jenis_acara', 'seminar');
@@ -140,8 +140,8 @@ public function create($jenis)
 
     if ($jenis === 'seminar') {
         $isApproved = Sempro::where('id_ajuan', $validated['id_ajuan'])
-            ->where('status_laporan_ta_dospem1', 'Disetujui')
-            ->where('status_laporan_ta_dospem2', 'Disetujui')
+            ->where('status_proposal_ta_dospem1', 'Disetujui')
+            ->where('status_proposal_ta_dospem2', 'Disetujui')
             ->exists();
 
         if (!$isApproved) {

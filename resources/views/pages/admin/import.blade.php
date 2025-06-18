@@ -35,7 +35,7 @@
                                         <label for="kode_barang">File Excel</label>
                                         <input type="file" name="file_excel"  accept=".xls,.xlsx" required>
                                     </div>
-                                    <button type="submit" class="btn btn-info">Submit</button>
+                                    <button type="submit" class="btn btn-info">Upload</button>
                                     <a href="{{ route('admin.users') }}" class="btn btn-secondary">Kembali</a>
                                 </form>
 

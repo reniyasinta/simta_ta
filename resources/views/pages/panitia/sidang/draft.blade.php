@@ -12,7 +12,10 @@
             <div class="section-header">
                 <h1>Berkas Sidang - Draft</h1>
             </div>
-
+            <div class="card">
+                <div class="card-header">
+                    <h4>Daftar Draft Sidang Mahasiswa</h4>
+            </div>
             <div class="table-responsive">
                 <table id="table-sidang-draft" class="table table-bordered table-striped">
                     <thead>
@@ -53,9 +56,10 @@
                             <tr>
                                 <td colspan="7" class="text-center text-danger">Belum ada data.</td>
                             </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </section>
     </div>

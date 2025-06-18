@@ -17,23 +17,30 @@
             <div class="alert alert-danger">{{ session('error') }}</div>
         @endif
 
-    <form action="{{ route('panitia.jadwal.import') }}" method="POST" enctype="multipart/form-data">
-        @csrf
-        <input type="hidden" name="jenis" value="{{ $jenis }}">
-
-            <div class="form-group mb-3">
-                <label>File Excel</label>
-                <input type="file" name="file" class="form-control @error('file') is-invalid @enderror" required>
-                @error('file')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
+        <div class="card">
+            <div class="card-header">
+                <h4>Form Upload Jadwal (Excel)</h4>
             </div>
+            <div class="card-body">
+                <form action="{{ route('panitia.jadwal.import') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="jenis" value="{{ $jenis }}">
 
-            <div class="text-end">
-                <button type="submit" class="btn btn-primary">Upload</button>
-                <a href="{{ route('panitia.jadwal.jenis.index', ['jenis' => $jenis]) }}" class="btn btn-secondary">Kembali</a>
+                    <div class="form-group mb-3">
+                        <label>File Excel</label>
+                        <input type="file" name="file" class="form-control @error('file') is-invalid @enderror" required>
+                        @error('file')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="text-end mt-4">
+                        <button type="submit" class="btn btn-primary">Upload</button>
+                        <a href="{{ route('panitia.jadwal.jenis.index', ['jenis' => $jenis]) }}" class="btn btn-secondary">Kembali</a>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
     </section>
 </div>
 @endsection

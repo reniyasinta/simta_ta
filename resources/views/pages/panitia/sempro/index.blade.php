@@ -10,9 +10,14 @@
         </div>
 
         <div class="section-body">
-            <table id="table-sempro" class="table table-bordered table-striped table-hover">
-                <thead class="thead-dark">
-                <tr>
+            <div class="card">
+                <div class="card-header">
+                    <h4>Daftar Berkas Sempro</h4>
+                </div>
+                <div class="card-body">
+                    <table id="table-sempro" class="table table-bordered table-striped table-hover">
+                        <thead class="thead-dark">
+                    <tr>
                     <th class="text-center" style="width: 50px;">No</th>
                     <th class="text-center">Anggota Kelompok</th>
                     <th class="text-center">Proposal TA</th>
@@ -73,9 +78,11 @@
                         <tr>
                             <td colspan="4" class="text-center text-danger">Belum ada pengajuan Diterima.</td>
                         </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                      @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </section>
 </div>
