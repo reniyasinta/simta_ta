@@ -28,18 +28,12 @@
             $punyaDospem1 = $pengajuan?->id_dosen1 ? true : false;
             $punyaDospem2 = $pengajuan?->id_dosen2 ? true : false;
         @endphp
+<div class="card">
+    <div class="card-body">
 
-        <div class="d-flex justify-content-end mb-3">
-            @if($punyaDospem1 && $punyaDospem2)
-                <a href="{{ route('mahasiswa.surat.create') }}" class="btn btn-primary">Ajukan Baru</a>
-            @else
-                <button class="btn btn-secondary" disabled>Ajukan Baru</button>
-            @endif
-        </div>
-
-        <form method="GET" action="{{ route('mahasiswa.surat.index') }}">
-            <div class="form-group row">
-                <div class="col-sm-2">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <form method="GET" action="{{ route('mahasiswa.surat.index') }}" class="form-inline">
+                <div class="form-group mb-0">
                     <select name="perihal" id="perihal" class="form-control" onchange="this.form.submit()">
                         <option value="">-- Cari Perihal --</option>
                         <option value="Semua Perihal" {{ request('perihal') == 'Semua Perihal' ? 'selected' : '' }}>Semua Perihal</option>
@@ -48,8 +42,15 @@
                         <option value="Permintaan Data" {{ request('perihal') == 'Permintaan Data' ? 'selected' : '' }}>Permintaan Data</option>
                     </select>
                 </div>
-            </div>
-        </form>
+            </form>
+
+            @if($punyaDospem1 && $punyaDospem2)
+                <a href="{{ route('mahasiswa.surat.create') }}" class="btn btn-primary">Ajukan Baru</a>
+            @else
+                <button class="btn btn-secondary" disabled>Ajukan Baru</button>
+            @endif
+        </div>
+
 
         <div class="table-responsive">
             <table class="table table-bordered table-striped mt-3">
@@ -121,6 +122,7 @@
                 </tbody>
             </table>
         </div>
+
     </section>
 </div>
 @endsection

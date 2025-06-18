@@ -52,15 +52,13 @@
                         </tbody>
                     </table>
                 </div>
+                @if(!$mahasiswa || !$mahasiswa->kelompok)
+                <div class="text-right mt-3">
+                    <a href="{{ route('kelompok.create') }}" class="btn btn-primary">Buat Kelompok</a>
+                </div>
+                @endif
             </div>
         </div>
-
-        @if(!$mahasiswa || !$mahasiswa->kelompok)
-            <div class="text-right mt-3">
-                <a href="{{ route('kelompok.create') }}" class="btn btn-primary">Buat Kelompok</a>
-            </div>
-        @endif
-
     </section>
 </div>
 @endsection

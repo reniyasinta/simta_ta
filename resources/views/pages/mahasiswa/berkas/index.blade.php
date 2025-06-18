@@ -21,8 +21,13 @@
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
 
-        <div class="table-responsive">
-            <table id="table-berkas" class="table table-bordered table-striped">
+        <div class="card">
+            <div class="card-header">
+                <h4>Daftar Berkas Persyaratan</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                 <table id="table-berkas" class="table table-bordered table-striped">
                 <thead>
                     <tr>
                         <th>No</th>

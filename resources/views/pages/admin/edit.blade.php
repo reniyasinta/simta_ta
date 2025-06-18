@@ -23,70 +23,79 @@
                 </div>
             @endif
 
-            <form action="{{ route('admin.update', $user->id) }}" method="POST">
-                @csrf
-                @method('PUT')
-
-                <div class="form-group">
-                    <label for="name">Nama</label>
-                    <input type="text" name="name" id="name" class="form-control"
-                           value="{{ old('name', $user->name) }}" required>
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h4 class="mb-0">Form Edit Pengguna</h4>
                 </div>
 
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" name="email" id="email" class="form-control"
-                           value="{{ old('email', $user->email) }}" required>
-                </div>
+                <div class="card-body">
+                    <form action="{{ route('admin.update', $user->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
 
-                <div class="form-group">
-                    <label for="password">Password (Biarkan kosong jika tidak diubah)</label>
-                    <input type="password" name="password" id="password" class="form-control">
-                </div>
+                        <div class="form-group">
+                            <label for="name">Nama</label>
+                            <input type="text" name="name" id="name" class="form-control"
+                                   value="{{ old('name', $user->name) }}" required>
+                        </div>
 
-                <div class="form-group">
-                    <label for="role_id">Role</label>
-                    <select name="role_id" id="roleSelect" class="form-control" required>
-                        <option value="">-- Pilih Role --</option>
-                        @foreach($roles as $role)
-                            <option value="{{ $role->id }}"
-                                {{ $role->id == old('role_id', $user->role_id) ? 'selected' : '' }}>
-                                {{ ucfirst($role->name) }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" name="email" id="email" class="form-control"
+                                   value="{{ old('email', $user->email) }}" required>
+                        </div>
 
-                <div class="form-group" id="nip-group" style="{{ in_array(old('role_id', $user->role_id), [1,2,3]) ? '' : 'display:none;' }}">
-                    <label for="nip">NIP</label>
-                    <input type="text" name="nip" id="nip" class="form-control"
-                           value="{{ old('nip', $user->nip) }}">
-                </div>
+                        <div class="form-group">
+                            <label for="password">Password (Biarkan kosong jika tidak diubah)</label>
+                            <input type="password" name="password" id="password" class="form-control">
+                        </div>
 
-                <div class="form-group" id="nim-group" style="{{ old('role_id', $user->role_id) == 4 ? '' : 'display:none;' }}">
-                    <label for="nim">NIM</label>
-                    <input type="text" name="nim" id="nim" class="form-control"
-                           value="{{ old('nim', $user->nim) }}">
-                </div>
+                        <div class="form-group">
+                            <label for="role_id">Role</label>
+                            <select name="role_id" id="roleSelect" class="form-control" required>
+                                <option value="">-- Pilih Role --</option>
+                                @foreach($roles as $role)
+                                    <option value="{{ $role->id }}"
+                                        {{ $role->id == old('role_id', $user->role_id) ? 'selected' : '' }}>
+                                        {{ ucfirst($role->name) }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
 
-                <div class="form-group">
-                    <label for="id_prodi">Program Studi</label>
-                    <select name="id_prodi" class="form-control">
-                        <option value="">-- Pilih Prodi --</option>
-                        @foreach ($prodis as $prodi)
-                            <option value="{{ $prodi->id }}"
-                                {{ old('id_prodi', $user->id_prodi) == $prodi->id ? 'selected' : '' }}>
-                                {{ $prodi->nama_prodi }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+                        <div class="form-group" id="nip-group" style="{{ in_array(old('role_id', $user->role_id), [1,2,3]) ? '' : 'display:none;' }}">
+                            <label for="nip">NIP</label>
+                            <input type="text" name="nip" id="nip" class="form-control"
+                                   value="{{ old('nip', $user->nip) }}">
+                        </div>
 
-                <div class="form-group mt-3">
-                    <a href="{{ route('admin.users') }}" class="btn btn-secondary">Kembali</a>
-                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                        <div class="form-group" id="nim-group" style="{{ old('role_id', $user->role_id) == 4 ? '' : 'display:none;' }}">
+                            <label for="nim">NIM</label>
+                            <input type="text" name="nim" id="nim" class="form-control"
+                                   value="{{ old('nim', $user->nim) }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_prodi">Program Studi</label>
+                            <select name="id_prodi" class="form-control">
+                                <option value="">-- Pilih Prodi --</option>
+                                @foreach ($prodis as $prodi)
+                                    <option value="{{ $prodi->id }}"
+                                        {{ old('id_prodi', $user->id_prodi) == $prodi->id ? 'selected' : '' }}>
+                                        {{ $prodi->nama_prodi }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group mt-3 text-right">
+                            <a href="{{ route('admin.users') }}" class="btn btn-secondary">Kembali</a>
+                            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
+
         </section>
     </div>
 </div>
