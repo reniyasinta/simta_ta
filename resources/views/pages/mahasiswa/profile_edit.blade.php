@@ -42,7 +42,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Foto</label>
+                                    <label>Upload Foto</label>
                                     <input type="file" name="foto" class="form-control-file">
 
                                     @if ($mahasiswa->foto)

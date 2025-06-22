@@ -14,27 +14,27 @@
         use Illuminate\Support\Facades\Auth;
 
         $user = Auth::user();
-        $foto = asset('img/avatar/avatar-1.png'); // default avatar
+        $foto = asset('img/avatar/avatar-1.png'); // default
 
-        // Handle foto per role
-        switch ($user->role->name) {
-            case 'dosen':
-                if ($user->dosen && $user->dosen->foto) {
-                    $foto = asset($user->dosen->foto);
-                }
-                break;
-            case 'mahasiswa':
-                if ($user->mahasiswa && $user->mahasiswa->foto) {
-                    $foto = asset($user->mahasiswa->foto);
-                }
-                break;
-            case 'panitia':
-            case 'admin':
-                if ($user->foto) {
-                    $foto = asset($user->foto);
-                }
-                break;
+switch ($user->role->name) {
+    case 'dosen':
+        if ($user->dosen && $user->dosen->foto) {
+            $foto = asset('storage/uploads/foto_dosen/' . $user->dosen->foto);
         }
+        break;
+    case 'mahasiswa':
+        if ($user->mahasiswa && $user->mahasiswa->foto) {
+            $foto = asset('storage/uploads/foto_mahasiswa/' . $user->mahasiswa->foto);
+        }
+        break;
+    case 'panitia':
+    case 'admin':
+        if ($user->foto) {
+            $foto = asset('storage/uploads/foto_user/' . $user->foto);
+        }
+        break;
+}
+
 
         // Handle route profil per role
         switch ($user->role_id) {
