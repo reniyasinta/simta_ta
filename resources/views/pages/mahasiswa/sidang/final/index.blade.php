@@ -24,6 +24,7 @@
                 </ul>
             </div>
         @endif
+
         {{-- Card Tabel File --}}
         <div class="card">
             <div class="card-header">
@@ -31,12 +32,13 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered table-striped">
 
-                {{-- Tombol Upload --}}
-                <div class="mb-3 d-flex justify-content-end">
-                    <a href="{{ route('mahasiswa.sidang.final.create') }}" class="btn btn-primary">+ Upload Laporan Akhir</a>
-                </div>
+                    {{-- Tombol Upload --}}
+                    <div class="mb-3 d-flex justify-content-end">
+                        <a href="{{ route('mahasiswa.sidang.final.create') }}" class="btn btn-primary">+ Upload Laporan Akhir</a>
+                    </div>
+
+                    <table class="table table-bordered table-striped">
                         <thead>
                             <tr>
                                 <th style="width: 50px;">No</th>
@@ -80,17 +82,19 @@
                                                 <a href="{{ asset($sidang->$field) }}" target="_blank" class="btn btn-sm btn-secondary" title="Lihat File">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
-                                                <a href="{{ route('mahasiswa.sidang.final.edit', $field) }}" class="btn btn-sm btn-info" title="Edit">
-                                                    <i class="fas fa-edit"></i>
-                                                </a>
-                                                <form action="{{ route('mahasiswa.sidang.final.delete', ['jenis' => $field]) }}" method="POST" style="display:inline-block;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Anda yakin ingin menghapus file ini?')" title="Hapus">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </form>
                                             @endif
+
+                                            <a href="{{ route('mahasiswa.sidang.final.edit', $field) }}" class="btn btn-sm btn-info" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+
+                                            <form action="{{ route('mahasiswa.sidang.final.delete', ['jenis' => $field]) }}" method="POST" style="display:inline-block;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Anda yakin ingin menghapus file ini?')" title="Hapus">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
                                         @else
                                             <span class="text-muted">-</span>
                                         @endif
@@ -99,6 +103,7 @@
                             @endforeach
                         </tbody>
                     </table>
+
                 </div>
             </div>
         </div>

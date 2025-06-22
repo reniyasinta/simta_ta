@@ -5,19 +5,21 @@ namespace App\Http\Controllers\Panitia;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Sidang;
-use App\Models\TAConfig;
 
 
 class PanitiaSidangController extends Controller
 {
     public function draft()
     {
-        $sidangList = Sidang::with('mahasiswa.user')
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $sidangList = Sidang::with([
+            'kelompok.anggota1.mahasiswa',
+            'kelompok.anggota2.mahasiswa',
+            'kelompok.anggota3.mahasiswa'
+        ])->orderBy('created_at', 'desc')->get();
 
         return view('pages.panitia.sidang.draft', compact('sidangList'));
     }
+
   public function revisi()
     {
         $sidangList = Sidang::with('mahasiswa.user')
@@ -51,11 +53,7 @@ public function submitFinal(Request $request, $id_sidang)
 
     return redirect()->back()->with('success', 'Validasi final berhasil.');
 }
-public function formDrive($id)
-{
-    $sidang = Sidang::findOrFail($id);
-    return view('pages.panitia.sidang.drive', compact('sidang'));
-}
+
 
 
 }

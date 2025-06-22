@@ -50,7 +50,7 @@
                                 </tr>
                                 <tr>
                                     <th>Kuota Terisi</th>
-                                    <td>: {{ $dosen->kuota_terpakai ?? 0 }} / {{ $dosen->kuota_bimbingan ?? 0 }}</td>
+                                    <td>: {{ $totalBimbingan }} / {{ $kuota }} Mahasiswa</td>
                                 </tr>
 
                             </table>

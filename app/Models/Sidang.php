@@ -27,6 +27,8 @@ class Sidang extends Model
         'hasil_sidang',
         'status',
         'catatan_dosen',
+        'catatan_draft_dosen1',
+        'catatan_draft_dosen2',
         'penguji_1_id',
         'penguji_2_id',
         'penguji_3_id',

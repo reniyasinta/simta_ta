@@ -39,7 +39,7 @@
                                     @csrf
                                     <div class="form-group">
                                         <label>Revisi Laporan (PDF)</label>
-                                        <input type="file" name="revisi_laporan" class="form-control" required>
+                                        <input type="file" name="revisi_laporan" class="form-control" accept=".pdf" required>
                                     </div>
                                     <button type="submit" class="btn btn-info">Upload</button>
                                     <a href="{{ route('mahasiswa.sidang.revisi') }}" class="btn btn-secondary">Kembali</a>

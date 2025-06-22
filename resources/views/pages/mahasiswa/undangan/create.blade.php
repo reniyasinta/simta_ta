@@ -24,22 +24,26 @@
             </div>
         @endif
 
-        <form action="{{ route('mahasiswa.undangan.store') }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            <input type="hidden" name="jadwal_id" value="{{ $jadwal->id }}">
-            <input type="hidden" name="penguji_id" value="{{ $pengujiId }}">
-            <input type="hidden" name="jenis_acara" value="{{ $jenisAcara }}">
+        <div class="card">
+            <div class="card-body">
+                <form action="{{ route('mahasiswa.undangan.store') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="jadwal_id" value="{{ $jadwal->id }}">
+                    <input type="hidden" name="penguji_id" value="{{ $pengujiId }}">
+                    <input type="hidden" name="jenis_acara" value="{{ $jenisAcara }}">
 
-            <div class="form-group">
-                <label>Upload File (PDF)</label>
-                <input type="file" name="undangan" class="form-control" required accept=".pdf">
-            </div>
+                    <div class="form-group">
+                        <label>Upload File (PDF)</label>
+                        <input type="file" name="undangan" class="form-control" required accept=".pdf">
+                    </div>
 
-            <div class="text-end mt-3">
-                <button type="submit" class="btn btn-primary">Upload</button>
-                <a href="{{ route('mahasiswa.undangan.index', ['jenis' => $jenisAcara]) }}" class="btn btn-secondary">Kembali</a>
+                    <div class="text-end mt-3">
+                        <button type="submit" class="btn btn-primary">Upload</button>
+                        <a href="{{ route('mahasiswa.undangan.index', ['jenis' => $jenisAcara]) }}" class="btn btn-secondary">Kembali</a>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
     </section>
 </div>
 @endsection

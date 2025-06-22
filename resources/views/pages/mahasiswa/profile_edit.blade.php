@@ -42,11 +42,7 @@
                                 </div>
 
                                 <div class="form-group">
-<<<<<<< HEAD
-                                    <label>Upload Foto</label>
-=======
                                     <label>Foto</label>
->>>>>>> 5ae23dda23a03bc9e17ee6e09ab8e796757f0f61
                                     <input type="file" name="foto" class="form-control-file">
 
                                     @if ($mahasiswa->foto)

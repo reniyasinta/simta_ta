@@ -10,6 +10,9 @@
         </div>
 
         <div class="card">
+            <div class="card-header">
+                <h4>Jadwal Seminar Proposal</h4>
+            </div>
             <div class="card-body">
                 @if ($jadwals->count())
                     <div class="table-responsive">

@@ -11,13 +11,14 @@
 
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title mb-0">Upload Laporan</h4>
+                <h4 class="card-title mb-0">Upload Laporan Tugas Akhir</h4>
             </div>
             <div class="card-body">
-                <div class="mb-3 d-flex justify-content-end">
-                    <a href="{{ route('mahasiswa.sidang.draft.create') }}" class="btn btn-primary">+ Upload Berkas</a>
-                </div>
-
+                @if (!$sidang || $sidang->status_draft_dosen1 !== 'Disetujui' || $sidang->status_draft_dosen2 !== 'Disetujui')
+                    <div class="mb-3 d-flex justify-content-end">
+                        <a href="{{ route('mahasiswa.sidang.draft.create') }}" class="btn btn-primary">+ Upload Berkas</a>
+                    </div>
+                @endif
                 @if(session('success'))
                     <div class="alert alert-success">{{ session('success') }}</div>
                 @endif
@@ -29,7 +30,6 @@
                                 <th>No</th>
                                 <th>File Draft</th>
                                 <th>Lembar Konsultasi</th>
-                                <th>Waktu Upload</th>
                                 <th>Status Dospem 1</th>
                                 <th>Status Dospem 2</th>
                                 <th>Catatan Dospem 1</th>
@@ -38,21 +38,18 @@
                         </thead>
                         <tbody>
                         @if ($sidang)
-                            @foreach($sidang->uploads()->where('jenis_upload', 'draft')->orderBy('uploaded_at', 'desc')->get() as $index => $upload)
-                                <tr>
-                                    <td>{{ $index + 1 }}</td>
-                                    <td><a href="{{ asset($upload->file_path) }}" target="_blank">Lihat</a></td>
-                                    <td><a href="{{ asset($upload->file_path_2) }}" target="_blank">Lihat</a></td>
-                                    <td>{{ $upload->uploaded_at ?? '-' }}</td>
-                                    <td>{{ $sidang->status_draft_dosen1 ?? '-' }}</td>
-                                    <td>{{ $sidang->status_draft_dosen2 ?? '-' }}</td>
-                                    <td>{{ $sidang->catatan_draft_dosen1 ?? '-' }}</td>
-                                    <td>{{ $sidang->catatan_draft_dosen2 ?? '-' }}</td>
-                                </tr>
-                            @endforeach
+                            <tr>
+                                <td>1</td>
+                                <td><a href="{{ asset($sidang->laporan_TA) }}" target="_blank">Lihat</a></td>
+                                <td><a href="{{ asset($sidang->lembar_konsultasi) }}" target="_blank">Lihat</a></td>
+                                <td>{{ $sidang->status_draft_dosen1 ?? '-' }}</td>
+                                <td>{{ $sidang->status_draft_dosen2 ?? '-' }}</td>
+                                <td>{{ $sidang->catatan_draft_dosen1 ?? '-' }}</td>
+                                <td>{{ $sidang->catatan_draft_dosen2 ?? '-' }}</td>
+                            </tr>
                         @else
                             <tr>
-                                <td colspan="8" class="text-center text-danger">Belum ada data sidang.</td>
+                                <td colspan="7" class="text-center text-danger">Belum ada data sidang.</td>
                             </tr>
                         @endif
                         </tbody>

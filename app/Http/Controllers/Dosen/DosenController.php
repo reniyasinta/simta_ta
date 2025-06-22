@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Jadwal;
 use App\Models\PengajuanPembimbing;
 use App\Models\Dosen;
+use App\Models\KuotaBimbinganDosen;
 
 class DosenController extends Controller
 {
@@ -15,6 +16,10 @@ public function index()
 {
     $user = Auth::user();
     $dosen = Dosen::with('prodi')->where('user_id', $user->id)->firstOrFail();
+
+    // Ambil kuota P1 dari tabel kuota_bimbingan_dosen
+    $kuotaRecord = KuotaBimbinganDosen::where('id_dosen', $dosen->id_dosen)->first();
+    $kuota = $kuotaRecord->kuota_bimbingan ?? 0;
 
     // Hitung jumlah mahasiswa yang dibimbing
     $jumlah1 = PengajuanPembimbing::where('id_dosen1', $user->id)
@@ -30,7 +35,6 @@ public function index()
         ->sum(fn($p) => $p->kelompok?->anggota->count() ?? 0);
 
     $totalBimbingan = $jumlah1 + $jumlah2;
-    $kuota = $dosen->kuota_bimbingan ?? 0;
 
     $jadwals = Jadwal::where(function ($query) use ($dosen) {
         $query->where('penguji_1_id', $dosen->user_id)
@@ -94,7 +98,7 @@ public function index()
             'listProdi' // ✅ penting!
         ));
     }
-    
+
 public function kuotaPerProdi()
 {
     $prodis = \App\Models\Prodi::with(['dosens' => function ($query) {

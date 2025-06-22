@@ -160,8 +160,8 @@ Route::middleware(['role:panitia'])->prefix('panitia')->name('panitia.')->group(
         Route::post('sidang/verifikasi/{id}', [\App\Http\Controllers\Dosen\SidangController::class, 'verifikasi'])->name('dosen.sidang.verifikasi');
 
         // bimbingan mahasiswa
-        Route::get('/bimbingan', [MahasiswaController::class, 'index'])->name('dosen.bimbingan');
-        Route::get('/mahasiswa/{id}', [MahasiswaController::class, 'show'])->name('dosen.mahasiswa.show');
+        Route::get('/bimbingan', [DosenController::class, 'bimbingan'])->name('dosen.bimbingan');
+Route::get('/mahasiswa/{id}', [\App\Http\Controllers\Dosen\MahasiswaController::class, 'show'])->name('dosen.mahasiswa.show');
 
         // PERSETUJUAN SEMPRO
         Route::get('sempro', [DosenSemproController::class, 'index'])->name('dosen.sempro.index');

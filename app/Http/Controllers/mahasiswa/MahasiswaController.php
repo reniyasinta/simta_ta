@@ -52,16 +52,7 @@ class MahasiswaController extends Controller
                     return $pengajuan->kelompok?->anggota->count() ?? 0;
                 });
 
-            $jumlahSebagai2 = PengajuanPembimbing::where('id_dosen2', $dosen->user_id)
-                ->where('status', 'Diterima')
-                ->whereHas('kelompok.anggota', function ($query) use ($mahasiswa) {
-                    $query->where('id_prodi', $mahasiswa->id_prodi);
-                })
-                ->with('kelompok')
-                ->get()
-                ->sum(function ($pengajuan) {
-                    return $pengajuan->kelompok?->anggota->count() ?? 0;
-                });
+
 
             // Ambil kuota per prodi
             $kuota = KuotaBimbinganDosen::where('id_dosen', $dosen->id_dosen)
@@ -69,7 +60,7 @@ class MahasiswaController extends Controller
                 ->first();
 
             $dosen->kuota_total = $kuota ? $kuota->kuota_bimbingan : 0;
-            $dosen->kuota_terpakai = $jumlahSebagai1 + $jumlahSebagai2;
+            $dosen->kuota_terpakai = $jumlahSebagai1;
         }
 
         return view('pages.mahasiswa.dashboard', compact('jadwals', 'dosens'));

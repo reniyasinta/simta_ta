@@ -31,7 +31,6 @@
                             <tr>
                                 <th>No</th>
                                 <th>File Revisi</th>
-                                <th>Waktu Upload</th>
                                 <th>Status Penguji 1</th>
                                 <th>Status Penguji 2</th>
                                 <th>Status Penguji 3</th>
@@ -40,27 +39,24 @@
                                 <th>Catatan Penguji 3</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            @if ($sidang && $sidang->revisiUploads()->count() > 0)
-                                @foreach($sidang->revisiUploads()->orderBy('uploaded_at', 'desc')->get() as $index => $upload)
-                                    <tr>
-                                        <td>{{ $index + 1 }}</td>
-                                        <td><a href="{{ asset($upload->file_path) }}" target="_blank">Lihat</a></td>
-                                        <td>{{ $upload->uploaded_at }}</td>
-                                        <td>{{ $sidang->status_revisi_penguji_1 ?? '-' }}</td>
-                                        <td>{{ $sidang->status_revisi_penguji_2 ?? '-' }}</td>
-                                        <td>{{ $sidang->status_revisi_penguji_3 ?? '-' }}</td>
-                                        <td>{{ $sidang->catatan_penguji_1 ?? '-' }}</td>
-                                        <td>{{ $sidang->catatan_penguji_2 ?? '-' }}</td>
-                                        <td>{{ $sidang->catatan_penguji_3 ?? '-' }}</td>
-                                    </tr>
-                                @endforeach
-                            @else
-                                <tr>
-                                    <td colspan="9" class="text-center text-danger">Belum ada data sidang.</td>
-                                </tr>
-                            @endif
-                        </tbody>
+<tbody>
+    @if ($sidang && $sidang->revisi_laporan)
+        <tr>
+            <td>1</td>
+            <td><a href="{{ asset($sidang->revisi_laporan) }}" target="_blank">Lihat</a></td>
+            <td>{{ $sidang->status_revisi_penguji_1 ?? '-' }}</td>
+            <td>{{ $sidang->status_revisi_penguji_2 ?? '-' }}</td>
+            <td>{{ $sidang->status_revisi_penguji_3 ?? '-' }}</td>
+            <td>{{ $sidang->catatan_penguji_1 ?? '-' }}</td>
+            <td>{{ $sidang->catatan_penguji_2 ?? '-' }}</td>
+            <td>{{ $sidang->catatan_penguji_3 ?? '-' }}</td>
+        </tr>
+    @else
+        <tr>
+            <td colspan="8" class="text-center text-danger">Belum ada revisi yang diunggah.</td>
+        </tr>
+    @endif
+</tbody>
                     </table>
                 </div>
             </div>

@@ -125,14 +125,6 @@
                     </li>
                 </ul>
             </li>
-
-            <li class="menu-header">Data Pengujian TA</li>
-            <li class="{{ request()->is('dosen/seminar-proposal') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ url('seminar proposal') }}"><i class="fas fa-chalkboard-teacher"></i> <span>Seminar Proposal</span></a>
-            </li>
-            <li class="{{ request()->is('dosen/sidang-ta') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ url('seminar proposal') }}"><i class="fas fa-gavel"></i> <span>Sidang TA</span></a>
-            </li>
         </ul>
 
 

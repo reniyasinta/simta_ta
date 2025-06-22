@@ -124,6 +124,17 @@
         @endif
     </td>
 
+    {{-- Link Drive --}}
+    <td>
+        @if ($sidang->link_drive_proyek)
+            <a href="{{ $sidang->link_drive_proyek }}" target="_blank" class="btn btn-sm btn-primary">
+                <i class="fas fa-link"></i> 
+            </a>
+        @else
+            <span class="text-muted">Belum</span>
+        @endif
+    </td>
+
     {{-- Status --}}
     <td>
         @if ($sidang->status_final == 'Disetujui')
@@ -138,7 +149,7 @@
     {{-- Catatan --}}
     <td>
         @if($sidang->status_final === 'Menunggu')
-            <form action="{{ route('sidang.final.submit', $sidang->id_sidang) }}" method="POST" id="form-{{ $sidang->id_sidang }}">
+            <form action="{{ route('panitia.sidang.final.submit', $sidang->id_sidang) }}" method="POST" id="form-{{ $sidang->id_sidang }}">
                 @csrf
                 <textarea name="catatan_final" class="form-control form-control-sm" rows="2" placeholder="Isi catatan (opsional)">{{ $sidang->catatan_final ?? '' }}</textarea>
             </form>
@@ -159,10 +170,6 @@
         @endif
     </td>
 
-    <td class="text-center">
-    <a href="{{ route('panitia.sidang.drive', $sidang->id_sidang) }}" class="btn btn-sm btn-info">
-        <i class="fas fa-link"></i> Link Drive
-    </a>
 </td>
 
 </tr>

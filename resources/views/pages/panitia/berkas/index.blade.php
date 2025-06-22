@@ -115,14 +115,15 @@
     $(document).ready(function () {
         $('#table-berkas').DataTable({
             "language": {
-                "search": "Cari Nama Berkas:",
-                "lengthMenu": "Tampilkan _MENU_ data per halaman",
-                "zeroRecords": "Data tidak ditemukan",
-                "info": "Menampilkan _PAGE_ dari _PAGES_",
-                "infoEmpty": "Tidak ada data",
-                "infoFiltered": "(difilter dari _MAX_ total data)"
-            }
-            "pageLength": 10
+            "search": "Cari Nama Berkas:",
+            "lengthMenu": "Tampilkan _MENU_ data per halaman",
+            "zeroRecords": "Data tidak ditemukan",
+            "info": "Menampilkan _PAGE_ dari _PAGES_",
+            "infoEmpty": "Tidak ada data",
+            "infoFiltered": "(difilter dari _MAX_ total data)"
+        },
+        "pageLength": 10
+
         });
     });
 </script>

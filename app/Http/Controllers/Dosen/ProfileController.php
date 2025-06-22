@@ -8,35 +8,41 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Dosen;
 use App\Models\PengajuanPembimbing;
+use App\Models\KuotaBimbinganDosen;
 
 class ProfileController extends Controller
 {
-    public function index()
-    {
-        $user = Auth::user();
-        $dosen = Dosen::with('prodi')->where('user_id', $user->id)->firstOrFail();
+public function index()
+{
+    $user = Auth::user();
+    $dosen = Dosen::with('prodi')->where('user_id', $user->id)->firstOrFail();
 
-        // Hitung kuota terpakai
-        $jumlah1 = \App\Models\PengajuanPembimbing::where('id_dosen1', $user->id)
-            ->where('status', 'Diterima')
-            ->with('kelompok')
-            ->get()
-            ->sum(function ($pengajuan) {
-                return $pengajuan->kelompok?->anggota->count() ?? 0;
-            });
+    // Ambil kuota dari tabel kuota_bimbingan_dosen
+    $kuotaRecord = KuotaBimbinganDosen::where('id_dosen', $dosen->id_dosen)->first();
+    $kuota = $kuotaRecord->kuota_bimbingan ?? 0; // Kuota maksimal dosen
 
-        $jumlah2 = \App\Models\PengajuanPembimbing::where('id_dosen2', $user->id)
-            ->where('status', 'Diterima')
-            ->with('kelompok')
-            ->get()
-            ->sum(function ($pengajuan) {
-                return $pengajuan->kelompok?->anggota->count() ?? 0;
-            });
+    // Hitung total bimbingan (sebagai pembimbing 1 dan 2)
+    $jumlah1 = PengajuanPembimbing::where('id_dosen1', $dosen->id_dosen)
+        ->where('status', 'Diterima')
+        ->count(); // Menggunakan count() langsung untuk jumlah mahasiswa yang dibimbing dosen 1
 
-        $dosen->kuota_terpakai = $jumlah1 + $jumlah2;
+    $jumlah2 = PengajuanPembimbing::where('id_dosen2', $dosen->id_dosen)
+        ->where('status', 'Diterima')
+        ->count(); // Menggunakan count() langsung untuk jumlah mahasiswa yang dibimbing dosen 2
 
-        return view('pages.dosen.profile', compact('user', 'dosen'));
-    }
+    $totalBimbingan = $jumlah1 + $jumlah2; // Total bimbingan yang dilakukan oleh dosen
+
+    // Hitung kuota terpakai
+    $kuotaTerpakai = $totalBimbingan;
+
+    // Update data yang akan ditampilkan
+    $dosen->kuota_bimbingan = $kuota;
+    $dosen->kuota_terpakai = $kuotaTerpakai;
+
+    // Kirimkan ke view
+    return view('pages.dosen.profile', compact('user', 'dosen', 'totalBimbingan', 'kuota'));
+}
+
 
         public function update(Request $request)
         {
