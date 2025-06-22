@@ -182,6 +182,7 @@ Route::middleware(['role:panitia'])->prefix('panitia')->name('panitia.')->group(
         Route::get('/mahasiswa/profile', [MahasiswaController::class, 'profile'])->name('mahasiswa.profile');
         Route::post('/mahasiswa/profile/update', [MahasiswaController::class, 'updateProfile'])->name('mahasiswa.profile.update');
         Route::get('/profile/edit', [MahasiswaController::class, 'editProfile'])->name('mahasiswa.profile_edit');
+        Route::get('/mahasiswa/dosen/{id}', [MahasiswaController::class, 'showDosen'])->name('mahasiswa.dosen.show');
 
         // Draft
 
