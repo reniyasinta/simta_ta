@@ -21,49 +21,6 @@ class MahasiswaController extends Controller
     $user = Auth::user();
     $mahasiswa = $user->mahasiswa;
 
-        if (!$mahasiswa) {
-            return redirect()->back()->withErrors(['Anda belum terdaftar sebagai mahasiswa.']);
-        }
-
-        $idKelompok = $mahasiswa->id_kelompok;
-
-        // Ambil jadwal untuk kelompok mahasiswa ini
-        $jadwals = Jadwal::where(function ($query) use ($idKelompok) {
-                $query->whereHas('pengajuan', function ($q) use ($idKelompok) {
-                    $q->where('id_kelompok', $idKelompok);
-                })
-                ->orWhereNull('id_ajuan'); // untuk jadwal Yudisium
-            })
-            ->orderByDesc('tanggal')
-            ->get();
-
-        // Ambil semua dosen + hitung kuota bimbingan per prodi
-        $dosens = Dosen::with('user', 'prodi')->get();
-
-        foreach ($dosens as $dosen) {
-            $jumlahSebagai1 = PengajuanPembimbing::where('id_dosen1', $dosen->user_id)
-                ->where('status', 'Diterima')
-                ->whereHas('kelompok.anggota', function ($query) use ($mahasiswa) {
-                    $query->where('id_prodi', $mahasiswa->id_prodi);
-                })
-                ->with('kelompok')
-                ->get()
-                ->sum(function ($pengajuan) {
-                    return $pengajuan->kelompok?->anggota->count() ?? 0;
-                });
-
-
-
-            // Ambil kuota per prodi
-            $kuota = KuotaBimbinganDosen::where('id_dosen', $dosen->id_dosen)
-                ->where('id_prodi', $mahasiswa->id_prodi)
-                ->first();
-
-            $dosen->kuota_total = $kuota ? $kuota->kuota_bimbingan : 0;
-            $dosen->kuota_terpakai = $jumlahSebagai1;
-        }
-
-        return view('pages.mahasiswa.dashboard', compact('jadwals', 'dosens'));
     if (!$mahasiswa) {
         return redirect()->back()->withErrors(['Anda belum terdaftar sebagai mahasiswa.']);
     }
@@ -119,7 +76,6 @@ class MahasiswaController extends Controller
 
     return view('pages.mahasiswa.dashboard', compact('jadwals', 'dosens'));
 }
-
 
     // ===== Mahasiswa Profile =====
     public function profile()
