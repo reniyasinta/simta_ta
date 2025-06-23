@@ -29,59 +29,89 @@ class MahasiswaSidangController extends Controller
         return view('pages.mahasiswa.sidang.draft.create');
     }
 
-   public function uploadDraft(Request $request)
+public function uploadDraft(Request $request)
 {
-    $request->validate([
-        'laporan_TA' => 'required|mimes:pdf|max:20480',
-        'lembar_konsultasi' => 'required|mimes:pdf|max:20480',
-    ]);
-
     $mahasiswa = Auth::user()->mahasiswa;
 
-    // Cek pengajuan dulu
+    if (!$mahasiswa || !$mahasiswa->id_kelompok) {
+        return redirect()->back()->with('error', 'Anda belum memiliki kelompok.');
+    }
+
     $pengajuan = \App\Models\PengajuanPembimbing::where('id_kelompok', $mahasiswa->id_kelompok)
-                    ->where('status', 'Diterima')
-                    ->first();
+        ->where('status', 'Diterima')
+        ->first();
 
     if (!$pengajuan) {
-        return redirect()->back()->with('error', 'Pengajuan Pembimbing Diterima belum ada. Silakan cek pengajuan.');
+        return redirect()->back()->with('error', 'Anda belum memiliki dosen pembimbing yang disetujui.');
     }
 
-    // Cek SEMPRO
     $sempro = \App\Models\Sempro::where('id_ajuan', $pengajuan->id_ajuan)->first();
-
     if (!$sempro) {
-        return redirect()->back()->with('error', 'Data Sempro tidak ditemukan. Pastikan sudah input Sempro.');
+        return redirect()->back()->with('error', 'Data seminar proposal belum ditemukan.');
     }
 
-    $sidang = Sidang::where('id_kelompok', $mahasiswa->id_kelompok)->first();
+    // Dapatkan atau buat sidang
+    $sidang = Sidang::firstOrNew(['id_kelompok' => $mahasiswa->id_kelompok]);
+    $sidang->id_dosen1 = $pengajuan->id_dosen1;
+    $sidang->id_dosen2 = $pengajuan->id_dosen2;
+    $sidang->id_sempro = $sempro->id_sempro;
 
-    if (!$sidang) {
-        $sidang = Sidang::create([
-            'id_kelompok' => $mahasiswa->id_kelompok,
-            'id_dosen1' => $pengajuan->id_dosen1,
-            'id_dosen2' => $pengajuan->id_dosen2,
-            'id_sempro' => $sempro->id_sempro,
-            'status_draft_dosen1' => 'Menunggu',
-            'status_draft_dosen2' => 'Menunggu',
+    // ===== Validasi & Simpan File =====
+    if ($request->hasFile('laporan_TA')) {
+        $request->validate([
+            'laporan_TA' => 'required|mimes:pdf|max:20480',
         ]);
-    }
-
-    // Simpan file ke storage
-    $laporanPath = $request->file('laporan_TA')->store('uploads/laporan_ta', 'public');
-    $lembarPath = $request->file('lembar_konsultasi')->store('uploads/lembar_konsultasi', 'public');
-
-    // Reset status & catatan ke semua dosen (dikirim ulang ke semua)
-      $sidang->laporan_TA = 'storage/' . $laporanPath;
-        $sidang->lembar_konsultasi = 'storage/' . $lembarPath;
+        $sidang->laporan_TA = 'storage/' . $request->file('laporan_TA')->store('uploads/laporan_ta', 'public');
         $sidang->status_draft_dosen1 = 'Menunggu';
         $sidang->status_draft_dosen2 = 'Menunggu';
         $sidang->catatan_draft_dosen1 = null;
         $sidang->catatan_draft_dosen2 = null;
-        $sidang->save();
+    }
 
-    return redirect()->route('mahasiswa.sidang.draft')->with('success', 'Draft Laporan berhasil diupload dan status telah diperbarui.');
+    if ($request->hasFile('from_persetujuan_sidang')) {
+        $request->validate([
+            'from_persetujuan_sidang' => 'required|mimes:pdf|max:20480',
+        ]);
+        $sidang->from_persetujuan_sidang = 'storage/' . $request->file('from_persetujuan_sidang')->store('uploads/form_persetujuan_sidang', 'public');
+    }
+
+    if ($request->hasFile('lembar_konsultasi')) {
+        $request->validate([
+            'lembar_konsultasi' => 'required|mimes:pdf|max:20480',
+        ]);
+        $sidang->lembar_konsultasi = 'storage/' . $request->file('lembar_konsultasi')->store('uploads/lembar_konsultasi', 'public');
+    }
+
+    $sidang->save();
+
+    return redirect()->route('mahasiswa.sidang.draft')->with('success', 'File berhasil diupload.');
 }
+public function updateStatusDraft(Request $request, $id_sidang)
+{
+    $request->validate([
+        'status_draft' => 'required|in:Revisi,Disetujui',
+        'catatan' => 'nullable|string',
+    ]);
+
+    $user = Auth::user();
+    $sidang = Sidang::findOrFail($id_sidang);
+
+    if ($sidang->id_dosen1 == $user->id) {
+        $sidang->status_draft_dosen1 = $request->status_draft;
+        $sidang->catatan_draft_dosen1 = $request->catatan;
+    } elseif ($sidang->id_dosen2 == $user->id) {
+        $sidang->status_draft_dosen2 = $request->status_draft;
+        $sidang->catatan_draft_dosen2 = $request->catatan;
+    } else {
+        return back()->with('error', 'Anda bukan dosen pembimbing sidang ini.');
+    }
+
+    $sidang->save();
+
+    return back()->with('success', 'Status draft berhasil diperbarui.');
+}
+
+
 
     public function revisi()
     {

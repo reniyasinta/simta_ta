@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('nip')->nullable()->unique(); // untuk admin, dosen, panitia
             $table->string('nim')->nullable()->unique(); // untuk mahasiswa
 
-            // ✅ Tambahkan kolom id_prodi
             $table->unsignedBigInteger('id_prodi')->nullable();
 
             $table->timestamps();

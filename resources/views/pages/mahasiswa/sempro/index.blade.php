@@ -37,7 +37,7 @@
                         {{-- 1. Laporan TA --}}
                         <tr>
                             <td>1</td>
-                            <td>Proposal TA</td>
+                            <td>Proposal Tugas Akhir</td>
                             <td>
                                 <form action="{{ route('mahasiswa.sempro.uploadLaporanTa') }}" method="POST" enctype="multipart/form-data">
                                     @csrf

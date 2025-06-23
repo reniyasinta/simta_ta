@@ -8,12 +8,19 @@ use Illuminate\Http\Request;
 
 class PimpinanJadwalController extends Controller
 {
-    public function seminar()
-    {
-        $jadwals = Jadwal::where('jenis_acara', 'seminar')->orderBy('tanggal', 'desc')->get();
-        return view('pages.pimpinan.jadwal.seminar', compact('jadwals'));
-    }
+public function seminar()
+{
+    $jadwals = Jadwal::with([
+        'kelompok.anggota.prodi',
+        'penguji1',
+        'penguji2',
+        'penguji3'
+    ])->where('jenis_acara', 'seminar')
+      ->orderBy('tanggal', 'desc')
+      ->get();
 
+    return view('pages.pimpinan.jadwal.seminar', compact('jadwals'));
+}
     public function sidang()
     {
         $jadwals = Jadwal::where('jenis_acara', 'sidang')->orderBy('tanggal', 'desc')->get();

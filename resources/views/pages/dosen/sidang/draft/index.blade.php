@@ -48,15 +48,11 @@
                                 </td>
 
                                 <td>
-                                    @php
-                                        $latestDraft = $sidang->draftUploads()->latest('uploaded_at')->first();
-                                    @endphp
-
-                                    @if($latestDraft)
-                                        <a href="{{ asset($latestDraft->file_path) }}" target="_blank" class="btn btn-sm btn-info">Lihat</a>
-                                    @else
-                                        <span class="text-muted">Belum Upload</span>
-                                    @endif
+                                    @if($sidang->laporan_TA)
+                                    <a href="{{ asset($sidang->laporan_TA) }}" target="_blank" class="btn btn-sm btn-info">Lihat</a>
+                                @else
+                                    <span class="text-muted">Belum Upload</span>
+                                @endif
                                 </td>
 
                                 <td>
@@ -70,33 +66,38 @@
                                     @endphp
                                     {{ $status }}
                                 </td>
+<td>
+    @php
+        $catatan = '-';
+        if ($sidang->id_dosen1 == auth()->user()->id) {
+            $catatan = $sidang->catatan_draft_dosen1 ?? '';
+        } elseif ($sidang->id_dosen2 == auth()->user()->id) {
+            $catatan = $sidang->catatan_draft_dosen2 ?? '';
+        }
+    @endphp
 
-                                <td>
-                                    @php
-                                        $catatan = '-';
-                                        if ($sidang->id_dosen1 == auth()->user()->id) {
-                                            $catatan = $sidang->catatan_draft_dosen1 ?? '-';
-                                        } elseif ($sidang->id_dosen2 == auth()->user()->id) {
-                                            $catatan = $sidang->catatan_draft_dosen2 ?? '-';
-                                        }
-                                    @endphp
-                                    {{ $catatan }}
-                                </td>
+    @if ($status == '-' || $status == 'Menunggu')
+        <form action="{{ route('dosen.sidang.updateStatusDraft', $sidang->id_sidang) }}" method="POST">
+            @csrf
+            <textarea name="catatan" class="form-control form-control-sm mb-2" placeholder="Catatan (opsional)">{{ old('catatan', $catatan) }}</textarea>
+    @else
+        {{ $catatan }}
+    @endif
+</td>
 
-                                <td>
-                                    @if ($status == '-' || $status == 'Menunggu')
-                                    <form action="{{ route('dosen.sidang.updateStatusDraft', $sidang->id_sidang) }}" method="POST">
-                                        @csrf
-                                        <textarea name="catatan" class="form-control form-control-sm mb-2" placeholder="Catatan (opsional)"></textarea>
-                                        <div class="d-flex gap-2">
-                                            <button type="submit" name="status_draft" value="Disetujui" class="btn btn-sm btn-success">Setuju</button>
-                                            <button type="submit" name="status_draft" value="Revisi" class="btn btn-sm btn-warning">Revisi</button>
-                                        </div>
-                                    </form>
-                                    @else
-                                        <span class=>Sudah Divalidasi</span>
-                                    @endif
-                                </td>
+</td>
+<td>
+    @if ($status == '-' || $status == 'Menunggu')
+            <div class="d-flex gap-2">
+                <button type="submit" name="status_draft" value="Disetujui" class="btn btn-sm btn-success">Setuju</button>
+                <button type="submit" name="status_draft" value="Revisi" class="btn btn-sm btn-warning">Revisi</button>
+            </div>
+        </form>
+    @else
+        <span class="text-muted">Sudah Divalidasi</span>
+    @endif
+</td>
+
                             </tr>
                         @empty
                             <tr>

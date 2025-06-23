@@ -6,7 +6,7 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>Laporan TA Revisi</h1>
+            <h1>Revisi Laporan Tugas Akhir</h1>
         </div>
 
         {{-- Notifikasi sukses --}}

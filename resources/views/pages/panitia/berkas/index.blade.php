@@ -62,7 +62,6 @@
                                                 'rar' => 'fas fa-file-archive text-muted',
                                             ];
                                             $icon = $icons[strtolower($extension)] ?? 'fas fa-file';
-
                                             $canPreviewDirect = in_array(strtolower($extension), ['pdf', 'jpg', 'jpeg', 'png', 'txt']);
                                             $canGoogleViewer = in_array(strtolower($extension), ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx']);
                                             $fileUrl = Storage::url($item->file_path);
@@ -83,7 +82,6 @@
                                            class="btn btn-warning btn-sm me-1" title="Edit">
                                             <i class="fas fa-pencil-alt"></i>
                                         </a>
-
                                         <form action="{{ route('panitia.berkas.destroy', $item->id_berkas) }}"
                                               method="POST" class="d-inline"
                                               onsubmit="return confirm('Yakin ingin menghapus berkas ini?')">
@@ -97,7 +95,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="text-center">Belum ada berkas diunggah.</td>
+                                    <td colspan="3" class="text-center">Belum ada berkas diunggah.</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -114,16 +112,16 @@
 <script>
     $(document).ready(function () {
         $('#table-berkas').DataTable({
-            "language": {
-            "search": "Cari Nama Berkas:",
-            "lengthMenu": "Tampilkan _MENU_ data per halaman",
-            "zeroRecords": "Data tidak ditemukan",
-            "info": "Menampilkan _PAGE_ dari _PAGES_",
-            "infoEmpty": "Tidak ada data",
-            "infoFiltered": "(difilter dari _MAX_ total data)"
-        },
-        "pageLength": 10
-
+            language: {
+                search: "Cari Nama Berkas:",
+                lengthMenu: "Tampilkan _MENU_ data per halaman",
+                zeroRecords: "Data tidak ditemukan",
+                info: "Menampilkan _PAGE_ dari _PAGES_",
+                infoEmpty: "Tidak ada data",
+                infoFiltered: "(difilter dari _MAX_ total data)"
+            },
+            pageLength: 10,
+            autoWidth: false
         });
     });
 </script>

@@ -8,11 +8,16 @@
 
 @section('main')
     <div class="main-content">
-        <section class="section">
-            <div class="section-header">
-                <h1>Berkas Sidang - Revisi</h1>
-            </div>
+<section class="section">
+    <div class="section-header">
+        <h1>Berkas Sidang - Revisi</h1>
+    </div>
 
+    <div class="card">
+        <div class="card-header">
+            <h4 class="mb-0">Daftar Revisi Laporan Sidang</h4>
+        </div>
+        <div class="card-body">
             <div class="table-responsive">
                 <table id="table-sidang-revisi" class="table table-bordered table-striped">
                     <thead>
@@ -29,8 +34,21 @@
                         @forelse ($sidangList as $index => $sidang)
                             <tr>
                                 <td>{{ $index + 1 }}</td>
-                                <td>{{ $sidang->mahasiswa->nama_mhs ?? '-' }}</td>
-                                <td>{{ $sidang->mahasiswa->nim_mhs ?? '-' }}</td>
+<td>
+    @foreach (['anggota1', 'anggota2', 'anggota3'] as $pos)
+        @if($sidang->kelompok && $sidang->kelompok->$pos && $sidang->kelompok->$pos->mahasiswa)
+            <div>{{ $sidang->kelompok->$pos->mahasiswa->nama_mhs ?? '-' }}</div>
+        @endif
+    @endforeach
+</td>
+<td>
+    @foreach (['anggota1', 'anggota2', 'anggota3'] as $pos)
+        @if($sidang->kelompok && $sidang->kelompok->$pos && $sidang->kelompok->$pos->mahasiswa)
+            <div>{{ $sidang->kelompok->$pos->mahasiswa->nim_mhs ?? '-' }}</div>
+        @endif
+    @endforeach
+</td>
+
                                 <td>{{ $sidang->mahasiswa->prodi->nama_prodi ?? '-' }}</td>
                                 <td>
                                     @if ($sidang->revisi_laporan)
@@ -49,6 +67,8 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+    </div>
         </section>
     </div>
 @endsection

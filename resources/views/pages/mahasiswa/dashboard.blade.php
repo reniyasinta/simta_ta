@@ -113,7 +113,7 @@
                                     <div class="fw-bold text-dark">{{ $dosen->nama_dosen }}</div>
                                     <div class="text-muted small">Kuota: {{ $dosen->kuota_terpakai }}/{{ $dosen->kuota_total ?? 0 }}</div>
                                 </div>
-                                
+
                                 <a href="{{ route('mahasiswa.dosen.show', $dosen->id_dosen) }}"
                                    class="btn btn-outline-primary btn-sm" title="Lihat Detail">
                                     <i class="fas fa-eye"></i>

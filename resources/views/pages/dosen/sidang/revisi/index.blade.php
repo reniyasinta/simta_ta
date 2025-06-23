@@ -2,6 +2,10 @@
 
 @section('title', 'ACC Revisi Sidang')
 
+@push('style')
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+@endpush
+
 @section('main')
 <div class="main-content">
     <section class="section">
@@ -16,21 +20,23 @@
         <div class="card shadow-sm">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered table-striped">
+                    <table id="table-revisi" class="table table-bordered table-striped">
                         <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>Nama Mahasiswa</th>
-                            <th>Revisi Laporan</th>
-                            <th>Status Revisi</th>
-                            <th>Catatan</th>
-                            <th>Aksi</th>
-                        </tr>
+                            <tr>
+                                <th>No</th>
+                                <th>Nama Mahasiswa</th>
+                                <th>Revisi Laporan</th>
+                                <th>Status Revisi</th>
+                                <th>Catatan</th>
+                                <th>Aksi</th>
+                            </tr>
                         </thead>
                         <tbody>
                             @forelse($sidangList as $index => $sidang)
                             <tr>
                                 <td>{{ $index + 1 }}</td>
+
+                                {{-- Nama Mahasiswa --}}
                                 <td>
                                     @php
                                         $anggotaList = [];
@@ -47,71 +53,67 @@
                                     {!! implode('<br>', $anggotaList) !!}
                                 </td>
 
+                                {{-- Revisi Laporan --}}
                                 <td>
-                                    @php
-                                        $latestRevisi = $sidang->revisi_laporan;
-                                    @endphp
-                                    @if($latestRevisi)
-                                        <a href="{{ asset($latestRevisi) }}" target="_blank" class="btn btn-sm btn-info">
+                                    @if($sidang->revisi_laporan)
+                                        <a href="{{ asset($sidang->revisi_laporan) }}" target="_blank" class="btn btn-sm btn-info">
                                             <i class="fas fa-eye"></i> Lihat
                                         </a>
                                     @else
                                         <span class="text-muted">Belum Upload</span>
                                     @endif
-
                                 </td>
 
-                                <td>
-                                    @if ($sidang->penguji_1_id == auth()->user()->id)
-                                        {{ $sidang->status_revisi_penguji_1 ?? '-' }}
-                                    @elseif ($sidang->penguji_2_id == auth()->user()->id)
-                                        {{ $sidang->status_revisi_penguji_2 ?? '-' }}
-                                    @elseif ($sidang->penguji_3_id == auth()->user()->id)
-                                        {{ $sidang->status_revisi_penguji_3 ?? '-' }}
-                                    @else
-                                        -
-                                    @endif
-                                </td>
-
-                                <td>
-                                    @if ($sidang->penguji_1_id == auth()->user()->id)
-                                        {{ $sidang->catatan_penguji_1 ?? '-' }}
-                                    @elseif ($sidang->penguji_2_id == auth()->user()->id)
-                                        {{ $sidang->catatan_penguji_2 ?? '-' }}
-                                    @elseif ($sidang->penguji_3_id == auth()->user()->id)
-                                        {{ $sidang->catatan_penguji_3 ?? '-' }}
-                                    @else
-                                        -
-                                    @endif
-                                </td>
-
+                                {{-- Status --}}
                                 <td>
                                     @php
                                         $penguji_ke = null;
-                                        if ($sidang->penguji_1_id == auth()->user()->id) {
-                                            $penguji_ke = 1;
-                                        } elseif ($sidang->penguji_2_id == auth()->user()->id) {
-                                            $penguji_ke = 2;
-                                        } elseif ($sidang->penguji_3_id == auth()->user()->id) {
-                                            $penguji_ke = 3;
-                                        }
+                                        if ($sidang->penguji_1_id == auth()->user()->id) $penguji_ke = 1;
+                                        elseif ($sidang->penguji_2_id == auth()->user()->id) $penguji_ke = 2;
+                                        elseif ($sidang->penguji_3_id == auth()->user()->id) $penguji_ke = 3;
+
+                                        $status = $sidang->{'status_revisi_penguji_' . $penguji_ke} ?? 'Menunggu';
+                                        $catatan = $sidang->{'catatan_penguji_' . $penguji_ke} ?? '-';
                                     @endphp
+                                    {{ $status }}
+                                </td>
 
-                                    @if($penguji_ke)
-                                    <form action="{{ route('dosen.sidang.updateStatusRevisi', [$sidang->id_sidang, $penguji_ke]) }}" method="POST" style="display: inline-block;">
-                                        @csrf
-                                        <select name="status_revisi" class="form-control form-control-sm d-inline w-auto mb-2" required>
-                                            <option value="Menunggu">Menunggu</option>
-                                            <option value="Revisi">Revisi</option>
-                                            <option value="Disetujui">Disetujui</option>
-                                        </select>
-
-                                        <textarea name="catatan_revisi" class="form-control form-control-sm mb-2" placeholder="Catatan Revisi"></textarea>
-
-                                        <button type="submit" class="btn btn-sm btn-primary">Update</button>
-                                    </form>
+                                {{-- Catatan --}}
+                                <td>
+                                    @if($penguji_ke && $status === 'Menunggu')
+                                        <form action="{{ route('dosen.sidang.updateStatusRevisi', [$sidang->id_sidang, $penguji_ke]) }}" method="POST" id="form-{{ $sidang->id_sidang }}-{{ $penguji_ke }}">
+                                            @csrf
+                                            <textarea name="catatan_revisi" class="form-control form-control-sm" rows="2" placeholder="Catatan Revisi">{{ $catatan }}</textarea>
+                                            <input type="hidden" name="status_revisi" id="status_revisi_{{ $sidang->id_sidang }}_{{ $penguji_ke }}">
+                                        </form>
                                     @else
-                                        <span class="text-muted">Anda bukan penguji untuk sidang ini.</span>
+                                        {{ $catatan }}
+                                    @endif
+                                </td>
+
+                                {{-- Aksi --}}
+                                <td>
+                                    @if($penguji_ke && $status === 'Menunggu')
+                                        <div class="d-flex gap-2 flex-wrap">
+                                            <button
+                                                type="submit"
+                                                form="form-{{ $sidang->id_sidang }}-{{ $penguji_ke }}"
+                                                onclick="document.getElementById('status_revisi_{{ $sidang->id_sidang }}_{{ $penguji_ke }}').value = 'Disetujui'"
+                                                class="btn btn-sm btn-success">
+                                                ACC Revisi
+                                            </button>
+                                            <button
+                                                type="submit"
+                                                form="form-{{ $sidang->id_sidang }}-{{ $penguji_ke }}"
+                                                onclick="document.getElementById('status_revisi_{{ $sidang->id_sidang }}_{{ $penguji_ke }}').value = 'Revisi'"
+                                                class="btn btn-sm btn-danger">
+                                                Tolak Revisi
+                                            </button>
+                                        </div>
+                                    @elseif($penguji_ke)
+                                        <span class="badge badge-success">Sudah divalidasi</span>
+                                    @else
+                                        <span class="text-muted">Anda bukan penguji</span>
                                     @endif
                                 </td>
                             </tr>
@@ -128,3 +130,22 @@
     </section>
 </div>
 @endsection
+
+@push('scripts')
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#table-revisi').DataTable({
+            "language": {
+                "search": "Cari Mahasiswa / NIM:",
+                "lengthMenu": "Tampilkan _MENU_ data per halaman",
+                "zeroRecords": "Data tidak ditemukan",
+                "info": "Menampilkan _PAGE_ dari _PAGES_",
+                "infoEmpty": "Tidak ada data",
+                "infoFiltered": "(disaring dari total _MAX_ data)"
+            },
+            "pageLength": 10
+        });
+    });
+</script>
+@endpush
