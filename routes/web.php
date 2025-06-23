@@ -60,24 +60,32 @@ Route::middleware(['auth'])->group(function () {
         return 'Dashboard untuk semua pengguna';
     })->name('dashboard');
 
-    // ADMIN
-    Route::middleware(['role:admin'])->group(function () {
-        Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
-        Route::get('/user', [UsersController::class, 'index'])->name('admin.users');
-        Route::get('/admin/create', [UsersController::class, 'create'])->name('admin.create');
-        Route::post('/admin', [UsersController::class, 'store'])->name('admin.store');
-        Route::get('/admin/{id}/edit', [UsersController::class, 'edit'])->name('admin.edit');
-        Route::put('/admin/{id}', [UsersController::class, 'update'])->name('admin.update');
-        Route::delete('/admin/{id}', [UsersController::class, 'destroy'])->name('admin.destroy');
-        Route::get('/admin/import', [UsersController::class, 'importForm'])->name('admin.import');
-        Route::post('/admin/import', [UsersController::class, 'importStore'])->name('admin.import.store');
+// ADMIN
+Route::prefix('admin')->middleware(['role:admin'])->group(function () {
 
-        // Pengelolaan Surat Penelitian
-        Route::get('/admin/surat', [AdminSuratController::class, 'index'])->name('admin.surat.index');
-        Route::get('/admin/surat/{id}/edit', [AdminSuratController::class, 'edit'])->name('admin.surat.edit');
-        Route::put('/admin/surat/{id}/update', [AdminSuratController::class, 'update'])->name('admin.surat.update');
-        Route::get('/admin/surat/download/{id}', [AdminSuratController::class, 'download'])->name('admin.surat.download');
-    });
+    // Dashboard & Profile
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::get('/profile', [AdminController::class, 'profile'])->name('admin.profile');
+    Route::get('/profile/edit', [AdminController::class, 'editProfile'])->name('admin.profile_edit');
+    Route::post('/profile/update', [AdminController::class, 'updateProfile'])->name('admin.profile.update');
+
+    // User Management
+    Route::get('/user', [UsersController::class, 'index'])->name('admin.users');
+    Route::get('/create', [UsersController::class, 'create'])->name('admin.create');
+    Route::post('/', [UsersController::class, 'store'])->name('admin.store');
+    Route::get('/{id}/edit', [UsersController::class, 'edit'])->name('admin.edit');
+    Route::put('/{id}', [UsersController::class, 'update'])->name('admin.update');
+    Route::delete('/{id}', [UsersController::class, 'destroy'])->name('admin.destroy');
+    Route::get('/import', [UsersController::class, 'importForm'])->name('admin.import');
+    Route::post('/import', [UsersController::class, 'importStore'])->name('admin.import.store');
+
+    // Pengelolaan Surat
+    Route::get('/surat', [AdminSuratController::class, 'index'])->name('admin.surat.index');
+    Route::get('/surat/{id}/edit', [AdminSuratController::class, 'edit'])->name('admin.surat.edit');
+    Route::put('/surat/{id}/update', [AdminSuratController::class, 'update'])->name('admin.surat.update');
+    Route::get('/surat/download/{id}', [AdminSuratController::class, 'download'])->name('admin.surat.download');
+});
+
 
 // PANITIA
 Route::middleware(['role:panitia'])->prefix('panitia')->name('panitia.')->group(function () {
@@ -253,16 +261,30 @@ Route::get('/mahasiswa/{id}', [\App\Http\Controllers\Dosen\MahasiswaController::
 
     });
 
-    // Group route untuk role pimpinan
-Route::middleware(['auth'])->prefix('pimpinan')->name('pimpinan.')->group(function () {
-    Route::get('/dashboard', [\App\Http\Controllers\Pimpinan\PimpinanController::class, 'index'])->name('dashboard');
+    // ROUTE PIMPINAN
+Route::middleware(['auth', 'role:pimpinan'])->prefix('pimpinan')->name('pimpinan.')->group(function () {
 
-Route::get('/pengajuan', [\App\Http\Controllers\Pimpinan\PimpinanPengajuanController::class, 'index'])->name('pengajuan.index');
-    Route::get('/kuota', [\App\Http\Controllers\Pimpinan\PimpinanKuotaController::class, 'index'])->name('kuota.index');
-    Route::get('/jadwal/seminar', [\App\Http\Controllers\Pimpinan\PimpinanJadwalController::class, 'seminar'])->name('jadwal.seminar');
-    Route::get('/jadwal/sidang', [\App\Http\Controllers\Pimpinan\PimpinanJadwalController::class, 'sidang'])->name('jadwal.sidang');
-    Route::get('/jadwal/yudisium', [\App\Http\Controllers\Pimpinan\PimpinanJadwalController::class, 'yudisium'])->name('jadwal.yudisium');
-    Route::get('/surat', [\App\Http\Controllers\Pimpinan\PimpinanSuratController::class, 'index'])->name('surat.index');
+    // Dashboard
+    Route::get('/dashboard', [PimpinanController::class, 'index'])->name('dashboard');
+
+    // Profile
+    Route::get('/profile', [PimpinanController::class, 'profile'])->name('profile');
+    Route::get('/profile/edit', [PimpinanController::class, 'editProfile'])->name('profile_edit');
+    Route::post('/profile/update', [PimpinanController::class, 'updateProfile'])->name('profile.update');
+
+    // Pengajuan
+    Route::get('/pengajuan', [PimpinanPengajuanController::class, 'index'])->name('pengajuan.index');
+
+    // Kuota
+    Route::get('/kuota', [PimpinanKuotaController::class, 'index'])->name('kuota.index');
+
+    // Jadwal
+    Route::get('/jadwal/seminar', [PimpinanJadwalController::class, 'seminar'])->name('jadwal.seminar');
+    Route::get('/jadwal/sidang', [PimpinanJadwalController::class, 'sidang'])->name('jadwal.sidang');
+    Route::get('/jadwal/yudisium', [PimpinanJadwalController::class, 'yudisium'])->name('jadwal.yudisium');
+
+    // Surat
+    Route::get('/surat', [PimpinanSuratController::class, 'index'])->name('surat.index');
 });
 
 

@@ -45,7 +45,7 @@
             </li>
 
             <li class="{{ request()->routeIs('panitia.pengajuan.index') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('panitia.pengajuan.index') }}"><i class="fas fa-file-signature"></i> <span>Penentuan Dospem 2</span></a>
+                <a class="nav-link" href="{{ route('panitia.pengajuan.index') }}"><i class="fas fa-file-signature"></i> <span>Dosen Pembimbing 2</span></a>
             </li>
 
             <li class="{{ request()->routeIs('panitia.berkas.index') ? 'active' : '' }}">
@@ -71,7 +71,7 @@
 </li>
 
 
-            <li class="menu-header">Sempro</li>
+
             <li class="{{ request()->routeIs('panitia.sempro.index') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('panitia.sempro.index') }}"><i class="fas fa-file-pdf"></i> <span>Berkas Sempro</span></a>
             </li>
@@ -121,7 +121,7 @@
                         <a class="nav-link" href="{{ route('dosen.sidang.draft') }}">Laporan TA</a>
                     </li>
                     <li class="{{ request()->routeIs('dosen.sidang.revisi') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('dosen.sidang.revisi') }}">ACC Revisi Laporan TA</a>
+                        <a class="nav-link" href="{{ route('dosen.sidang.revisi') }}">Persetujuan Perbaikan</a>
                     </li>
                 </ul>
             </li>
@@ -221,30 +221,29 @@
 {{-- ================= Pimpinan (role_id = 5) ================= --}}
 @elseif($roleId == 5)
 <ul class="sidebar-menu">
-    <li class="menu-header">Dashboard</li>
     <li class="{{ request()->routeIs('pimpinan.dashboard') ? 'active' : '' }}">
         <a href="{{ route('pimpinan.dashboard') }}" class="nav-link">
             <i class="fas fa-fire"></i> <span>Dashboard</span>
         </a>
     </li>
 
-    <li class="menu-header">Monitoring</li>
+    <li class="menu-header">DATA REKAPITULASI</li>
 
     <li class="{{ request()->routeIs('pimpinan.pengajuan.index') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('pimpinan.pengajuan.index') }}">
-            <i class="fas fa-file-signature"></i> <span>Pengajuan Pembimbing</span>
+            <i class="fas fa-file-signature"></i> <span>Rekapitulasi DOSPEM</span>
         </a>
     </li>
 
     <li class="{{ request()->routeIs('pimpinan.kuota.index') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('pimpinan.kuota.index') }}">
-            <i class="fas fa-users-cog"></i> <span>Monitoring Kuota</span>
+            <i class="fas fa-users-cog"></i> <span>Rekapitulasi Kuota</span>
         </a>
     </li>
 
     <li class="nav-item dropdown {{ request()->is('pimpinan/jadwal*') ? 'active' : '' }}">
         <a href="#" class="nav-link has-dropdown">
-            <i class="fas fa-calendar-alt"></i> <span>Monitoring Jadwal</span>
+            <i class="fas fa-calendar-alt"></i> <span>Rekapitulasi Jadwal</span>
         </a>
         <ul class="dropdown-menu">
             <li class="{{ request()->routeIs('pimpinan.jadwal.seminar') ? 'active' : '' }}">
@@ -261,7 +260,7 @@
 
     <li class="{{ request()->routeIs('pimpinan.surat.index') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('pimpinan.surat.index') }}">
-            <i class="fas fa-envelope"></i> <span>Monitoring Surat</span>
+            <i class="fas fa-envelope"></i> <span>Rekapitulasi Surat</span>
         </a>
     </li>
 

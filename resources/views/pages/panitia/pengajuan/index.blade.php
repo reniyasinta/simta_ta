@@ -38,8 +38,8 @@
                                 <th>No</th>
                                 <th>Kelompok</th>
                                 <th>Judul</th>
-                                <th>Dosen 1</th>
-                                <th>Dosen 2</th>
+                                <th>Dosen Pembimbing 1</th>
+                                <th>Dosen Pembimbing 2</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>

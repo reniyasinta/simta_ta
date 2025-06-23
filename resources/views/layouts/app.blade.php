@@ -71,34 +71,45 @@
     <script src="{{ asset('js/custom.js') }}"></script>
 
     <!-- Script Toggle NIP/NIM -->
-    <script>
-        function toggleNipNim() {
-            const role = parseInt(document.getElementById('roleSelect')?.value);
-            const nipGroup = document.getElementById('nip-group');
-            const nimGroup = document.getElementById('nim-group');
+  <script>
+    function toggleNipNim() {
+        const role = parseInt(document.getElementById('roleSelect')?.value);
+        const nipGroup = document.getElementById('nip-group');
+        const nimGroup = document.getElementById('nim-group');
+        const prodiSelect = document.getElementById('prodiSelect'); // ⬅️ penting!
 
-            if (!role || (!nipGroup && !nimGroup)) return;
+        if (!role) return;
 
-            if ([1, 2, 3].includes(role)) {
-                nipGroup.style.display = 'block';
-                nimGroup.style.display = 'none';
-            } else if (role === 4) {
-                nipGroup.style.display = 'none';
-                nimGroup.style.display = 'block';
-            } else {
-                nipGroup.style.display = 'none';
-                nimGroup.style.display = 'none';
-            }
+        // Reset semua
+        if (nipGroup) nipGroup.style.display = 'none';
+        if (nimGroup) nimGroup.style.display = 'none';
+        if (prodiSelect) {
+            prodiSelect.disabled = false;
         }
 
-        document.addEventListener('DOMContentLoaded', function () {
-            const roleSelect = document.getElementById('roleSelect');
-            if (roleSelect) {
-                roleSelect.addEventListener('change', toggleNipNim);
-                toggleNipNim();
+        // Role-based logic
+        if ([1, 2, 3].includes(role)) {
+            if (nipGroup) nipGroup.style.display = 'block';
+        } else if (role === 4) {
+            if (nimGroup) nimGroup.style.display = 'block';
+        } else if (role === 5) { // Pimpinan
+            if (nipGroup) nipGroup.style.display = 'block';
+            if (prodiSelect) {
+                prodiSelect.value = "";          // kosongkan pilihan
+                prodiSelect.disabled = true;     // disable dropdown
             }
-        });
-    </script>
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const roleSelect = document.getElementById('roleSelect');
+        if (roleSelect) {
+            roleSelect.addEventListener('change', toggleNipNim);
+            toggleNipNim(); // inisialisasi awal
+        }
+    });
+</script>
+
 </body>
 
 </html>

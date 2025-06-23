@@ -54,52 +54,58 @@ class UsersController extends Controller
         return view('pages.admin.create', compact('roles', 'prodis'));
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:4',
-            'role_id' => 'required|in:1,2,3,4,5',
-            'nim' => 'required_if:role_id,4|nullable|unique:users,nim',
-            'nip' => 'required_unless:role_id,4|nullable|unique:users,nip',
-            'id_prodi' => 'nullable|exists:prodis,id',
-        ], [
-            'nim.required_if' => 'NIM wajib diisi untuk mahasiswa.',
-            'nip.required_unless' => 'NIP wajib diisi untuk selain mahasiswa.',
-        ]);
-            $idProdi = $request->role_id == 5 ? null : $request->id_prodi;
+ public function store(Request $request)
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email',
+        'password' => 'required|min:4',
+        'role_id' => 'required|in:1,2,3,4,5',
+        'nim' => 'required_if:role_id,4|nullable|unique:users,nim',
+        'nip' => 'required_unless:role_id,4|nullable|unique:users,nip',
+        'id_prodi' => 'nullable|required_unless:role_id,5|exists:prodis,id',
+    ], [
+        'nim.required_if' => 'NIM wajib diisi untuk mahasiswa.',
+        'nip.required_unless' => 'NIP wajib diisi untuk selain mahasiswa.',
+        'id_prodi.required_unless' => 'Prodi wajib dipilih untuk selain pimpinan.',
+    ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role_id' => $request->role_id,
-            'nim' => $request->nim,
-            'nip' => $request->nip,
+    // Tentukan nilai prodi: jika role = pimpinan, kosongkan
+    $idProdi = $request->role_id == 5 ? null : $request->id_prodi;
+
+    $user = User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+        'role_id' => $request->role_id,
+        'nim' => $request->nim,
+        'nip' => $request->nip,
+        'id_prodi' => $idProdi, // gunakan nilai yang sudah disesuaikan
+    ]);
+
+    // Tambahkan ke tabel mahasiswa jika role mahasiswa
+    if ($request->role_id == 4) {
+        Mahasiswa::create([
+            'user_id' => $user->id,
+            'nim_mhs' => $request->nim,
+            'nama_mhs' => $request->name,
             'id_prodi' => $request->id_prodi,
         ]);
-
-        if ($request->role_id == 4) {
-            Mahasiswa::create([
-                'user_id' => $user->id,
-                'nim_mhs' => $request->nim,
-                'nama_mhs' => $request->name,
-                'id_prodi' => $request->id_prodi,
-            ]);
-        }
-
-        if ($request->role_id == 3) {
-            Dosen::create([
-                'user_id' => $user->id,
-                'nip_dosen' => $request->nip,
-                'nama_dosen' => $request->name,
-                'id_prodi' => $request->id_prodi,
-            ]);
-        }
-
-        return redirect()->route('admin.users')->with('success', 'User berhasil ditambahkan.');
     }
+
+    // Tambahkan ke tabel dosen jika role dosen
+    if ($request->role_id == 3) {
+        Dosen::create([
+            'user_id' => $user->id,
+            'nip_dosen' => $request->nip,
+            'nama_dosen' => $request->name,
+            'id_prodi' => $request->id_prodi,
+        ]);
+    }
+
+    return redirect()->route('admin.users')->with('success', 'User berhasil ditambahkan.');
+}
+
 
     public function edit($id)
     {
@@ -127,7 +133,7 @@ class UsersController extends Controller
                 'nullable',
                 Rule::unique('users')->ignore($id),
                 function ($attribute, $value, $fail) use ($request) {
-                    if (in_array($request->role_id, [1, 2, 3]) && !$value) {
+                    if (in_array($request->role_id, [1, 2, 3, 5]) && !$value) {
                         $fail('NIP wajib diisi untuk Admin, Dosen, atau Panitia.');
                     }
                 }
@@ -142,7 +148,7 @@ class UsersController extends Controller
                 }
             ],
         ]);
-        
+
         $idProdi = $request->role_id == 5 ? null : $request->id_prodi;
 
         $user->name = $request->name;

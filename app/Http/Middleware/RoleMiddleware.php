@@ -14,6 +14,7 @@ class RoleMiddleware
         'panitia' => 2,
         'dosen' => 3,
         'mahasiswa' => 4,
+        'pimpinan' => 5,
     ];
 
     public function handle(Request $request, Closure $next, ...$roles): Response

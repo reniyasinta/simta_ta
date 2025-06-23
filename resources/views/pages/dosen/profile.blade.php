@@ -19,7 +19,7 @@
                         <div class="card-body">
                             <div class="profile-widget-header d-flex justify-content-center mb-3">
                                 <img alt="Foto {{ $dosen->nama_dosen }}"
-                                     src="{{ $dosen->foto ? asset('uploads/foto_dosen/' . $dosen->foto) : asset('img/avatar/avatar-1.png') }}"
+                                     src="{{ $dosen->foto ? asset('storage/uploads/foto_dosen/' . $dosen->foto) : asset('img/avatar/avatar-1.png') }}"
                                      class="rounded-circle"
                                      style="width: 120px; height: 120px; object-fit: cover; border: 3px solid #6777ef;">
                             </div>

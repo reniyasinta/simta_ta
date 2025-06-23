@@ -13,6 +13,7 @@
     @php
         use Illuminate\Support\Facades\Auth;
 
+
         $user = Auth::user();
         $foto = asset('img/avatar/avatar-1.png'); // default
 
@@ -28,9 +29,18 @@ switch ($user->role->name) {
         }
         break;
     case 'panitia':
+        if ($user->panitia && $user->panitia->foto) {
+            $foto = asset('storage/uploads/foto_panitia/' . $user->panitia->foto);
+        }
+        break;
     case 'admin':
-        if ($user->foto) {
-            $foto = asset('storage/uploads/foto_user/' . $user->foto);
+        if ($user->admin && $user->admin->foto) {
+            $foto = asset('storage/uploads/foto_admin/' . $user->admin->foto);
+        }
+        break;
+    case 'pimpinan':
+        if ($user->pimpinan && $user->pimpinan->foto) {
+            $foto = asset('storage/uploads/foto_pimpinan/' . $user->pimpinan->foto);
         }
         break;
 }
@@ -39,7 +49,7 @@ switch ($user->role->name) {
         // Handle route profil per role
         switch ($user->role_id) {
             case 1: // Admin
-                $profileRoute = url('admin.profile');
+                $profileRoute = route('admin.profile');
                 break;
             case 2: // Panitia
                 $profileRoute = route('panitia.profile');
@@ -50,8 +60,8 @@ switch ($user->role->name) {
             case 4: // Mahasiswa
                 $profileRoute = route('mahasiswa.profile');
                 break;
-            default:
-                $profileRoute = '#';
+            case 5: // Pimpinan
+                $profileRoute = route('pimpinan.profile');
                 break;
         }
     @endphp
