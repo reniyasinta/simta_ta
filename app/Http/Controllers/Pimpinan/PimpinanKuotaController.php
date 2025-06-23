@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 
 class PimpinanKuotaController extends Controller
 {
-    public function index(Request $request)
+     public function index(Request $request)
     {
         $prodis = Prodi::all();
         $prodiFilter = $request->get('prodi');
@@ -52,3 +52,4 @@ class PimpinanKuotaController extends Controller
         return view('pages.pimpinan.kuota.index', compact('dosenList', 'prodis'));
     }
 }
+

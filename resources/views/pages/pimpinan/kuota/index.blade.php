@@ -2,6 +2,10 @@
 
 @section('title', 'Monitoring Kuota Bimbingan')
 
+@push('style')
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+@endpush
+
 @section('main')
 <div class="main-content">
     <section class="section">
@@ -9,47 +13,55 @@
             <h1>Monitoring Kuota Bimbingan</h1>
         </div>
 
-        <form method="get" class="mb-3">
-            <div class="form-row">
-                <div class="col-md-4">
-                    <select name="prodi" class="form-control" onchange="this.form.submit()">
-                        <option value="">Semua Prodi</option>
-                        @foreach($prodis as $prodi)
-                            <option value="{{ $prodi->id }}" {{ request('prodi') == $prodi->id ? 'selected' : '' }}>
-                                {{ $prodi->nama_prodi }}
-                            </option>
-                        @endforeach
-                    </select>
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="table-kuota" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nama Dosen</th>
+                                <th>Prodi</th>
+                                <th>Kuota P1</th>
+                                <th>Kuota P2</th>
+                                <th>Terpakai</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($dosenList as $index => $dosen)
+                                <tr>
+                                    <td>{{ $index + 1 }}</td>
+                                    <td>{{ $dosen->nama_dosen }}</td>
+                                    <td>{{ $dosen->prodi->nama_prodi ?? '-' }}</td>
+                                    <td>{{ $dosen->kuota_bimbingan }}</td>
+                                    <td>{{ $dosen->kuota_p2 }}</td>
+                                    <td>{{ $dosen->bimbingan_terpakai }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
-        </form>
-
-        <div class="table-responsive">
-            <table class="table table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Nama Dosen</th>
-                        <th>Prodi</th>
-                        <th>Kuota P1</th>
-                        <th>Kuota P2</th>
-                        <th>Terpakai</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($dosenList as $index => $dosen)
-                    <tr>
-                        <td>{{ $index + 1 }}</td>
-                        <td>{{ $dosen->nama_dosen }}</td>
-                        <td>{{ $dosen->prodi->nama_prodi ?? '-' }}</td>
-                        <td>{{ $dosen->kuota_bimbingan }}</td>
-                        <td>{{ $dosen->kuota_p2 }}</td>
-                        <td>{{ $dosen->bimbingan_terpakai }}</td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
         </div>
     </section>
 </div>
 @endsection
+
+@push('scripts')
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#table-kuota').DataTable({
+                "language": {
+                    "search": "Cari Dosen / Prodi:",
+                    "lengthMenu": "Tampilkan _MENU_ data per halaman",
+                    "zeroRecords": "Data tidak ditemukan",
+                    "info": "Menampilkan _PAGE_ dari _PAGES_",
+                    "infoEmpty": "Tidak ada data",
+                    "infoFiltered": "(disaring dari total _MAX_ data)"
+                },
+                "pageLength": 10
+            });
+        });
+    </script>
+@endpush

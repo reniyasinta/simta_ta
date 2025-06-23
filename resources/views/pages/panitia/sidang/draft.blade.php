@@ -19,9 +19,11 @@
                         <thead class="thead-dark">
                             <tr>
                                 <th class="text-center" style="width: 50px;">No</th>
-                                <th class="text-center">Anggota Kelompok</th>
+                                <th class="text-center">Nama Mahasiswa</th>
+                                <th class="text-center">NIM</th>
                                 <th class="text-center">Prodi</th>
                                 <th class="text-center">Laporan TA</th>
+                                <th class="text-center">Form Persetujuan</th>
                                 <th class="text-center">Lembar Konsultasi</th>
                                 <th class="text-center">Status Draft</th>
                             </tr>
@@ -31,25 +33,33 @@
                                 <tr>
                                     <td class="text-center">{{ $index + 1 }}</td>
                                     <td>
-                                        <strong>Anggota:</strong>
-                                        <ul style="padding-left: 16px;">
-                                            @if($sidang->kelompok && $sidang->kelompok->anggota1)
-                                                <li>{{ $sidang->kelompok->anggota1->mahasiswa->nama_mhs ?? '-' }} ({{ $sidang->kelompok->anggota1->mahasiswa->nim_mhs ?? '-' }})</li>
-                                            @endif
-                                            @if($sidang->kelompok && $sidang->kelompok->anggota2)
-                                                <li>{{ $sidang->kelompok->anggota2->mahasiswa->nama_mhs ?? '-' }} ({{ $sidang->kelompok->anggota2->mahasiswa->nim_mhs ?? '-' }})</li>
-                                            @endif
-                                            @if($sidang->kelompok && $sidang->kelompok->anggota3)
-                                                <li>{{ $sidang->kelompok->anggota3->mahasiswa->nama_mhs ?? '-' }} ({{ $sidang->kelompok->anggota3->mahasiswa->nim_mhs ?? '-' }})</li>
-                                            @endif
-                                        </ul>
+                                        @foreach ($sidang->kelompok->anggota as $anggota)
+                                            <div>{{ $anggota->nama_mhs ?? '-' }}</div>
+                                        @endforeach
+                                    </td>
+                                    <td>
+                                        @foreach ($sidang->kelompok->anggota as $anggota)
+                                            <div>{{ $anggota->nim_mhs ?? '-' }}</div>
+                                        @endforeach
                                     </td>
                                     <td class="text-center">
-                                        {{ $sidang->mahasiswa->prodi->nama_prodi ?? '-' }}
+                                        {{
+                                            $sidang->kelompok->anggota->first()->prodi->nama_prodi
+                                                ?? 'Tidak ada prodi'
+                                        }}
                                     </td>
                                     <td class="text-center">
                                         @if ($sidang->laporan_TA)
                                             <a href="{{ asset($sidang->laporan_TA) }}" target="_blank" class="btn btn-sm btn-info">
+                                                <i class="fas fa-eye"></i> Lihat
+                                            </a>
+                                        @else
+                                            <span class="badge badge-secondary">Belum Upload</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-center">
+                                        @if ($sidang->from_persetujuan_sidang)
+                                            <a href="{{ asset($sidang->from_persetujuan_sidang) }}" target="_blank" class="btn btn-sm btn-info">
                                                 <i class="fas fa-eye"></i> Lihat
                                             </a>
                                         @else
@@ -75,7 +85,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="text-center text-danger">Belum ada data sidang.</td>
+                                    <td colspan="8" class="text-center text-danger">Belum ada data sidang.</td>
                                 </tr>
                             @endforelse
                         </tbody>

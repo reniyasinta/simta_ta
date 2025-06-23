@@ -177,13 +177,13 @@
 
     <li class="{{ request()->routeIs('mahasiswa.sempro.index') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('mahasiswa.sempro.index') }}">
-            <i class="fas fa-file-alt"></i> <span>Berkas Sempro</span>
+            <i class="fas fa-file-alt"></i> <span>Berkas SEMPRO</span>
         </a>
     </li>
 
     <li class="{{ request()->routeIs('mahasiswa.undangan.index') && request()->get('jenis') == 'seminar' ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('mahasiswa.undangan.index', ['jenis' => 'seminar']) }}">
-            <i class="fas fa-envelope-open-text"></i> <span>Undangan Sempro</span>
+            <i class="fas fa-envelope-open-text"></i> <span>Undangan SEMPRO</span>
         </a>
     </li>
 

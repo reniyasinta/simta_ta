@@ -95,6 +95,66 @@ class MahasiswaController extends Controller
         return view('pages.mahasiswa.jadwal.seminar', compact('jadwals'));
     }
 
+    public function profile()
+    {
+        $user = auth()->user();
+        $mahasiswa = $user->mahasiswa;
+
+        return view('pages.mahasiswa.profile', compact('user', 'mahasiswa'));
+    }
+
+    public function editProfile()
+    {
+        $user = auth()->user();
+        $mahasiswa = $user->mahasiswa;
+
+        return view('pages.mahasiswa.profile_edit', compact('user', 'mahasiswa'));
+    }
+       public function updateProfile(Request $request)
+    {
+        $user = Auth::user();
+        $mahasiswa = Mahasiswa::where('user_id', $user->id)->firstOrFail();
+
+        $request->validate([
+            'nama_mhs' => 'required|string|max:255',
+            'nim_mhs' => 'required|string|max:255|unique:mahasiswa,nim_mhs,' . $mahasiswa->id_mhs . ',id_mhs',
+            'semester' => 'required|integer',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'no_telp' => 'required|string|max:20',
+        ]);
+
+        // Update tabel users
+        $user->email = $request->email;
+        $user->name = $request->nama_mhs;
+        $user->save();
+
+            // Handle upload foto baru
+    if ($request->hasFile('foto')) {
+        // Hapus file lama kalau ada
+        if ($mahasiswa->foto && Storage::disk('public')->exists('uploads/foto_mahasiswa/'.$mahasiswa->foto)) {
+            Storage::disk('public')->delete('uploads/foto_mahasiswa/'.$mahasiswa->foto);
+        }
+
+        $fileName = uniqid() . '.' . $request->file('foto')->getClientOriginalExtension();
+        $request->file('foto')->storeAs('uploads/foto_mahasiswa', $fileName, 'public');
+        $mahasiswa->foto = $fileName; // hanya simpan nama file
+    }
+
+
+            // Update tabel mahasiswa
+            $mahasiswa->nama_mhs = $request->nama_mhs;
+            $mahasiswa->nim_mhs = $request->nim_mhs;
+            $mahasiswa->semester = $request->semester;
+            $mahasiswa->id_prodi = $user->id_prodi;
+            $mahasiswa->no_telp = $request->no_telp;
+            $mahasiswa->save();
+
+
+        return redirect()->route('mahasiswa.profile')->with('success', 'Profil berhasil diperbarui.');
+    }
+
+
     public function jadwalSidang()
     {
         $mahasiswa = Auth::user()->mahasiswa;

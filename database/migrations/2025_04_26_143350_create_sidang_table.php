@@ -29,6 +29,7 @@ return new class extends Migration
 
             // Laporan Draft
             $table->string('laporan_TA')->nullable();
+            $table->string('from_persetujuan_sidang')->nullable();
             $table->enum('status_draft_dosen1', ['Menunggu', 'Revisi', 'Disetujui'])->default('Menunggu');
             $table->enum('status_draft_dosen2', ['Menunggu', 'Revisi', 'Disetujui'])->default('Menunggu');
             $table->text('catatan_draft_dosen1')->nullable();
