@@ -15,18 +15,21 @@
 
         <div class="card">
             <div class="card-body">
+
+                {{-- Filter Prodi: seperti versi sempro tapi tanpa groupMapping --}}
+                <form method="GET" class="form-inline mb-3">
+                    <label for="prodi" class="mr-2">Filter Prodi:</label>
+                    <select name="prodi_id" id="prodi" class="form-control mr-2" onchange="this.form.submit()">
+                        <option value="">Semua</option>
+                        @foreach($prodis as $prodi)
+                            <option value="{{ $prodi->id }}" {{ request('prodi_id') == $prodi->id ? 'selected' : '' }}>
+                                {{ $prodi->nama_prodi }}
+                            </option>
+                        @endforeach
+                    </select>
+                </form>
+
                 <div class="table-responsive">
-                    <form method="GET" action="{{ route('pimpinan.pengajuan.index') }}" class="mb-3 w-50">
-                        <label for="prodi_filter" class="form-label">Filter Prodi:</label>
-                        <select name="prodi_id" id="prodi_filter" class="form-select" onchange="this.form.submit()">
-                            <option value="">-- Semua Prodi --</option>
-                            @foreach($prodis as $prodi)
-                                <option value="{{ $prodi->id }}" {{ request('prodi_id') == $prodi->id ? 'selected' : '' }}>
-                                    {{ $prodi->nama_prodi }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </form>
                     <table id="table-pengajuan" class="table table-bordered table-striped">
                         <thead>
                             <tr>
@@ -58,6 +61,7 @@
                         </tbody>
                     </table>
                 </div>
+
             </div>
         </div>
     </section>
@@ -69,15 +73,15 @@
     <script>
         $(document).ready(function () {
             $('#table-pengajuan').DataTable({
-                "language": {
-                    "search": "Cari Mahasiswa / NIM / Prodi:",
-                    "lengthMenu": "Tampilkan _MENU_ data per halaman",
-                    "zeroRecords": "Data tidak ditemukan",
-                    "info": "Menampilkan _PAGE_ dari _PAGES_",
-                    "infoEmpty": "Tidak ada data",
-                    "infoFiltered": "(disaring dari total _MAX_ data)"
+                language: {
+                    search: "Cari Mahasiswa / NIM / Prodi:",
+                    lengthMenu: "Tampilkan _MENU_ data per halaman",
+                    zeroRecords: "Data tidak ditemukan",
+                    info: "Menampilkan _PAGE_ dari _PAGES_",
+                    infoEmpty: "Tidak ada data",
+                    infoFiltered: "(disaring dari total _MAX_ data)"
                 },
-                "pageLength": 10
+                pageLength: 10
             });
         });
     </script>

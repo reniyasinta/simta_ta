@@ -225,6 +225,11 @@
                     <i class="fas fa-envelope"></i> <span>Rekapitulasi Surat</span>
                 </a>
             </li>
+             <li class="{{ request()->routeIs('pimpinan.sidang.final') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('pimpinan.sidang.final') }}">
+                    <i class="fas fa-envelope"></i> <span>Rekapitulasi Berkas Mahasiswa</span>
+                </a>
+            </li>
         </ul>
         @endif
         @endauth

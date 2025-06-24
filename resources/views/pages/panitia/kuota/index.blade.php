@@ -3,8 +3,7 @@
 @section('title', 'Manajemen Kuota Dosen')
 
 @push('style')
-    <!-- DataTables CSS -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 @endpush
 
 @section('main')
@@ -23,12 +22,37 @@
                 <div class="alert alert-success">{{ session('success') }}</div>
             @endif
 
-            {{-- Mulai Card --}}
+            @php
+                $userProdiId = auth()->user()->id_prodi;
+                $groupMapping = [
+                    [1, 2], // TI & SIKC
+                    [3, 4], // Listrik & TRPE
+                    [5, 6], // Elka & TRO
+                ];
+                $userGroup = collect($groupMapping)->first(fn($group) => in_array($userProdiId, $group)) ?? [];
+                $availableProdis = \App\Models\Prodi::whereIn('id', $userGroup)->pluck('nama_prodi', 'id');
+                $filteredDosenList = $dosenList->filter(function ($dosen) {
+                    $selectedProdi = request('prodi');
+                    return !$selectedProdi || ($dosen->id_prodi == $selectedProdi);
+                })->values();
+            @endphp
+
             <div class="card">
                 <div class="card-header">
                     <h4 class="card-title mb-0">Tabel Manajemen Kuota Dosen</h4>
                 </div>
                 <div class="card-body">
+                    {{-- Dropdown Filter Prodi --}}
+                    <form method="GET" class="form-inline mb-3">
+                        <label for="prodi" class="mr-2">Filter Prodi:</label>
+                        <select name="prodi" id="prodi" class="form-control mr-2" onchange="this.form.submit()">
+                            <option value="">Semua</option>
+                            @foreach($availableProdis as $id => $nama)
+                                <option value="{{ $id }}" {{ request('prodi') == $id ? 'selected' : '' }}>{{ $nama }}</option>
+                            @endforeach
+                        </select>
+                    </form>
+
                     <div class="table-responsive">
                         <table id="table-kuota-dosen" class="table table-bordered table-striped">
                             <thead>
@@ -44,7 +68,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($dosenList as $key => $dosen)
+                                @forelse($filteredDosenList as $key => $dosen)
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>{{ $dosen->nama_dosen }}</td>
@@ -75,13 +99,11 @@
                                         </form>
                                     </td>
                                 </tr>
-                                @endforeach
-
-                                @if($dosenList->isEmpty())
+                                @empty
                                 <tr>
                                     <td colspan="8" class="text-center">Tidak ada data dosen.</td>
                                 </tr>
-                                @endif
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
@@ -94,22 +116,20 @@
 @endsection
 
 @push('scripts')
-    <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-
-    <script>
-        $(document).ready(function() {
-            $('#table-kuota-dosen').DataTable({
-                "language": {
-                    "search": "Cari Nama Dosen / Prodi:",
-                    "lengthMenu": "Tampilkan _MENU_ data per halaman",
-                    "zeroRecords": "Data tidak ditemukan",
-                    "info": "Menampilkan _PAGE_ dari _PAGES_",
-                    "infoEmpty": "Tidak ada data",
-                    "infoFiltered": "(difilter dari _MAX_ total data)"
-                },
-                "pageLength": 10
-            });
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#table-kuota-dosen').DataTable({
+            "language": {
+                "search": "Cari Nama Dosen / Prodi:",
+                "lengthMenu": "Tampilkan _MENU_ data per halaman",
+                "zeroRecords": "Data tidak ditemukan",
+                "info": "Menampilkan _PAGE_ dari _PAGES_",
+                "infoEmpty": "Tidak ada data",
+                "infoFiltered": "(difilter dari _MAX_ total data)"
+            },
+            "pageLength": 10
         });
-    </script>
+    });
+</script>
 @endpush

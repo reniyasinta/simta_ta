@@ -37,7 +37,9 @@ use App\Http\Controllers\Pimpinan\PimpinanPengajuanController;
 use App\Http\Controllers\Pimpinan\PimpinanKuotaController;
 use App\Http\Controllers\Pimpinan\PimpinanJadwalController;
 use App\Http\Controllers\Pimpinan\PimpinanSuratController;
+use App\Http\Controllers\Pimpinan\PimpinanSidangController;
 use App\Http\Controllers\Pimpinan\PimpinanController;
+
 
 // Halaman login
 Route::get('/', function () {
@@ -282,6 +284,7 @@ Route::middleware(['auth', 'role:pimpinan'])->prefix('pimpinan')->name('pimpinan
     Route::get('/jadwal/seminar', [PimpinanJadwalController::class, 'seminar'])->name('jadwal.seminar');
     Route::get('/jadwal/sidang', [PimpinanJadwalController::class, 'sidang'])->name('jadwal.sidang');
     Route::get('/jadwal/yudisium', [PimpinanJadwalController::class, 'yudisium'])->name('jadwal.yudisium');
+Route::get('/sidang/final', [PimpinanSidangController::class, 'final'])->name('sidang.final');
 
     // Surat
     Route::get('/surat', [PimpinanSuratController::class, 'index'])->name('surat.index');

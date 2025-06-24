@@ -57,7 +57,11 @@
                                         <span class="text-muted">Belum Upload</span>
                                     @endif
                                 </td>
-                                <td>{{ $sidang->status_revisi_penguji_1 ?? '-' }}</td>
+                                <td>
+                                    <div><strong>Penguji 1:</strong> {{ $sidang->status_revisi_penguji_1 ?? '-' }}</div>
+                                    <div><strong>Penguji 2:</strong> {{ $sidang->status_revisi_penguji_2 ?? '-' }}</div>
+                                    <div><strong>Penguji 3:</strong> {{ $sidang->status_revisi_penguji_3 ?? '-' }}</div>
+                                </td>
                             </tr>
                         @empty
                             <tr>

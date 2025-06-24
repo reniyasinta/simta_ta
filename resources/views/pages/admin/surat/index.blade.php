@@ -3,7 +3,6 @@
 @section('title', 'Surat Penelitian Mahasiswa')
 
 @push('style')
-    <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 @endpush
 
@@ -30,15 +29,27 @@
 
             <div class="card-body">
 
-                {{-- Filter Perihal --}}
+                {{-- Filter Perihal & Prodi --}}
+                @php
+                    $allProdi = \App\Models\Prodi::pluck('nama_prodi', 'id');
+                @endphp
+
                 <form method="GET" action="{{ route('admin.surat.index') }}" class="mb-4">
-                    <div class="form-group row">
-                        <div class="col-sm-3">
+                    <div class="form-row">
+                        <div class="col-md-3 mb-2">
                             <select name="perihal" id="perihal" class="form-control" onchange="this.form.submit()">
                                 <option value="">-- Semua Perihal --</option>
                                 <option value="Studi Pendahuluan" {{ request('perihal') == 'Studi Pendahuluan' ? 'selected' : '' }}>Studi Pendahuluan</option>
                                 <option value="Pengantar Penelitian" {{ request('perihal') == 'Pengantar Penelitian' ? 'selected' : '' }}>Pengantar Penelitian</option>
                                 <option value="Permintaan Data" {{ request('perihal') == 'Permintaan Data' ? 'selected' : '' }}>Permintaan Data</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 mb-2">
+                            <select name="prodi" id="prodi" class="form-control" onchange="this.form.submit()">
+                                <option value="">-- Semua Prodi --</option>
+                                @foreach($allProdi as $id => $nama)
+                                    <option value="{{ $id }}" {{ request('prodi') == $id ? 'selected' : '' }}>{{ $nama }}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -50,6 +61,7 @@
                         <thead class="text-center">
                             <tr>
                                 <th>Mahasiswa</th>
+                                <th>Prodi</th>
                                 <th>Judul TA</th>
                                 <th>Tujuan</th>
                                 <th>Perihal</th>
@@ -61,7 +73,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($daftarSurat as $surat)
+                            @php
+                                $filteredSurat = $daftarSurat->filter(function ($surat) {
+                                    $selectedProdi = request('prodi');
+                                    $mhsProdi = $surat->mahasiswa?->id_prodi;
+                                    return !$selectedProdi || ($mhsProdi == $selectedProdi);
+                                })->values();
+                            @endphp
+
+                            @forelse($filteredSurat as $surat)
                                 <tr>
                                     <td>
                                         @if($surat->mahasiswa && $surat->mahasiswa->kelompok)
@@ -74,22 +94,17 @@
                                             <em>Tidak ada kelompok</em>
                                         @endif
                                     </td>
+                                    <td>
+                                        {{ $surat->mahasiswa->prodi->nama_prodi ?? '-' }}
+                                    </td>
                                     <td>{{ $surat->judul_ta }}</td>
                                     <td>{{ $surat->tujuan }}</td>
                                     <td>{{ $surat->perihal }}</td>
                                     <td>
-                                        @php
-                                            $pengajuan = $surat->mahasiswa?->pengajuanDiterima;
-                                            $dospem1 = $pengajuan?->dosen1?->dosen?->nama_dosen;
-                                        @endphp
-                                        {{ $dospem1 ?? '-' }}
+                                        {{ $surat->mahasiswa?->pengajuanDiterima?->dosen1?->dosen?->nama_dosen ?? '-' }}
                                     </td>
                                     <td>
-                                        @php
-                                            $pengajuan = $surat->mahasiswa?->pengajuanDiterima;
-                                            $dospem2 = $pengajuan?->dosen2?->dosen?->nama_dosen;
-                                        @endphp
-                                        {{ $dospem2 ?? '-' }}
+                                        {{ $surat->mahasiswa?->pengajuanDiterima?->dosen2?->dosen?->nama_dosen ?? '-' }}
                                     </td>
                                     <td class="text-capitalize">{{ $surat->status ?? '-' }}</td>
                                     <td>
@@ -105,7 +120,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="9" class="text-center">Belum ada pengajuan surat.</td>
+                                    <td colspan="10" class="text-center">Belum ada pengajuan surat.</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -120,21 +135,21 @@
 @endsection
 
 @push('scripts')
-    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
-    <script>
-        $(document).ready(function() {
-            $('#table-surat').DataTable({
-                "language": {
-                    "search": "Cari Nama / Judul / Tujuan / Dospem:",
-                    "lengthMenu": "Tampilkan _MENU_ data per halaman",
-                    "zeroRecords": "Data tidak ditemukan",
-                    "info": "Menampilkan _PAGE_ dari _PAGES_",
-                    "infoEmpty": "Tidak ada data",
-                    "infoFiltered": "(filtered from _MAX_ total records)"
-                },
-                "pageLength": 10
-            });
+<script>
+    $(document).ready(function() {
+        $('#table-surat').DataTable({
+            "language": {
+                "search": "Cari Nama / Judul / Tujuan / Dospem:",
+                "lengthMenu": "Tampilkan _MENU_ data per halaman",
+                "zeroRecords": "Data tidak ditemukan",
+                "info": "Menampilkan _PAGE_ dari _PAGES_",
+                "infoEmpty": "Tidak ada data",
+                "infoFiltered": "(filtered from _MAX_ total records)"
+            },
+            "pageLength": 10
         });
-    </script>
+    });
+</script>
 @endpush

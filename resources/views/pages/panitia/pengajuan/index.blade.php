@@ -3,7 +3,6 @@
 @section('title', 'Pengajuan Mahasiswa')
 
 @push('style')
-<!-- DataTables CSS -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 @endpush
 
@@ -22,21 +21,42 @@
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
 
+        @php
+            $userProdiId = auth()->user()->id_prodi;
+            $groupMapping = [
+                [1, 2], // TI & SIKC
+                [3, 4], // Listrik & TRPE
+                [5, 6], // Elka & TRO
+            ];
+            $userGroup = collect($groupMapping)->first(fn($group) => in_array($userProdiId, $group)) ?? [];
+            $availableProdis = \App\Models\Prodi::whereIn('id', $userGroup)->pluck('nama_prodi', 'id');
+        @endphp
+
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h4 class="mb-0">Tabel Pengajuan Mahasiswa</h4>
-                <a href="{{ route('panitia.pengajuan.export') }}" class="btn btn-success btn-sm">
-                    Export Excel
-                </a>
+                <a href="{{ route('panitia.pengajuan.export') }}" class="btn btn-success btn-sm">Export Excel</a>
             </div>
 
             <div class="card-body">
+                {{-- Filter Prodi --}}
+                <form method="GET" class="form-inline mb-3">
+                    <label for="prodi" class="mr-2">Filter Prodi:</label>
+                    <select name="prodi" id="prodi" class="form-control mr-2" onchange="this.form.submit()">
+                        <option value="">Semua</option>
+                        @foreach($availableProdis as $id => $nama)
+                            <option value="{{ $id }}" {{ request('prodi') == $id ? 'selected' : '' }}>{{ $nama }}</option>
+                        @endforeach
+                    </select>
+                </form>
+
                 <div class="table-responsive">
                     <table id="table-pengajuan" class="table table-bordered table-striped table-hover">
                         <thead>
                             <tr>
                                 <th>No</th>
                                 <th>Kelompok</th>
+                                <th>Prodi</th>
                                 <th>Judul</th>
                                 <th>Dosen Pembimbing 1</th>
                                 <th>Dosen Pembimbing 2</th>
@@ -44,7 +64,18 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($pengajuanList as $key => $p)
+                            @php
+                                $filteredPengajuan = $pengajuanList->filter(function($pengajuan) {
+                                    $selectedProdi = request('prodi');
+                                    $anggota1 = $pengajuan->kelompok->anggota1->mahasiswa ?? null;
+                                    return !$selectedProdi || ($anggota1 && $anggota1->id_prodi == $selectedProdi);
+                                })->values();
+                            @endphp
+
+                            @forelse($filteredPengajuan as $key => $p)
+                                @php
+                                    $prodi = $p->kelompok->anggota1->mahasiswa->prodi->nama_prodi ?? '-';
+                                @endphp
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>
@@ -56,6 +87,7 @@
                                             @endforelse
                                         </ul>
                                     </td>
+                                    <td>{{ $prodi }}</td>
                                     <td>{{ $p->judul_ta }}</td>
                                     <td>{{ $p->dosen1->dosen->nama_dosen ?? '-' }}</td>
                                     <td>{{ $p->dosen2->dosen->nama_dosen ?? 'Belum ditetapkan' }}</td>
@@ -67,7 +99,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="text-center">Belum ada pengajuan.</td>
+                                    <td colspan="7" class="text-center">Belum ada pengajuan.</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -80,9 +112,7 @@
 @endsection
 
 @push('scripts')
-<!-- DataTables JS -->
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-
 <script>
     $(document).ready(function() {
         $('#table-pengajuan').DataTable({

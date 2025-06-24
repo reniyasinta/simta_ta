@@ -16,11 +16,11 @@
         <div class="card">
             <div class="card-body">
 
-                {{-- Filter Dropdown Prodi --}}
-                <form method="GET" action="{{ route('pimpinan.surat.index') }}" class="mb-4 w-50">
-                    <label for="prodi_filter" class="form-label">Filter Prodi:</label>
-                    <select name="prodi_id" id="prodi_filter" class="form-select" onchange="this.form.submit()">
-                        <option value="">-- Semua Prodi --</option>
+                {{-- Filter Prodi --}}
+                <form method="GET" class="form-inline mb-4">
+                    <label for="prodi_id" class="mr-2">Filter Prodi:</label>
+                    <select name="prodi_id" id="prodi_id" class="form-control mr-2" onchange="this.form.submit()">
+                        <option value="">Semua</option>
                         @foreach($prodis as $prodi)
                             <option value="{{ $prodi->id }}" {{ request('prodi_id') == $prodi->id ? 'selected' : '' }}>
                                 {{ $prodi->nama_prodi }}
@@ -34,10 +34,11 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Mahasiswa</th>
+                                <th>Anggota Kelompok</th>
                                 <th>Perihal</th>
                                 <th>Judul</th>
-                                <th>Dosen Pembimbing</th>
+                                <th>Dosen Pembimbing 1</th>
+                                <th>Dosen Pembimbing 2</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
@@ -46,12 +47,16 @@
                             <tr>
                                 <td>{{ $index + 1 }}</td>
                                 <td>
-                                    {{ $surat->mahasiswa->nama_mhs ?? '-' }}
-                                    ({{ $surat->mahasiswa->nim_mhs ?? '-' }})
+                                    <ul class="mb-0">
+                                        @foreach($surat->mahasiswa->kelompok->anggota ?? [] as $mhs)
+                                            <li>{{ $mhs->nama_mhs }} ({{ $mhs->nim_mhs }})</li>
+                                        @endforeach
+                                    </ul>
                                 </td>
                                 <td>{{ $surat->perihal }}</td>
                                 <td>{{ $surat->judul_ta ?? '-' }}</td>
-                                <td>{{ $surat->dosen_pembimbing ?? '-' }}</td>
+                                <td>{{ $surat->mahasiswa->pengajuanDiterima->dosen1->dosen->nama_dosen ?? '-' }}</td>
+                                <td>{{ $surat->mahasiswa->pengajuanDiterima->dosen2->dosen->nama_dosen ?? '-' }}</td>
                                 <td>{{ $surat->status }}</td>
                             </tr>
                             @endforeach
