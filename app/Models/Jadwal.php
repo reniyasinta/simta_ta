@@ -32,7 +32,7 @@ class Jadwal extends Model
 
     public function kelompok()
     {
-        return $this->belongsTo(Kelompok::class, 'id_kelompok');
+        return $this->belongsTo(Kelompok::class, 'id_kelompok', 'id_kelompok');
     }
     // Relasi ke mahasiswa
     public function mahasiswa()

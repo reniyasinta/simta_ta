@@ -37,5 +37,5 @@ class Mahasiswa extends Model
         return $this->hasOne(PengajuanPembimbing::class, 'id_kelompok', 'id_kelompok')
                     ->where('status', 'Diterima');
     }
-
+    
 }

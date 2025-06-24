@@ -21,7 +21,7 @@ public function index()
     $kuotaRecord = KuotaBimbinganDosen::where('id_dosen', $dosen->id_dosen)->first();
     $kuota = $kuotaRecord->kuota_bimbingan ?? 0;
 
-    // Hitung jumlah mahasiswa yang dibimbing
+    // Hitung jumlah mahasiswa bimbingan
     $jumlah1 = PengajuanPembimbing::where('id_dosen1', $user->id)
         ->where('status', 'Diterima')
         ->with('kelompok')
@@ -36,17 +36,52 @@ public function index()
 
     $totalBimbingan = $jumlah1 + $jumlah2;
 
+    // Semua jadwal (untuk ditampilkan di dashboard utama)
     $jadwals = Jadwal::where(function ($query) use ($dosen) {
         $query->where('penguji_1_id', $dosen->user_id)
             ->orWhere('penguji_2_id', $dosen->user_id)
             ->orWhere('penguji_3_id', $dosen->user_id);
     })->orderBy('tanggal', 'asc')
-    ->orderBy('jam_mulai', 'asc')
-    ->get();
+      ->orderBy('jam_mulai', 'asc')
+      ->get();
 
-    return view('pages.dosen.dashboard', compact('dosen', 'totalBimbingan', 'kuota', 'jadwals'));
+    // Jadwal Seminar saja
+    $jadwalSeminar = Jadwal::where('jenis_acara', 'seminar')
+        ->where(function ($query) use ($dosen) {
+            $query->where('penguji_1_id', $dosen->user_id)
+                ->orWhere('penguji_2_id', $dosen->user_id)
+                ->orWhere('penguji_3_id', $dosen->user_id);
+        })
+        ->orderBy('tanggal', 'asc')
+        ->orderBy('jam_mulai', 'asc')
+        ->get();
+
+    // Jadwal Sidang saja
+    $jadwalSidang = Jadwal::where('jenis_acara', 'sidang')
+        ->where(function ($query) use ($dosen) {
+            $query->where('penguji_1_id', $dosen->user_id)
+                ->orWhere('penguji_2_id', $dosen->user_id)
+                ->orWhere('penguji_3_id', $dosen->user_id);
+        })
+        ->orderBy('tanggal', 'asc')
+        ->orderBy('jam_mulai', 'asc')
+        ->get();
+
+    // Total masing-masing
+    $totalJadwalSeminar = $jadwalSeminar->count();
+    $totalJadwalSidang = $jadwalSidang->count();
+
+    return view('pages.dosen.dashboard', compact(
+        'dosen',
+        'totalBimbingan',
+        'kuota',
+        'jadwals',
+        'jadwalSeminar',
+        'jadwalSidang',
+        'totalJadwalSeminar',
+        'totalJadwalSidang'
+    ));
 }
-
 
     public function bimbingan()
     {

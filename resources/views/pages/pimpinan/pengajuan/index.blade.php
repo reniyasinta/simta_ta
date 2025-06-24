@@ -16,6 +16,17 @@
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
+                    <form method="GET" action="{{ route('pimpinan.pengajuan.index') }}" class="mb-3 w-50">
+                        <label for="prodi_filter" class="form-label">Filter Prodi:</label>
+                        <select name="prodi_id" id="prodi_filter" class="form-select" onchange="this.form.submit()">
+                            <option value="">-- Semua Prodi --</option>
+                            @foreach($prodis as $prodi)
+                                <option value="{{ $prodi->id }}" {{ request('prodi_id') == $prodi->id ? 'selected' : '' }}>
+                                    {{ $prodi->nama_prodi }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </form>
                     <table id="table-pengajuan" class="table table-bordered table-striped">
                         <thead>
                             <tr>
@@ -23,8 +34,8 @@
                                 <th>Kelompok</th>
                                 <th>Prodi</th>
                                 <th>Judul</th>
-                                <th>Dosen 1</th>
-                                <th>Dosen 2</th>
+                                <th>Dosen Pembimbing 1</th>
+                                <th>Dosen Pembimbing 2</th>
                             </tr>
                         </thead>
                         <tbody>

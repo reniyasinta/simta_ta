@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Monitoring Kuota Bimbingan')
+@section('title', 'Rekapitulasi Kuota Bimbingan')
 
 @push('style')
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
@@ -10,11 +10,22 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>Monitoring Kuota Bimbingan</h1>
+            <h1>Rekapitulasi Kuota Bimbingan</h1>
         </div>
 
         <div class="card">
             <div class="card-body">
+                <form method="GET" action="{{ route('pimpinan.kuota.index') }}" class="mb-4 w-50">
+                    <label for="prodi_filter" class="form-label">Filter Prodi:</label>
+                    <select name="prodi_id" id="prodi_filter" class="form-select" onchange="this.form.submit()">
+                        <option value="">-- Semua Prodi --</option>
+                        @foreach($prodis as $prodi)
+                            <option value="{{ $prodi->id }}" {{ request('prodi_id') == $prodi->id ? 'selected' : '' }}>
+                                {{ $prodi->nama_prodi }}
+                            </option>
+                        @endforeach
+                    </select>
+                </form>
                 <div class="table-responsive">
                     <table id="table-kuota" class="table table-bordered table-striped">
                         <thead>

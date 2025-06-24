@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Monitoring Jadwal Seminar')
+@section('title', 'Jadwal Seminar')
 
 @push('style')
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
@@ -10,11 +10,22 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>Monitoring Jadwal Seminar</h1>
+            <h1>Rekapitulasi Jadwal Seminar</h1>
         </div>
 
         <div class="card">
             <div class="card-body">
+                <form method="GET" action="{{ request()->url() }}" class="mb-4 w-50">
+                    <label for="prodi_filter" class="form-label">Filter Prodi:</label>
+                    <select name="prodi_id" id="prodi_filter" class="form-select" onchange="this.form.submit()">
+                        <option value="">-- Semua Prodi --</option>
+                        @foreach($prodis as $prodi)
+                            <option value="{{ $prodi->id }}" {{ request('prodi_id') == $prodi->id ? 'selected' : '' }}>
+                                {{ $prodi->nama_prodi }}
+                            </option>
+                        @endforeach
+                    </select>
+                </form>
                 <div class="table-responsive">
                     <table id="table-seminar" class="table table-striped table-bordered">
                         <thead>
@@ -59,7 +70,7 @@
             language: {
                 search: "Cari Kelompok / Judul / Penguji:",
                 lengthMenu: "Tampilkan _MENU_ data per halaman",
-                zeroRecords: "Data tidak ditemukan",
+                zeroRecords: "Belum ada data seminar yang tersedia",
                 info: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
                 infoEmpty: "Tidak ada data tersedia",
                 infoFiltered: "(disaring dari total _MAX_ data)"

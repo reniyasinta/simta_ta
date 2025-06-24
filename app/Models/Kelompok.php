@@ -46,7 +46,7 @@ class Kelompok extends Model
 
     public function anggota()
     {
-        return $this->hasMany(Mahasiswa::class, 'id_kelompok');
+        return $this->hasMany(Mahasiswa::class, 'id_kelompok', 'id_kelompok');
     }
 
     public function getAnggotaAttribute()
@@ -75,5 +75,7 @@ class Kelompok extends Model
     {
         return $this->belongsTo(Prodi::class, 'id_prodi');
     }
+
+
 
 }

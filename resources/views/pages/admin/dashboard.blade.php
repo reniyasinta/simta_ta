@@ -6,7 +6,7 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>Dashboard Admin</h1>
+            <h1>Selamat datang, {{ Auth::user()->name ?? 'User Tidak Ditemukan' }}!</h1>
         </div>
 
         {{-- Welcome Message --}}

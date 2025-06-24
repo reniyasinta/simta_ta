@@ -9,8 +9,7 @@
         </div>
 
         <div class="row">
-
-            {{-- Kartu Kuota Bimbingan --}}
+            {{-- Kuota Bimbingan --}}
             <div class="col-md-4">
                 <div class="card card-statistic-1 shadow">
                     <div class="card-icon bg-primary">
@@ -27,26 +26,42 @@
                 </div>
             </div>
 
-            {{-- Kartu Jumlah Jadwal --}}
+            {{-- Jadwal Seminar --}}
             <div class="col-md-4">
                 <div class="card card-statistic-1 shadow">
-                    <div class="card-icon bg-success">
+                    <div class="card-icon bg-info">
                         <i class="fas fa-calendar-alt"></i>
                     </div>
                     <div class="card-wrap">
                         <div class="card-header">
-                            <h4>Jadwal Ujian</h4>
+                            <h4>Jadwal Seminar</h4>
                         </div>
                         <div class="card-body">
-                            {{ $jadwals->count() }} Jadwal
+                            {{ $totalJadwalSeminar }} Jadwal
                         </div>
                     </div>
                 </div>
             </div>
 
+            {{-- Jadwal Sidang --}}
+            <div class="col-md-4">
+                <div class="card card-statistic-1 shadow">
+                    <div class="card-icon bg-success">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <div class="card-wrap">
+                        <div class="card-header">
+                            <h4>Jadwal Sidang</h4>
+                        </div>
+                        <div class="card-body">
+                            {{ $totalJadwalSidang }} Jadwal
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        {{-- Tabel Jadwal --}}
+        {{-- Tabel Jadwal Penguji --}}
         <div class="card mt-4">
             <div class="card-header">
                 <h4>Jadwal Anda sebagai Penguji</h4>
@@ -69,15 +84,21 @@
                             <tr>
                                 <td>{{ ucfirst($jadwal->jenis_acara) }}</td>
                                 <td>{{ \Carbon\Carbon::parse($jadwal->tanggal)->translatedFormat('l, d M Y') }}</td>
-                                <td>{{ \Carbon\Carbon::parse($jadwal->jam_mulai)->format('H:i') }} - {{ \Carbon\Carbon::parse($jadwal->jam_selesai)->format('H:i') }}</td>
+                                <td>
+                                    {{ \Carbon\Carbon::parse($jadwal->jam_mulai)->format('H:i') }}
+                                    -
+                                    {{ \Carbon\Carbon::parse($jadwal->jam_selesai)->format('H:i') }}
+                                </td>
                                 <td>{{ $jadwal->ruangan }}</td>
                                 <td>{{ $jadwal->judul_ta }}</td>
-                                <td>{{ $jadwal->pengajuan?->kelompok?->anggota->pluck('nama_mhs')->implode(', ') ?? '-' }}</td>
+                                <td>
+                                    {{ $jadwal->pengajuan?->kelompok?->anggota->pluck('nama_mhs')->implode(', ') ?? '-' }}
+                                </td>
                                 <td>
                                     @php
                                         $undangan = \App\Models\Undangan::where('jadwal_id', $jadwal->id)
                                             ->where('penguji_id', Auth::id())
-                                            ->where('jenis_acara', $jadwal->jenis_acara) // penting: supaya Seminar & Sidang beda
+                                            ->where('jenis_acara', $jadwal->jenis_acara)
                                             ->first();
                                     @endphp
 
@@ -90,7 +111,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="text-center">Tidak ada jadwal.</td>
+                                <td colspan="7" class="text-center">Tidak ada jadwal.</td>
                             </tr>
                         @endforelse
                     </tbody>

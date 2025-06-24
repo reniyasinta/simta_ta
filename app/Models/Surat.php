@@ -22,5 +22,9 @@ class Surat extends Model
     {
         return $this->belongsTo(Kelompok::class, 'id_kelompok', 'id_kelompok');
     }
+        public function prodi()
+    {
+        return $this->belongsTo(Prodi::class, 'id_prodi', 'id_prodi');
+    }
 
 }
