@@ -18,7 +18,7 @@ class Kelompok extends Model
     // Relasi ke mahasiswa yang masuk ke kelompok ini
     public function mahasiswa()
     {
-        return $this->hasMany(Mahasiswa::class, 'id_kelompok');
+        return $this->hasMany(Mahasiswa::class, 'id_kelompok', 'id_kelompok');
     }
 
     // Relasi ke user sebagai anggota 1
