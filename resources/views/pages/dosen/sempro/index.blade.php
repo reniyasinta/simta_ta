@@ -3,7 +3,6 @@
 @section('title', 'Validasi SEMPRO')
 
 @push('style')
-<!-- DataTables CSS -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 @endpush
 
@@ -22,18 +21,27 @@
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
 
-        @php
-            $user = Auth::user();
-        @endphp
+        @php $user = Auth::user(); @endphp
 
         <div class="card shadow-sm">
             <div class="card-body">
+         <!-- Filter Prodi -->
+        <form method="GET" class="form-inline mb-3">
+            <label for="prodi" class="mr-2">Filter Prodi:</label>
+            <select name="prodi" id="prodi" class="form-control mr-2" onchange="this.form.submit()">
+                <option value="">-- Semua Prodi --</option>
+                @foreach($availableProdis as $id => $nama)
+                    <option value="{{ $id }}" {{ request('prodi') == $id ? 'selected' : '' }}>{{ $nama }}</option>
+                @endforeach
+            </select>
+        </form>
                 <div class="table-responsive">
                     <table id="table-sempro" class="table table-bordered table-striped">
                         <thead>
                             <tr>
                                 <th>No</th>
                                 <th>Anggota Kelompok</th>
+                                <th>Prodi</th>
                                 <th>Judul TA</th>
                                 <th>Proposal TA</th>
                                 <th>Status</th>
@@ -43,21 +51,19 @@
                         </thead>
                         <tbody>
                             @forelse($sempros as $key => $item)
+                                @php
+                                    $prodi = $item->pengajuan->kelompok->anggota1->mahasiswa->prodi->nama_prodi ?? '-';
+                                @endphp
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
                                     <td>
                                         <ul class="mb-0">
-                                            @if($item->pengajuan->kelompok->anggota1)
-                                                <li>{{ $item->pengajuan->kelompok->anggota1->mahasiswa->nama_mhs ?? '-' }}</li>
-                                            @endif
-                                            @if($item->pengajuan->kelompok->anggota2)
-                                                <li>{{ $item->pengajuan->kelompok->anggota2->mahasiswa->nama_mhs ?? '-' }}</li>
-                                            @endif
-                                            @if($item->pengajuan->kelompok->anggota3)
-                                                <li>{{ $item->pengajuan->kelompok->anggota3->mahasiswa->nama_mhs ?? '-' }}</li>
-                                            @endif
+                                            @foreach($item->pengajuan->kelompok->anggota as $mhs)
+                                                <li>{{ $mhs->nama_mhs }} ({{ $mhs->nim_mhs }})</li>
+                                            @endforeach
                                         </ul>
                                     </td>
+                                    <td>{{ $prodi }}</td>
                                     <td>{{ $item->pengajuan->judul_ta ?? '-' }}</td>
                                     <td>
                                         @if($item->proposal_ta)
@@ -76,7 +82,6 @@
                                                 $status = 'Menunggu';
                                             }
                                         @endphp
-
                                         @if($status === 'Disetujui')
                                             <span class="badge bg-success text-white">Disetujui</span>
                                         @elseif($status === 'Revisi')
@@ -118,7 +123,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="text-center">Tidak ada pengajuan.</td>
+                                    <td colspan="8" class="text-center">Tidak ada pengajuan.</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -131,13 +136,12 @@
 @endsection
 
 @push('scripts')
-<!-- DataTables JS -->
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 <script>
     $(document).ready(function () {
         $('#table-sempro').DataTable({
             language: {
-                search: "Cari Pengajuan:",
+                search: "Cari Mahasiswa / NIM / Judul:",
                 lengthMenu: "Tampilkan _MENU_ data",
                 zeroRecords: "Data tidak ditemukan",
                 info: "Menampilkan _PAGE_ dari _PAGES_",

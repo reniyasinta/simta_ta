@@ -83,56 +83,58 @@ public function index()
     ));
 }
 
-    public function bimbingan()
-    {
-        $user = auth()->user();
+public function bimbingan(Request $request)
+{
+    $user = auth()->user();
+    $dosen = Dosen::where('user_id', $user->id)->first();
 
-        $dosen = Dosen::where('user_id', $user->id)->first();
+    // Group Mapping
+    $groupMapping = [
+        [1, 2], [3, 4], [5, 6],
+    ];
 
-        $sebagaiPembimbing1 = PengajuanPembimbing::with(['kelompok.anggota', 'dosen1'])
-            ->where('id_dosen1', $user->id)
-            ->where('status', 'Diterima')
-            ->get();
+    $idProdiDosen = $dosen->id_prodi ?? null;
+    $allowedProdis = [];
 
-        $sebagaiPembimbing2 = PengajuanPembimbing::with(['kelompok.anggota', 'dosen2'])
-            ->where('id_dosen2', $user->id)
-            ->where('status', 'Diterima')
-            ->get();
-
-        $totalBimbingan = $sebagaiPembimbing1->sum(fn($p) => $p->kelompok?->anggota->count() ?? 0)
-         + $sebagaiPembimbing2->sum(fn($p) => $p->kelompok?->anggota->count() ?? 0);
-        $kuota = $dosen->kuota_bimbingan ?? 0;
-
-        $groupMapping = [
-            [1, 2], // TI & SIKC
-            [3, 4], // Listrik & TRPE
-            [5, 6], // Elka & TRO
-        ];
-
-        $idProdiDosen = $dosen->id_prodi ?? null;
-        $allowedProdis = [];
-
-        if ($idProdiDosen === null) {
-            $allowedProdis = \App\Models\Prodi::pluck('id')->toArray();
-        } else {
-            $groupProdi = collect($groupMapping)->first(function ($group) use ($idProdiDosen) {
-                return in_array($idProdiDosen, $group);
-            });
-
-            $allowedProdis = $groupProdi ?: [];
-        }
-
-        $listProdi = \App\Models\Prodi::whereIn('id', $allowedProdis)->get();
-
-
-        return view('pages.dosen.bimbingan.index', compact(
-            'sebagaiPembimbing1',
-            'sebagaiPembimbing2',
-            'totalBimbingan',
-            'kuota',
-            'listProdi' // ✅ penting!
-        ));
+    if ($idProdiDosen === null) {
+        $allowedProdis = \App\Models\Prodi::pluck('id')->toArray();
+    } else {
+        $groupProdi = collect($groupMapping)->first(fn($group) => in_array($idProdiDosen, $group));
+        $allowedProdis = $groupProdi ?: [];
     }
+
+    $prodiFilter = $request->prodi;
+
+    $sebagaiPembimbing1 = PengajuanPembimbing::with(['kelompok.anggota.prodi', 'dosen1'])
+        ->where('id_dosen1', $user->id)
+        ->where('status', 'Diterima')
+        ->when($prodiFilter, function ($query) use ($prodiFilter) {
+            $query->whereHas('kelompok.anggota1.mahasiswa', fn($q) => $q->where('id_prodi', $prodiFilter));
+        })
+        ->get();
+
+    $sebagaiPembimbing2 = PengajuanPembimbing::with(['kelompok.anggota.prodi', 'dosen2'])
+        ->where('id_dosen2', $user->id)
+        ->where('status', 'Diterima')
+        ->when($prodiFilter, function ($query) use ($prodiFilter) {
+            $query->whereHas('kelompok.anggota1.mahasiswa', fn($q) => $q->where('id_prodi', $prodiFilter));
+        })
+        ->get();
+
+    $totalBimbingan = $sebagaiPembimbing1->sum(fn($p) => $p->kelompok?->anggota->count() ?? 0)
+        + $sebagaiPembimbing2->sum(fn($p) => $p->kelompok?->anggota->count() ?? 0);
+    $kuota = $dosen->kuota_bimbingan ?? 0;
+
+    $listProdi = \App\Models\Prodi::whereIn('id', $allowedProdis)->pluck('nama_prodi', 'id');
+
+    return view('pages.dosen.bimbingan.index', compact(
+        'sebagaiPembimbing1',
+        'sebagaiPembimbing2',
+        'totalBimbingan',
+        'kuota',
+        'listProdi'
+    ));
+}
 
 public function kuotaPerProdi()
 {

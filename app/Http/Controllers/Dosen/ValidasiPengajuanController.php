@@ -60,9 +60,10 @@ class ValidasiPengajuanController extends Controller
         }
 
         $pengajuan = $query->orderBy('created_at', 'desc')->get();
-        $listProdi = Prodi::whereIn('id', $allowedProdis)->get();
+$listProdi = Prodi::whereIn('id', $allowedProdis)->get();
+$availableProdis = Prodi::whereIn('id', $allowedProdis)->pluck('nama_prodi', 'id'); // Tambahkan ini
 
-        return view('pages.dosen.validasi.index', compact('pengajuan', 'listProdi'));
+        return view('pages.dosen.validasi.index', compact('pengajuan', 'listProdi','availableProdis'));
     }
 
     public function validasi(Request $request, $id)

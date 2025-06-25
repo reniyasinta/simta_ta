@@ -15,23 +15,31 @@
         </div>
 
         <div class="section-body">
-            {{-- Pencarian Global --}}
-            <div class="card shadow-sm mb-4">
-                <div class="card-body">
-                    <input type="text" id="searchInput" class="form-control" placeholder="Cari Mahasiswa / Prodi..." />
-                </div>
-            </div>
-
- <div class="card shadow-sm mb-4">
+        <div class="card shadow-sm mb-4">
                 <div class="card-header bg-white d-flex justify-content-between align-items-center">
                     <h4 class="mb-0 text-primary">Informasi Kuota Bimbingan</h4>
                 </div>
-                <div class="card-body">
-                    <div class="alert alert-info">
-                        <strong>Kuota Bimbingan:</strong> {{ $kuota }} &nbsp; | &nbsp;
-                        <strong>Jumlah Bimbingan Aktif:</strong> {{ $totalBimbingan }}
-                    </div>
-                </div>
+<div class="card-body">
+    {{-- Filter Prodi --}}
+    <form method="GET" class="form-inline mb-3">
+        <label for="prodi" class="mr-2">Filter Prodi:</label>
+        <select name="prodi" id="prodi" class="form-control mr-2" onchange="this.form.submit()">
+            <option value="">-- Semua Prodi --</option>
+            @foreach($listProdi as $id => $nama)
+                <option value="{{ $id }}" {{ request('prodi') == $id ? 'selected' : '' }}>{{ $nama }}</option>
+            @endforeach
+        </select>
+    </form>
+
+    {{-- Input Cari Mahasiswa / NIM --}}
+    <input type="text" id="searchInput" class="form-control mb-3" placeholder="Cari Mahasiswa" />
+
+    <div class="alert alert-info">
+        <strong>Kuota Bimbingan:</strong> {{ $kuota }} &nbsp; | &nbsp;
+        <strong>Jumlah Bimbingan Aktif:</strong> {{ $totalBimbingan }}
+    </div>
+</div>
+
  </div>
             {{-- Mahasiswa Bimbingan 1 --}}
             <div class="card shadow-sm mb-4">

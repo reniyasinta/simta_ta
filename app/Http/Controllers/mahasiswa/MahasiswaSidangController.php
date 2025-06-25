@@ -167,11 +167,7 @@ public function final()
     $sidang = Sidang::where('id_kelompok', $mahasiswa->id_kelompok)->first();
 
     $prodiId = $mahasiswa->id_prodi;
-    $linkConfig = TAConfig::where('id_prodi', $prodiId)
-        ->where('nama_konfigurasi', 'link_drive_proyek_zip')
-        ->first();
-
-    $link_drive_proyek = $linkConfig ? $linkConfig->config_value : null;
+    $link_drive_proyek = $sidang->link_drive_proyek ?? null;
 
     return view('pages.mahasiswa.sidang.final.index', compact('sidang', 'link_drive_proyek'));
 }
