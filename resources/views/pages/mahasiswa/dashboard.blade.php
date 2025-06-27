@@ -104,7 +104,7 @@
                     @foreach ($dosens as $dosen)
                         <div class="col-md-6 col-lg-4 mb-4">
                             <div class="d-flex align-items-center shadow-sm bg-white border rounded p-3 h-100">
-                                <img src="{{ $dosen->foto ? asset('uploads/foto_dosen/' . $dosen->foto) : asset('img/avatar/avatar-1.png') }}"
+                                <img src="{{ $dosen->foto ? asset('storage/uploads/foto_dosen/' . $dosen->foto) : asset('img/avatar/avatar-1.png') }}"
                                      alt="Foto Dosen"
                                      class="rounded-circle me-4"
                                      style="width: 50px; height: 50px; object-fit: cover; margin-right: 16px;">

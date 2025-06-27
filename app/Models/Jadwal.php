@@ -25,7 +25,7 @@ class Jadwal extends Model
         'penguji_1_id',
         'penguji_2_id',
         'penguji_3_id',
-        'id_mhs',
+        'id_kelompok',
         'id_dosen',
         'id_ajuan',
     ];

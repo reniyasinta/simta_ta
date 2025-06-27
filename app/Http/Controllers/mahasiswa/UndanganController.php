@@ -14,12 +14,14 @@ class UndanganController extends Controller
     public function index(Request $request)
     {
         $jenis = $request->get('jenis', 'seminar');
+        $idKelompok = Auth::user()->mahasiswa->id_kelompok ?? null;
 
-        $mahasiswaId = Auth::user()->mahasiswa->id_mhs ?? null;
+        if (!$idKelompok) {
+            return back()->with('error', 'Anda belum tergabung dalam kelompok.');
+        }
 
-        // Ambil jadwal mahasiswa
         $jadwals = Jadwal::where('jenis_acara', $jenis)
-            ->where('id_mhs', $mahasiswaId)
+            ->where('id_kelompok', $idKelompok)
             ->with(['penguji1', 'penguji2', 'penguji3'])
             ->get();
 
@@ -50,11 +52,9 @@ class UndanganController extends Controller
             'undangan' => 'required|file|mimes:pdf|max:20480',
         ]);
 
-        // Upload file
         $folder = 'undangan/' . $validated['jenis_acara'];
         $filePath = $request->file('undangan')->store($folder, 'public');
 
-        // Simpan undangan
         Undangan::updateOrCreate(
             [
                 'jadwal_id' => $validated['jadwal_id'],
@@ -62,6 +62,7 @@ class UndanganController extends Controller
                 'jenis_acara' => $validated['jenis_acara'],
             ],
             [
+                'id_kelompok' => Auth::user()->mahasiswa->id_kelompok,
                 'file_path' => $filePath,
                 'uploaded_by' => Auth::id(),
             ]
