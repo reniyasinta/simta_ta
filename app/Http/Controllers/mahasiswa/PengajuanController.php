@@ -11,8 +11,7 @@ use App\Models\PengajuanPembimbing;
 use Illuminate\Support\Facades\Storage;
 use App\Models\KuotaBimbinganDosen;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\PengajuanDospem1Mail;
-
+use App\Mail\PengajuanDosenMail;
 
 class PengajuanController extends Controller
 {
@@ -165,7 +164,7 @@ public function create()
         // 🔽 Kirim email ke dosen pembimbing 1
         $dosen = User::find($request->id_dosen1);
         if ($dosen && $dosen->email) {
-            Mail::to($dosen->email)->send(new PengajuanDospem1Mail($mahasiswa, $request->judul_ta));
+            Mail::to($dosen->email)->send(new PengajuanDosenMail($mahasiswa, $request->judul_ta));
         }
         return redirect()->route('pengajuan.index')->with('success', 'Pengajuan berhasil diajukan.');
     }

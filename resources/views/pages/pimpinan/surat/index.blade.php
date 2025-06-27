@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Monitoring Surat Mahasiswa')
+@section('title', 'Surat Mahasiswa')
 
 @push('style')
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
@@ -10,7 +10,7 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>Monitoring Surat Mahasiswa</h1>
+            <h1>Rekapitulasi Surat Mahasiswa</h1>
         </div>
 
         <div class="card">

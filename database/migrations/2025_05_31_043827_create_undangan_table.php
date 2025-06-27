@@ -10,6 +10,8 @@ return new class extends Migration
     {
         Schema::create('undangan', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('id_kelompok');
+            $table->foreign('id_kelompok')->references('id_kelompok')->on('kelompok')->onDelete('cascade');
             $table->foreignId('jadwal_id')->constrained('jadwals')->onDelete('cascade');
             $table->foreignId('penguji_id')->constrained('users')->onDelete('cascade');
             $table->enum('jenis_acara', ['seminar', 'sidang']);

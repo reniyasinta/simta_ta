@@ -24,8 +24,10 @@ public function indexJenis($jenis)
 {
     if (!in_array($jenis, ['seminar', 'sidang'])) abort(404);
 
+    $idProdiPanitia = auth()->user()->id_prodi;
+
+    // --- SEMINAR ---
     if ($jenis === 'seminar') {
-        // --- QUERY SEMINAR ---
         $approvedAjuanIds = Sempro::where('status_proposal_ta_dospem1', 'Disetujui')
             ->where('status_proposal_ta_dospem2', 'Disetujui')
             ->pluck('id_ajuan');
@@ -33,31 +35,30 @@ public function indexJenis($jenis)
         $pengajuans = PengajuanPembimbing::with(['kelompok.anggota', 'dosen1', 'dosen2'])
             ->whereIn('id_ajuan', $approvedAjuanIds)
             ->whereNotNull('id_dosen2')
-            ->whereHas('kelompok')
+            ->whereHas('kelompok.anggota', function ($q) use ($idProdiPanitia) {
+                $q->where('id_prodi', $idProdiPanitia);
+            })
             ->get();
     }
 
+    // --- SIDANG ---
     if ($jenis === 'sidang') {
-        // --- QUERY SIDANG ---
-
-        // Ambil semua pengajuan yang:
-        // - Sudah punya jadwal seminar
-        // - Draft sidang dosen 1 & 2 sudah disetujui
-
         $pengajuans = PengajuanPembimbing::with(['kelompok.anggota', 'dosen1', 'dosen2'])
             ->whereHas('jadwals', function ($q) {
                 $q->where('jenis_acara', 'seminar');
             })
             ->whereHas('sidang', function ($q) {
                 $q->where('status_draft_dosen1', 'Disetujui')
-                  ->where('status_draft_dosen2', 'Disetujui');
+                    ->where('status_draft_dosen2', 'Disetujui');
             })
             ->whereNotNull('id_dosen2')
-            ->whereHas('kelompok')
+            ->whereHas('kelompok.anggota', function ($q) use ($idProdiPanitia) {
+                $q->where('id_prodi', $idProdiPanitia);
+            })
             ->get();
     }
 
-    // Ambil jadwal yang sudah ada (untuk semua jenis)
+    // --- Jadwal yang sudah dibuat ---
     $jadwals = Jadwal::with([
             'pengajuan.kelompok.anggota.prodi',
             'pengajuan.dosen1',
@@ -67,18 +68,20 @@ public function indexJenis($jenis)
             'penguji3',
         ])
         ->where('jenis_acara', $jenis)
+        ->whereHas('pengajuan.kelompok.anggota', function ($q) use ($idProdiPanitia) {
+            $q->where('id_prodi', $idProdiPanitia);
+        })
         ->orderBy('tanggal', 'desc')
         ->orderBy('jam_mulai', 'asc')
         ->get();
 
-    // Filter pengajuan yang belum terjadwal
-    $pengajuanBelumTerjadwal = $pengajuans->filter(function($pengajuan) use ($jadwals) {
+    // --- Pengajuan yang belum dijadwalkan ---
+    $pengajuanBelumTerjadwal = $pengajuans->filter(function ($pengajuan) use ($jadwals) {
         return !$jadwals->contains('id_ajuan', $pengajuan->id_ajuan);
     });
 
     return view("pages.panitia.jadwal.$jenis.index", compact('jadwals', 'pengajuanBelumTerjadwal', 'jenis'));
 }
-
 
 
 public function create($jenis)
@@ -187,7 +190,7 @@ public function create($jenis)
         'jam_mulai'      => $validated['jam_mulai'],
         'jam_selesai'    => $validated['jam_selesai'],
         'ruangan'        => $validated['ruangan'],
-        'id_mhs'         => $firstAnggota->id_mhs ?? null,
+        'id_kelompok'    => $firstAnggota->id_kelompok,
         'id_ajuan'       => $validated['id_ajuan'],
         'nim'            => $anggota->pluck('nim_mhs')->join(', '),
         'nama'           => $anggota->pluck('nama_mhs')->join(', '),

@@ -10,6 +10,7 @@ class Undangan extends Model
 
     protected $fillable = [
         'jadwal_id',
+        'id_kelompok',
         'penguji_id',
         'jenis_acara',
         'file_path',
@@ -33,4 +34,10 @@ class Undangan extends Model
     {
         return $this->belongsTo(User::class, 'uploaded_by');
     }
+
+        public function kelompok()
+    {
+        return $this->belongsTo(Kelompok::class, 'id_kelompok');
+    }
+
 }
