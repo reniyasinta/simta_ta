@@ -24,24 +24,12 @@
             $availableProdis = \App\Models\Prodi::whereIn('id', $userGroup)->pluck('nama_prodi', 'id');
         @endphp
 
-
-
             <div class="card">
                 <div class="card-header">
                     <h4>Daftar Berkas Sempro</h4>
                 </div>
                 <div class="card-body">
                             <div class="section-body">
-            {{-- Dropdown Filter Prodi --}}
-            <form method="GET" class="form-inline mb-3">
-                <label for="prodi" class="mr-2">Filter Prodi:</label>
-                <select name="prodi" id="prodi" class="form-control mr-2" onchange="this.form.submit()">
-                    <option value="">Semua</option>
-                    @foreach($availableProdis as $id => $nama)
-                        <option value="{{ $id }}" {{ request('prodi') == $id ? 'selected' : '' }}>{{ $nama }}</option>
-                    @endforeach
-                </select>
-            </form>
                     <table id="table-sempro" class="table table-bordered table-striped table-hover">
                         <thead class="thead-dark">
                             <tr>

@@ -26,9 +26,9 @@
 <div class="card shadow-sm">
     <div class="card-header bg-white d-flex justify-content-between align-items-center">
         <h4 class="mb-0">Data User</h4>
-        <div class="btn-group" role="group" aria-label="Aksi User">
-            <a href="{{ route('admin.create') }}" class="btn btn-primary">+ Tambah User</a>
-            <a href="{{ route('admin.import') }}" class="btn btn-primary">Import User</a>
+        <div class="d-flex" role="group" aria-label="Aksi User">
+            <a href="{{ route('admin.create') }}" class="btn btn-primary" style="margin-right: 8px;">+ Tambah User</a>
+            <a href="{{ route('admin.import') }}" class="btn btn-primary" style="margin-right: 8px;">Import User</a>
             <a href="{{ route('template.user') }}" class="btn btn-primary">Download Template</a>
         </div>
     </div>

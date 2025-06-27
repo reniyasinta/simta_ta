@@ -72,52 +72,37 @@ public function update(Request $request)
 }
 
 // ===== Panitia Profile =====
-public function profile()
-{
-    $user = Auth::user()->load('prodi'); // biar nanti bisa ambil nama prodi di blade
-    return view('pages.panitia.profile', compact('user'));
-}
-
-// ===== Edit Profile Panitia =====
-public function editProfile()
-{
-    $user = Auth::user()->load('prodi');
-    $prodis = Prodi::all(); // untuk dropdown pilihan prodi
-    return view('pages.panitia.profile_edit', compact('user', 'prodis'));
-}
-
-// ===== Update Profile Panitia =====
-public function updateProfile(Request $request)
-{
-    $user = Auth::user();
-
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email,' . $user->id,
-        'id_prodi' => 'required|exists:prodi,id_prodi',
-        'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-    ]);
-
-    $user->name = $request->name;
-    $user->email = $request->email;
-    $user->id_prodi = $request->id_prodi;
-
-    if ($request->hasFile('foto')) {
-        // Hapus foto lama (jika ada)
-        if ($user->foto && Storage::disk('public')->exists(str_replace('storage/', '', $user->foto))) {
-            Storage::disk('public')->delete(str_replace('storage/', '', $user->foto));
-        }
-
-        // Upload foto baru
-        $path = $request->file('foto')->store('uploads/foto_panitia', 'public');
-        $user->foto = 'storage/' . $path;
+ public function profile()
+    {
+        $user = Auth::user()->load('prodi'); // memuat relasi prodi
+        return view('pages.panitia.profile', compact('user'));
     }
 
-    $user->save();
+    // Form edit profil
+    public function editProfile()
+    {
+        $user = Auth::user()->load('prodi');
+        return view('pages.panitia.profile_edit', compact('user'));
+    }
 
-    return redirect()->route('panitia.profile')->with('success', 'Profil berhasil diperbarui.');
-}
+    // Update profil
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::user();
 
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'id_prodi' => 'required|exists:prodis,id', // validasi ke tabel `prodis` kolom `id`
+        ]);
 
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->id_prodi = $request->id_prodi; // tetap disimpan walau readonly
+
+        $user->save();
+
+        return redirect()->route('panitia.profile')->with('success', 'Profil berhasil diperbarui.');
+    }
 
 }

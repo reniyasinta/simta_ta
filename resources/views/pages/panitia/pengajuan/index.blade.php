@@ -39,17 +39,6 @@
             </div>
 
             <div class="card-body">
-                {{-- Filter Prodi --}}
-                <form method="GET" class="form-inline mb-3">
-                    <label for="prodi" class="mr-2">Filter Prodi:</label>
-                    <select name="prodi" id="prodi" class="form-control mr-2" onchange="this.form.submit()">
-                        <option value="">Semua</option>
-                        @foreach($availableProdis as $id => $nama)
-                            <option value="{{ $id }}" {{ request('prodi') == $id ? 'selected' : '' }}>{{ $nama }}</option>
-                        @endforeach
-                    </select>
-                </form>
-
                 <div class="table-responsive">
                     <table id="table-pengajuan" class="table table-bordered table-striped table-hover">
                         <thead>

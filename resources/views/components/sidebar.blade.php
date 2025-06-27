@@ -90,21 +90,16 @@
                 <a class="nav-link" href="{{ route('dosen.validasi') }}"><i class="fas fa-check-circle"></i> <span>Validasi Pengajuan</span></a>
             </li>
             <li class="{{ request()->routeIs('dosen.sempro.index') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('dosen.sempro.index') }}"><i class="fas fa-file-signature"></i> <span>Validasi Maju Sempro</span></a>
+                <a class="nav-link" href="{{ route('dosen.sempro.index') }}"><i class="fas fa-file-signature"></i> <span>Validasi Seminar Proposal</span></a>
             </li>
             <li class="{{ request()->routeIs('dosen.bimbingan') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('dosen.bimbingan') }}"><i class="fas fa-comments"></i> <span>Data Bimbingan</span></a>
             </li>
-            <li class="nav-item dropdown {{ request()->routeIs('dosen.sidang.*') ? 'active' : '' }}">
-                <a href="#" class="nav-link has-dropdown"><i class="fas fa-file-signature"></i> <span>Sidang TA</span></a>
-                <ul class="dropdown-menu">
-                    <li class="{{ request()->routeIs('dosen.sidang.draft') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('dosen.sidang.draft') }}">Laporan TA</a>
-                    </li>
-                    <li class="{{ request()->routeIs('dosen.sidang.revisi') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('dosen.sidang.revisi') }}">Persetujuan Perbaikan</a>
-                    </li>
-                </ul>
+            <li class="{{ request()->routeIs('dosen.sidang.draft') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('dosen.sidang.draft') }}"><i class="fas fa-comments"></i> <span>Validasi Tugas Akhir</span></a>
+            </li>
+            <li class="{{ request()->routeIs('dosen.sidang.revisi') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('dosen.sidang.revisi') }}"><i class="fas fa-comments"></i> <span>Persetujuan Perbaikan Sidang</span></a>
             </li>
         </ul>
 

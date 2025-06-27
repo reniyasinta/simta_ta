@@ -15,38 +15,35 @@
                         <form method="POST" action="{{ route('panitia.profile.update') }}" enctype="multipart/form-data">
                             @csrf
 
+                            {{-- Tampilkan error validasi jika ada --}}
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <ul class="mb-0">
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+
                             <div class="card-body">
                                 <div class="form-group">
                                     <label>Nama Panitia</label>
-                                    <input type="text" name="name" class="form-control" value="{{ old('name', $user->name) }}" required>
+                                    <input type="text" name="name" class="form-control"
+                                        value="{{ old('name', $user->name) }}" required>
                                 </div>
 
                                 <div class="form-group">
                                     <label>Email</label>
-                                    <input type="email" name="email" class="form-control" value="{{ old('email', $user->email) }}" required>
+                                    <input type="email" name="email" class="form-control"
+                                        value="{{ old('email', $user->email) }}" required>
                                 </div>
 
                                 <div class="form-group">
                                     <label>Prodi</label>
-                                    <select name="id_prodi" class="form-control" required>
-                                        <option value="">-- Pilih Prodi --</option>
-                                        @foreach($prodis as $prodi)
-                                            <option value="{{ $prodi->id_prodi }}" {{ old('id_prodi', $user->id_prodi) == $prodi->id_prodi ? 'selected' : '' }}>
-                                                {{ $prodi->nama_prodi }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Upload Foto</label>
-                                    <input type="file" name="foto" class="form-control-file">
-                                    @if ($user->foto)
-                                        <div class="mt-2">
-                                            <img src="{{ asset($user->foto) }}" alt="Foto Panitia"
-                                                style="width: 100px; height: 100px; object-fit: cover;" class="rounded-circle">
-                                        </div>
-                                    @endif
+                                    <input type="text" class="form-control"
+                                        value="{{ $user->prodi->nama_prodi ?? '-' }}" readonly>
+                                    <input type="hidden" name="id_prodi" value="{{ $user->id_prodi }}">
                                 </div>
                             </div>
 
