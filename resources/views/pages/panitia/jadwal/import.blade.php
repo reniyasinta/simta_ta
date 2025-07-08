@@ -17,6 +17,17 @@
             <div class="alert alert-danger">{{ session('error') }}</div>
         @endif
 
+        @if(session('warnings'))
+            <div class="alert alert-warning">
+                <strong>Beberapa baris tidak diimpor:</strong>
+                <ul class="mb-0">
+                    @foreach (session('warnings') as $warning)
+                        <li>{{ $warning }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <div class="card">
             <div class="card-header">
                 <h4>Form Upload Jadwal (Excel)</h4>

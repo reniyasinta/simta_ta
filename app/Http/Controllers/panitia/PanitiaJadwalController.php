@@ -270,21 +270,30 @@ public function create($jenis)
     }
 
     public function importJadwal(Request $request)
-    {
-        $jenis = $request->input('jenis');
-        if (!in_array($jenis, ['seminar', 'sidang'])) abort(404);
+{
+    $jenis = $request->input('jenis');
+    if (!in_array($jenis, ['seminar', 'sidang'])) abort(404);
 
-        $request->validate([
-            'file' => 'required|file|mimes:xlsx,xls',
-        ]);
+    $request->validate([
+        'file' => 'required|file|mimes:xlsx,xls',
+    ]);
 
-        try {
-            Excel::import(new JadwalTemplateImport($jenis), $request->file('file'));
-            return redirect()->route('panitia.jadwal.jenis.index', ['jenis' => $jenis])->with('success', 'Jadwal berhasil diimpor.');
-        } catch (\Exception $e) {
-            return back()->with('error', 'Gagal impor: ' . $e->getMessage());
+    try {
+        Excel::import(new JadwalTemplateImport($jenis), $request->file('file'));
+
+        $msg = 'Jadwal berhasil diimpor.';
+        if (session()->has('import_warnings')) {
+            $msg .= ' Beberapa baris dilewati:';
         }
+
+        return redirect()->route('panitia.jadwal.jenis.index', ['jenis' => $jenis])
+            ->with('success', $msg)
+            ->with('warnings', session()->get('import_warnings'));
+    } catch (\Exception $e) {
+        return back()->with('error', 'Gagal impor: ' . $e->getMessage());
     }
+}
+
 
     // === YUDISIUM TERPISAH ===
 
