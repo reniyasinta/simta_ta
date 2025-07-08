@@ -17,9 +17,7 @@ public function index()
     $user = Auth::user();
     $dosen = Dosen::with('prodi')->where('user_id', $user->id)->firstOrFail();
 
-    // Ambil kuota P1 dari tabel kuota_bimbingan_dosen
-    $kuotaRecord = KuotaBimbinganDosen::where('id_dosen', $dosen->id_dosen)->first();
-    $kuota = $kuotaRecord->kuota_bimbingan ?? 0;
+    $kuota = KuotaBimbinganDosen::where('id_dosen', $dosen->id_dosen)->sum('kuota_bimbingan');
 
     // Hitung jumlah mahasiswa bimbingan
     $jumlah1 = PengajuanPembimbing::where('id_dosen1', $user->id)
@@ -123,7 +121,7 @@ public function bimbingan(Request $request)
 
     $totalBimbingan = $sebagaiPembimbing1->sum(fn($p) => $p->kelompok?->anggota->count() ?? 0)
         + $sebagaiPembimbing2->sum(fn($p) => $p->kelompok?->anggota->count() ?? 0);
-    $kuota = $dosen->kuota_bimbingan ?? 0;
+    $kuota = \App\Models\KuotaBimbinganDosen::where('id_dosen', $dosen->id_dosen)->sum('kuota_bimbingan');
 
     $listProdi = \App\Models\Prodi::whereIn('id', $allowedProdis)->pluck('nama_prodi', 'id');
 

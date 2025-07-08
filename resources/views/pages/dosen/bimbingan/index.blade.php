@@ -35,10 +35,11 @@
                         {{-- Input Cari Mahasiswa / NIM --}}
                         <input type="text" id="searchInput" class="form-control mb-3" placeholder="Cari Mahasiswa" />
 
-                    <div class="p-3 rounded text-white" style="background-color: #4c6ef5;">
-                        <strong>Kuota Bimbingan:</strong> {{ $kuota }} &nbsp; | &nbsp;
-                        <strong>Jumlah Bimbingan Aktif:</strong> {{ $totalBimbingan }}
-                    </div>
+<div class="p-3 rounded text-white" style="background-color: #4c6ef5;">
+    <strong>Kuota Bimbingan:</strong> {{ $kuota }} &nbsp; | &nbsp;
+    <strong>Jumlah Bimbingan Aktif:</strong> {{ $totalBimbingan }}
+</div>
+
                     </div>
                     {{-- Mahasiswa Bimbingan 1 --}}
                     <div class="card shadow-sm mb-4">
@@ -123,7 +124,7 @@
             </section>
         </div>
         @endsection
-        
+
 @push('scripts')
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
 

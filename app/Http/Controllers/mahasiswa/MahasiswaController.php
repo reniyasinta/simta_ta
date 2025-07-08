@@ -102,9 +102,10 @@ class MahasiswaController extends Controller
     $mahasiswa = Mahasiswa::where('user_id', $user->id)->firstOrFail();
 
     $request->validate([
-        'nama_mhs' => 'required|string|max:255',
+        'nama_mhs' => 'required|string|max:100',
         'nim_mhs' => 'required|string|max:255|unique:mahasiswa,nim_mhs,' . $mahasiswa->id_mhs . ',id_mhs',
         'semester' => 'required|integer',
+        'kelas' => 'required|string|max:10',
         'email' => 'required|email|unique:users,email,' . $user->id,
         'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         'no_telp' => 'required|string|max:20',
@@ -127,11 +128,11 @@ if ($request->hasFile('foto')) {
     $mahasiswa->foto = $fileName; // hanya simpan nama file
 }
 
-
         // Update tabel mahasiswa
         $mahasiswa->nama_mhs = $request->nama_mhs;
         $mahasiswa->nim_mhs = $request->nim_mhs;
         $mahasiswa->semester = $request->semester;
+        $mahasiswa->kelas = $request->kelas;
         $mahasiswa->id_prodi = $user->id_prodi;
         $mahasiswa->no_telp = $request->no_telp;
         $mahasiswa->save();

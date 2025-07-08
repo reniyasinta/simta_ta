@@ -45,6 +45,7 @@
                             <tr>
                                 <th>No</th>
                                 <th>Kelompok</th>
+                                <th>Kelas</th>
                                 <th>Prodi</th>
                                 <th>Judul</th>
                                 <th>Dosen Pembimbing 1</th>
@@ -53,14 +54,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @php
-                                $filteredPengajuan = $pengajuanList->filter(function($pengajuan) {
-                                    $selectedProdi = request('prodi');
-                                    $anggota1 = $pengajuan->kelompok->anggota1->mahasiswa ?? null;
-                                    return !$selectedProdi || ($anggota1 && $anggota1->id_prodi == $selectedProdi);
-                                })->values();
-                            @endphp
-
+                    @php
+                        $filteredPengajuan = $pengajuanList
+                            ->sortByDesc('created_at') // Urutkan dari yang terbaru
+                            ->filter(function($pengajuan) {
+                                $selectedProdi = request('prodi');
+                                $anggota1 = $pengajuan->kelompok->anggota1->mahasiswa ?? null;
+                                return !$selectedProdi || ($anggota1 && $anggota1->id_prodi == $selectedProdi);
+                            })->values();
+                    @endphp
                             @forelse($filteredPengajuan as $key => $p)
                                 @php
                                     $prodi = $p->kelompok->anggota1->mahasiswa->prodi->nama_prodi ?? '-';
@@ -74,6 +76,13 @@
                                             @empty
                                                 <li><em>Tidak ada anggota</em></li>
                                             @endforelse
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <ul>
+                                            @foreach($p->kelompok->anggota ?? [] as $mhs)
+                                                <li>{{ $mhs->kelas ?? '-' }}</li>
+                                            @endforeach
                                         </ul>
                                     </td>
                                     <td>{{ $prodi }}</td>
@@ -106,7 +115,7 @@
     $(document).ready(function() {
         $('#table-pengajuan').DataTable({
             language: {
-                search: "Cari Mahasiswa / NIM / Judul:",
+                search: "Cari Mahasiswa / Kelas / NIM / Judul:",
                 lengthMenu: "Tampilkan _MENU_ data per halaman",
                 zeroRecords: "Data tidak ditemukan",
                 info: "Menampilkan _PAGE_ dari _PAGES_",

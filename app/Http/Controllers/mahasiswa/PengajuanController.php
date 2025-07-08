@@ -34,7 +34,10 @@ class PengajuanController extends Controller
             'kelompok.anggota3.mahasiswa',
             'dosen1.dosen',
             'dosen2.dosen',
-        ])->where('id_kelompok', $mahasiswa->id_kelompok)->get();
+        ])
+            ->where('id_kelompok', $mahasiswa->id_kelompok)
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         // Ambil semua dosen (tanpa batasan prodi) beserta relasi user
         $dosenList = Dosen::with('user')->get();
@@ -144,15 +147,32 @@ public function create()
         if (!$mahasiswa || !$mahasiswa->kelompok) {
             return redirect()->route('mahasiswa.dashboard')->with('error', 'Data kelompok tidak ditemukan.');
         }
-    // Inisialisasi default kosong
-    $fileName = null;
 
-    // Hanya proses jika ada file
-    if ($request->hasFile('proposal')) {
-        $file = $request->file('proposal');
-        $fileName =  $file->getClientOriginalName();
-        $file->storeAs('proposal', $fileName, 'public');
-    }
+        // Cek apakah pernah ditolak sebelumnya dengan judul dan dosen yang sama
+        $judul = trim($request->judul_ta);
+        $idDosen1 = $request->id_dosen1;
+
+        $pengajuanLama = PengajuanPembimbing::where('id_kelompok', $mahasiswa->id_kelompok)
+            ->where('id_dosen1', $idDosen1)
+            ->whereRaw('LOWER(judul_ta) = ?', [strtolower($judul)])
+            ->where('status', 'Ditolak')
+            ->first();
+
+        if ($pengajuanLama) {
+            return back()->withInput()->withErrors([
+                'judul_ta' => 'Anda sudah pernah mengajukan judul yang sama ke dosen ini dan ditolak. Silakan ubah judulnya.',
+            ]);
+        }
+
+        // Inisialisasi default kosong
+        $fileName = null;
+
+        // Hanya proses jika ada file
+        if ($request->hasFile('proposal')) {
+            $file = $request->file('proposal');
+            $fileName =  $file->getClientOriginalName();
+            $file->storeAs('proposal', $fileName, 'public');
+        }
 
         PengajuanPembimbing::create([
             'id_kelompok' => $mahasiswa->id_kelompok,

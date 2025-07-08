@@ -202,7 +202,15 @@ public function create($jenis)
         'penguji_2_id'   => $validated['penguji_2_id'] ?? null,
         'penguji_3_id'   => $validated['penguji_3_id'] ?? null,
     ]);
-
+        if ($jenis === 'sidang') {
+        $sidang = Sidang::where('id_kelompok', $pengajuan->id_kelompok)->first();
+        if ($sidang) {
+            $sidang->penguji_1_id = $validated['penguji_1_id'];
+            $sidang->penguji_2_id = $validated['penguji_2_id'] ?? null;
+            $sidang->penguji_3_id = $validated['penguji_3_id'] ?? null;
+            $sidang->save();
+        }
+    }
     return redirect()->route('panitia.jadwal.jenis.index', ['jenis' => $validated['jenis_acara']])->with('success', 'Jadwal berhasil disimpan.');
 }
 

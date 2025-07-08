@@ -94,12 +94,12 @@
                                 {{-- Aksi --}}
                                 <td>
                                     @if($penguji_ke && $status === 'Menunggu')
-                                        <div class="d-flex gap-2 flex-wrap">
+                                        <div class="d-flex flex-wrap">
                                             <button
                                                 type="submit"
                                                 form="form-{{ $sidang->id_sidang }}-{{ $penguji_ke }}"
                                                 onclick="document.getElementById('status_revisi_{{ $sidang->id_sidang }}_{{ $penguji_ke }}').value = 'Disetujui'"
-                                                class="btn btn-sm btn-success">
+                                                class="btn btn-sm btn-success mr-2">
                                                 ACC Revisi
                                             </button>
                                             <button

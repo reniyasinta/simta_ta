@@ -37,13 +37,15 @@ public function model(array $row)
             'role_id' => $role->id,
             'nim' => $roleName === 'mahasiswa' ? $nim_nip : null,
             'nip' => $roleName === 'dosen' ? $nim_nip : null,
+            'kelas' => $roleName === 'mahasiswa' ? ($row['kelas'] ?? null) : null,
             'id_prodi' => $prodi?->id, // pakai null safe jika tidak ditemukan
         ]);
-if ($roleName === 'mahasiswa' && $nim_nip) {
+        if ($roleName === 'mahasiswa' && $nim_nip) {
             Mahasiswa::create([
                 'user_id' => $user->id,
                 'nim_mhs' => $nim_nip,
                 'nama_mhs' => $user->name,
+                'kelas' => $row['kelas'] ?? null,
                 'id_prodi' => $prodi?->id,
                 'prodi_mhs' => $prodi?->nama_prodi ?? null,
             ]);

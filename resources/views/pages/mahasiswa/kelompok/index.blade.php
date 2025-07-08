@@ -30,6 +30,7 @@
                                 <th>No</th>
                                 <th>Nama</th>
                                 <th>NIM</th>
+                                <th>Kelas</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -43,6 +44,7 @@
                                     <td>{{ $index + 1 }}</td>
                                     <td>{{ $anggota->nama_mhs }}</td>
                                     <td>{{ $anggota->nim_mhs }}</td>
+                                    <td>{{ $anggota->kelas ?? '-' }}</td>
                                 </tr>
                             @empty
                                 <tr>

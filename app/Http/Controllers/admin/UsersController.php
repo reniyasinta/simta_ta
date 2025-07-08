@@ -54,8 +54,8 @@ class UsersController extends Controller
         return view('pages.admin.create', compact('roles', 'prodis'));
     }
 
- public function store(Request $request)
-{
+    public function store(Request $request)
+    {
     $request->validate([
         'name' => 'required|string|max:255',
         'email' => 'required|email|unique:users,email',
@@ -63,12 +63,17 @@ class UsersController extends Controller
         'role_id' => 'required|in:1,2,3,4,5',
         'nim' => 'required_if:role_id,4|nullable|unique:users,nim',
         'nip' => 'required_unless:role_id,4|nullable|unique:users,nip',
+        'kelas' => 'required_if:role_id,4|nullable|string|max:20',
         'id_prodi' => 'nullable|required_unless:role_id,5|exists:prodis,id',
     ], [
+        'email.unique' => 'Email sudah digunakan, gunakan email lain.',
+        'nim.unique' => 'NIM sudah ada, gunakan NIM lain.',
+        'nip.unique' => 'NIP sudah digunakan, gunakan NIP lain.',
         'nim.required_if' => 'NIM wajib diisi untuk mahasiswa.',
         'nip.required_unless' => 'NIP wajib diisi untuk selain mahasiswa.',
-        'id_prodi.required_unless' => 'Prodi wajib dipilih untuk selain pimpinan.',
+        'id_prodi.required_unless' => 'Program Studi wajib dipilih untuk selain pimpinan.',
     ]);
+
 
     // Tentukan nilai prodi: jika role = pimpinan, kosongkan
     $idProdi = $request->role_id == 5 ? null : $request->id_prodi;
@@ -80,6 +85,7 @@ class UsersController extends Controller
         'role_id' => $request->role_id,
         'nim' => $request->nim,
         'nip' => $request->nip,
+        'kelas' => $request->role_id == 4 ? $request->kelas : null,
         'id_prodi' => $idProdi, // gunakan nilai yang sudah disesuaikan
     ]);
 
@@ -89,6 +95,7 @@ class UsersController extends Controller
             'user_id' => $user->id,
             'nim_mhs' => $request->nim,
             'nama_mhs' => $request->name,
+            'kelas' => $request->kelas,
             'id_prodi' => $request->id_prodi,
         ]);
     }
@@ -144,10 +151,14 @@ class UsersController extends Controller
                 function ($attribute, $value, $fail) use ($request) {
                     if ((int)$request->role_id === 4 && !$value) {
                         $fail('NIM wajib diisi untuk Mahasiswa.');
+                        }
                     }
-                }
-            ],
-        ]);
+                ],
+                ], [
+                    'email.unique' => 'Email sudah digunakan, gunakan email lain.',
+                    'nip.unique' => 'NIP sudah digunakan, gunakan NIP lain.',
+                    'nim.unique' => 'NIM sudah digunakan, gunakan NIM lain.',
+                ]);
 
         $idProdi = $request->role_id == 5 ? null : $request->id_prodi;
 
@@ -169,6 +180,7 @@ class UsersController extends Controller
                 $user->mahasiswa->update([
                     'nama_mhs' => $request->name,
                     'nim_mhs' => $request->nim,
+                    'kelas' => $request->kelas,
                     'id_prodi' => $request->id_prodi,
                 ]);
             } else {
@@ -176,6 +188,7 @@ class UsersController extends Controller
                     'user_id' => $user->id,
                     'nama_mhs' => $request->name,
                     'nim_mhs' => $request->nim,
+                    'kelas' => $request->kelas,
                     'id_prodi' => $request->id_prodi,
                 ]);
             }

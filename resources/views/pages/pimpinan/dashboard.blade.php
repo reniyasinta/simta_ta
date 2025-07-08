@@ -6,51 +6,55 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>Selamat datang, {{ Auth::user()->name ?? 'User Tidak Ditemukan' }}!</h1>
+            <h1 class="text-capitalize">Selamat datang, {{ Auth::user()->name ?? 'User Tidak Ditemukan' }}!</h1>
         </div>
 
-        <div class="row">
-            <div class="col-lg-3 col-md-6">
-                <div class="card card-statistic-1">
-                    <div class="card-icon bg-primary"><i class="fas fa-file-alt"></i></div>
-                    <div class="card-wrap">
-                        <div class="card-header"><h4>Pengajuan</h4></div>
-                        <div class="card-body">{{ $totalPengajuan }}</div>
-                    </div>
-                </div>
-            </div>
+        <div class="section-body">
+            <div class="row">
 
-            <div class="col-lg-3 col-md-6">
-                <div class="card card-statistic-1">
-                    <div class="card-icon bg-success"><i class="fas fa-users"></i></div>
-                    <div class="card-wrap">
-                        <div class="card-header"><h4>Surat</h4></div>
-                        <div class="card-body">{{ $totalSurat }}</div>
-                    </div>
-                </div>
-            </div>
+                @php
+                    $cards = [
+                        [
+                            'icon' => 'fas fa-file-alt',
+                            'color' => 'primary',
+                            'title' => 'Pengajuan',
+                            'value' => $totalPengajuan,
+                        ],
+                        [
+                            'icon' => 'fas fa-envelope-open-text',
+                            'color' => 'success',
+                            'title' => 'Surat Masuk',
+                            'value' => $totalSurat,
+                        ],
+                        [
+                            'icon' => 'fas fa-calendar-check',
+                            'color' => 'info',
+                            'title' => 'Jadwal',
+                            'value' => $totalJadwal,
+                        ],
+                    ];
+                @endphp
 
-            <div class="col-lg-3 col-md-6">
-                <div class="card card-statistic-1">
-                    <div class="card-icon bg-info"><i class="fas fa-calendar-alt"></i></div>
-                    <div class="card-wrap">
-                        <div class="card-header"><h4>Jadwal</h4></div>
-                        <div class="card-body">{{ $totalJadwal }}</div>
+                @foreach ($cards as $card)
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card card-statistic-1 shadow">
+                        <div class="card-icon bg-{{ $card['color'] }}">
+                            <i class="{{ $card['icon'] }}"></i>
+                        </div>
+                        <div class="card-wrap">
+                            <div class="card-header">
+                                <h4>{{ $card['title'] }}</h4>
+                            </div>
+                            <div class="card-body text-lg font-weight-bold">
+                                {{ $card['value'] }}
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+                @endforeach
 
-            <div class="col-lg-3 col-md-6">
-                <div class="card card-statistic-1">
-                    <div class="card-icon bg-warning"><i class="fas fa-tasks"></i></div>
-                    <div class="card-wrap">
-                        <div class="card-header"><h4>Kuota</h4></div>
-                        <div class="card-body">{{ $totalKuota }}</div>
-                    </div>
-                </div>
             </div>
         </div>
-
     </section>
 </div>
 @endsection

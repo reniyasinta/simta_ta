@@ -18,6 +18,18 @@
             </div>
 
             <div class="card-body">
+                {{-- Notifikasi error validasi --}}
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <strong>Terjadi kesalahan:</strong>
+                        <ul class="mb-0">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
                 <form action="{{ route('admin.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
@@ -29,11 +41,13 @@
                     <div class="form-group">
                         <label for="email">Email Pengguna</label>
                         <input type="email" name="email" class="form-control" required placeholder="Masukkan email" value="{{ old('email') }}">
+                        @error('email') <small class="text-danger">{{ $message }}</small> @enderror
                     </div>
 
                     <div class="form-group">
                         <label for="password">Password Default</label>
                         <input type="password" name="password" class="form-control" required placeholder="Masukkan password">
+                        @error('password') <small class="text-danger">{{ $message }}</small> @enderror
                     </div>
 
                     <div class="form-group">
@@ -48,15 +62,24 @@
                         </select>
                     </div>
 
-                    <div class="form-group" id="nip-group" style="display: none;">
+                    {{-- NIP --}}
+                    <div class="form-group" id="nip-group" style="display: {{ in_array(old('role_id'), [1,2,3,5]) ? 'block' : 'none' }};">
                         <label for="nip">NIP (Admin / Dosen / Panitia / Pimpinan)</label>
                         <input type="text" name="nip" id="nip" class="form-control" placeholder="Masukkan NIP" value="{{ old('nip') }}">
+                        @error('nip') <small class="text-danger">{{ $message }}</small> @enderror
                     </div>
 
-                    <div class="form-group" id="nim-group" style="display: none;">
+                    {{-- NIM --}}
+                    <div class="form-group" id="nim-group" style="display: {{ old('role_id') == 4 ? 'block' : 'none' }};">
                         <label for="nim">NIM (Mahasiswa)</label>
                         <input type="text" name="nim" id="nim" class="form-control" placeholder="Masukkan NIM" value="{{ old('nim') }}">
+                        @error('nim') <small class="text-danger">{{ $message }}</small> @enderror
                     </div>
+<div class="form-group">
+    <label for="kelas">Kelas (Hanya untuk Mahasiswa)</label>
+    <input type="text" name="kelas" class="form-control" placeholder="Masukkan kelas (jika Mahasiswa)" value="{{ old('kelas') }}">
+    @error('kelas') <small class="text-danger">{{ $message }}</small> @enderror
+</div>
 
                     <div class="form-group">
                         <label for="id_prodi">Program Studi</label>
@@ -68,6 +91,7 @@
                                 </option>
                             @endforeach
                         </select>
+                        @error('id_prodi') <small class="text-danger">{{ $message }}</small> @enderror
                     </div>
 
                     <div class="form-group mt-3 text-right">
@@ -87,27 +111,26 @@
         const roleValue = parseInt(document.getElementById('roleSelect').value);
         const nipGroup = document.getElementById('nip-group');
         const nimGroup = document.getElementById('nim-group');
-        const prodiSelect = document.getElementById('prodiSelect');
+        const kelasGroup = document.getElementById('kelas-group');
 
-        // Reset
+        // Reset tampilan
         nipGroup.style.display = 'none';
         nimGroup.style.display = 'none';
-        prodiSelect.disabled = false;
+        kelasGroup.style.display = 'none';
 
-        // Show input sesuai role
-        if ([1, 2, 3].includes(roleValue)) {
+        if ([1, 2, 3, 5].includes(roleValue)) {
             nipGroup.style.display = 'block';
-        } else if (roleValue === 4) {
-            nimGroup.style.display = 'block';
-        } else if (roleValue === 5) {
-            nipGroup.style.display = 'block';
-            prodiSelect.value = "";
-            prodiSelect.disabled = true;
         }
+
+if (roleValue === 4) {
+    nimGroup.style.display = 'block';
+    kelasGroup.style.display = 'block';
+}
+
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        toggleNipNim(); // saat load
+        toggleNipNim(); // Panggil pertama kali saat halaman dimuat
         document.getElementById('roleSelect').addEventListener('change', toggleNipNim);
     });
 </script>

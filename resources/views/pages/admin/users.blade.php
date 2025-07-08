@@ -43,6 +43,7 @@
                                 <th>Email</th>
                                 <th>Role</th>
                                 <th>NIP/NIM</th>
+                                <th>kelas</th>
                                 <th>Prodi</th>
                                 <th>Aksi</th>
                             </tr>
@@ -59,6 +60,13 @@
                                             {{ $user->nim ?? '-' }}
                                         @elseif (in_array($user->role_id, [1, 2, 3]))
                                             {{ $user->nip ?? '-' }}
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if ($user->role_id == 4)
+                                            {{ $user->mahasiswa->kelas ?? '-' }}
                                         @else
                                             -
                                         @endif

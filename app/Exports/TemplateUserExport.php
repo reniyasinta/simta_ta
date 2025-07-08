@@ -10,7 +10,7 @@ class TemplateUserExport implements FromArray
     public function array(): array
     {
         return [
-            ['name', 'email', 'password', 'role', 'nim_nip', 'prodi']
+            ['name', 'email', 'password', 'role', 'nim_nip','kelas', 'prodi']
         ];
     }
 }

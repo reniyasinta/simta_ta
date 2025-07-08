@@ -32,6 +32,12 @@
                                 </div>
 
                                 <div class="form-group">
+                                    <label>Kelas</label>
+                                    <input type="kelas" name="kelas" class="form-control" value="{{ old('kelas', $mahasiswa->kelas) }}" required>
+                                </div>
+
+
+                                <div class="form-group">
                                     <label>Email</label>
                                     <input type="email" name="email" class="form-control" value="{{ old('email', $user->email) }}" required>
                                 </div>

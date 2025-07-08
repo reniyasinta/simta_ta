@@ -50,7 +50,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($sempros as $key => $item)
+                                @php
+                                    $sortedSempros = $sempros->sortByDesc('created_at')->values();
+                                @endphp
+
+                                @forelse($sortedSempros as $key => $item)
                                 @php
                                     $prodi = $item->pengajuan->kelompok->anggota1->mahasiswa->prodi->nama_prodi ?? '-';
                                 @endphp

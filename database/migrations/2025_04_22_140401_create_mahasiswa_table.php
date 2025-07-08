@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('semester')->nullable();
             $table->string('foto')->nullable();
             $table->string('no_telp')->nullable();
+            $table->string('kelas')->nullable();
             $table->timestamps();
         });
     }

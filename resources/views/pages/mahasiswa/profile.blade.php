@@ -36,6 +36,10 @@
                                     <th>Email</th>
                                     <td>: {{ $mahasiswa->user->email }}</td>
                                 </tr>
+                                 <tr>
+                                    <th>Kelas</th>
+                                    <td>: {{ $mahasiswa->kelas }}</td>
+                                </tr>
                                 <tr>
                                     <th>Prodi</th>
                                     <td>: {{ $mahasiswa->prodi->nama_prodi ?? '-' }}</td>

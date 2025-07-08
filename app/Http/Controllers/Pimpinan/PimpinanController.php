@@ -20,11 +20,10 @@ class PimpinanController extends Controller
         $totalPengajuan = PengajuanPembimbing::count();
         $totalSurat = Surat::count();
         $totalJadwal = Jadwal::count();
-        $totalKuota = KuotaBimbinganDosen::count();
         $prodis = Prodi::all();
 
         return view('pages.pimpinan.dashboard', compact(
-            'totalPengajuan', 'totalSurat', 'totalJadwal', 'totalKuota', 'prodis'
+            'totalPengajuan', 'totalSurat', 'totalJadwal', 'prodis'
         ));
     }
 

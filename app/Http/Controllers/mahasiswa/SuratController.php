@@ -43,7 +43,6 @@ class SuratController extends Controller
             return redirect()->route('mahasiswa.surat.index')->with('error', 'Dosen Pembimbing 1 dan/atau 2 belum lengkap.');
         }
 
-        // ✅ TAMBAHKAN INI
         $dospem1 = $pengajuan->dosen1->dosen->nama_dosen ?? '-';
 
         return view('pages.mahasiswa.surat.create', compact('mahasiswa', 'dospem1'));

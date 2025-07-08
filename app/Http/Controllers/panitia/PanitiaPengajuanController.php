@@ -35,16 +35,42 @@ class PanitiaPengajuanController extends Controller
         return view('pages.panitia.pengajuan.index', compact('pengajuanList', 'dosenList'));
     }
 
-
 public function edit($id)
 {
     $pengajuan = PengajuanPembimbing::with(['kelompok.anggota', 'dosen1.dosen', 'dosen2.dosen'])->findOrFail($id);
 
-    // Ambil semua dosen role_id = 3 (tanpa group mapping)
-    $dosenList = User::where('role_id', 3)->get();
+    $user = auth()->user(); // panitia login
+    $idProdi = $user->id_prodi;
 
+    // Mapping grup prodi
+    $groupMapping = [
+        [1, 2], // TI & SIKC
+        [3, 4], // Listrik & TRPE
+        [5, 6], // Elka & TRO
+    ];
+
+    // Default: hanya prodi sendiri
+    $selectedGroup = [$idProdi];
+
+    foreach ($groupMapping as $group) {
+        if (in_array($idProdi, $group)) {
+            $selectedGroup = $group;
+            break;
+        }
+    }
+
+    // Ambil dosen role_id = 3 dan exclude dosen1
+    $dosenQuery = User::where('role_id', 3)
+        ->where('id', '!=', $pengajuan->id_dosen1);
+
+    if ($idProdi !== null) {
+        $dosenQuery->whereIn('id_prodi', $selectedGroup);
+    }
+
+    $dosenList = $dosenQuery->get();
+
+    // Hitung kuota dosen2
     foreach ($dosenList as $dosen) {
-        // Hitung total bimbingan sebagai DOSEN 2 saja!
         $jumlahSebagai2 = PengajuanPembimbing::where('id_dosen2', $dosen->id)
             ->where('status', 'Diterima')
             ->with('kelompok')
@@ -53,7 +79,6 @@ public function edit($id)
                 return $pengajuan->kelompok?->anggota->count() ?? 0;
             });
 
-        // Cari kuota P2 dari tabel Dosen
         $dosenModel = \App\Models\Dosen::where('user_id', $dosen->id)->first();
 
         $kuotaP2 = null;
@@ -68,6 +93,7 @@ public function edit($id)
 
     return view('pages.panitia.pengajuan.edit', compact('pengajuan', 'dosenList'));
 }
+
 
 public function update(Request $request, $id)
 {

@@ -53,42 +53,24 @@ public function editProfile()
 public function updateProfile(Request $request)
 {
     $user = Auth::user();
-    $admin = $user->admin;
 
     $request->validate([
         'name' => 'required|string|max:255',
-        'nip' => 'required|string|max:30',
-        'email' => 'required|email',
-        'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        'nip' => 'required|string|max:30|unique:users,nip,' . $user->id,
+        'email' => 'required|email|unique:users,email,' . $user->id,
+    ], [
+        'nip.unique' => 'NIP sudah digunakan, gunakan NIP lain.',
+        'email.unique' => 'Email sudah digunakan, gunakan email lain.',
     ]);
 
-    // Update user
     $user->update([
         'name' => $request->name,
         'email' => $request->email,
         'nip' => $request->nip,
     ]);
 
-    // Update admin
-    $admin->nip = $request->nip;
-    $admin->nama_admin = $request->name;
-
-    if ($request->hasFile('foto')) {
-        // Hapus foto lama
-        if ($admin->foto && Storage::exists('public/uploads/foto_admin/' . $admin->foto)) {
-            Storage::delete('public/uploads/foto_admin/' . $admin->foto);
-        }
-
-        // Simpan foto baru
-        $file = $request->file('foto');
-        $filename = time() . '_' . $file->getClientOriginalName();
-        $file->storeAs('public/uploads/foto_admin/', $filename);
-        $admin->foto = $filename;
-    }
-
-    $admin->save();
-
     return redirect()->route('admin.profile')->with('success', 'Profil berhasil diperbarui.');
 }
+
 
 }

@@ -32,7 +32,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                        @forelse($sidangList as $index => $sidang)
+                            @php
+                                $sortedSidangList = $sidangList->sortByDesc('created_at')->values();
+                            @endphp
+
+                            @forelse($sortedSidangList as $index => $sidang)
                             <tr>
                                 <td>{{ $index + 1 }}</td>
                                 <td>

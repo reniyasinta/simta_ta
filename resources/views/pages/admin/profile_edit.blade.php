@@ -30,20 +30,6 @@
                                     <label>Email</label>
                                     <input type="email" name="email" class="form-control" value="{{ old('email', $user->email) }}" required>
                                 </div>
-
-                                <div class="form-group">
-                                    <label>Upload Foto</label>
-                                    <input type="file" name="foto" class="form-control-file">
-
-                                    @if ($user->foto)
-                                        <div class="mt-2">
-                                            <img src="{{ asset('storage/uploads/foto_admin/' . $user->foto) }}" alt="Foto Admin"
-                                                 style="width: 100px; height: 100px; object-fit: cover;" class="rounded-circle">
-                                        </div>
-                                    @endif
-                                </div>
-                            </div>
-
                             <div class="card-footer text-right">
                                 <a href="{{ route('admin.profile') }}" class="btn btn-secondary">Batal</a>
                                 <button class="btn btn-primary" type="submit">Simpan Perubahan</button>

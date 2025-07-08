@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Profile Mahasiswa')
+@section('title', 'Profil Dosen')
 
 @section('main')
 <div class="main-content">
@@ -52,7 +52,19 @@
                                     <th>Kuota Terisi</th>
                                     <td>: {{ $totalBimbingan }} / {{ $kuota }} Mahasiswa</td>
                                 </tr>
-
+                                <tr>
+                                    <th>Kuota Per Prodi</th>
+                                    <td class="pt-2">
+                                        @forelse ($kuotaPerProdi as $kp)
+                                            <div>
+                                                {{ $kp->prodi->nama_prodi ?? '-' }}:
+                                                {{ $kp->terisi }} / {{ $kp->kuota_bimbingan }} Mahasiswa
+                                            </div>
+                                        @empty
+                                            <div>Tidak ada data kuota</div>
+                                        @endforelse
+                                    </td>
+                                </tr>
                             </table>
                         </div>
 

@@ -38,8 +38,9 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Prodi</th>
                                 <th>Anggota Kelompok</th>
+                                <th>Kelas</th>
+                                <th>Prodi</th>
                                 <th>Judul TA</th>
                                 <th>Proposal</th>
                                 <th>Status</th>
@@ -51,14 +52,19 @@
                             @forelse($pengajuan as $key => $item)
                                 <tr>
                                     <td>{{ $key + 1 }}</td>
-                                    <td>{{ $item->kelompok->anggota1->mahasiswa->prodi->nama_prodi ?? '-' }}</td>
                                     <td>
-                                        <ul class="mb-0">
                                             @foreach($item->kelompok->anggota as $mhs)
                                                 <li>{{ $mhs->nama_mhs }} ({{ $mhs->nim_mhs }})</li>
                                             @endforeach
                                         </ul>
                                     </td>
+                                    <td>
+                                            @foreach($item->kelompok->anggota as $mhs)
+                                                <li>{{ $mhs->kelas ?? '-' }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </td>
+                                    <td>{{ $item->kelompok->anggota1->mahasiswa->prodi->nama_prodi ?? '-' }}</td>
                                     <td>{{ $item->judul_ta ?? '-' }}</td>
                                     <td>
                                         @if($item->proposal)
@@ -88,14 +94,21 @@
                                     </td>
                                     <td>
                                         @if($item->status === 'Menunggu')
-                                            <div class="d-flex gap-2">
-                                                <button form="form-{{ $item->id_ajuan }}" type="submit" name="status" value="Diterima" class="btn btn-sm btn-success">Acc</button>
-                                                <button form="form-{{ $item->id_ajuan }}" type="submit" name="status" value="Ditolak" class="btn btn-sm btn-danger">Tolak</button>
+                                            <div class="d-flex flex-wrap">
+                                                <button
+                                                    form="form-{{ $item->id_ajuan }}" type="submit"name="status" value="Diterima"
+                                                    class="btn btn-sm btn-success mr-2 mb-2"> Acc
+                                                </button>
+                                                <button
+                                                    form="form-{{ $item->id_ajuan }}"  type="submit"name="status"  value="Ditolak"
+                                                    class="btn btn-sm btn-danger mb-2">Tolak
+                                                </button>
                                             </div>
                                         @else
                                             <span class="text-muted">Sudah divalidasi</span>
                                         @endif
                                     </td>
+
                                 </tr>
                             @empty
                                 <tr>
@@ -117,7 +130,7 @@
     $(document).ready(function () {
         $('#table-validasi').DataTable({
             "language": {
-                "search": "Cari Mahasiswa / NIM / Judul:",
+                "search": "Cari Mahasiswa /Kelas / NIM / Judul:",
                 "lengthMenu": "Tampilkan _MENU_ data",
                 "zeroRecords": "Data tidak ditemukan",
                 "info": "Menampilkan _PAGE_ dari _PAGES_",

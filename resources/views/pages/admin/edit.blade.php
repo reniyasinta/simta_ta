@@ -75,6 +75,11 @@
                                    value="{{ old('nim', $user->nim) }}">
                         </div>
 
+                        <div class="form-group" id="kelas-group" style="{{ old('role_id', $user->role_id) == 4 ? '' : 'display:none;' }}">
+                            <label for="kelas">Kelas</label>
+                            <input type="text" name="kelas" id="kelas" class="form-control" value="{{ old('kelas', optional($user->mahasiswa)->kelas) }}">
+                        </div>
+                        
                         <div class="form-group">
                             <label for="id_prodi">Program Studi</label>
                             <select name="id_prodi" class="form-control">
@@ -107,7 +112,9 @@
         const roleValue = parseInt(document.getElementById('roleSelect').value);
         const nipGroup = document.getElementById('nip-group');
         const nimGroup = document.getElementById('nim-group');
+        const kelasGroup = document.getElementById('kelas-group');
 
+        kelasGroup.style.display = roleValue === 4 ? 'block' : 'none';
         nipGroup.style.display = [1, 2, 3].includes(roleValue) ? 'block' : 'none';
         nimGroup.style.display = roleValue === 4 ? 'block' : 'none';
     }

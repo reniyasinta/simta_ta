@@ -17,16 +17,19 @@
             </div>
         </div>
         @endif
-
-        <div class="card">
-            <div class="card-header">
-                <h1>Berkas Sidang - Final</h1>
+        <section class="section">
+            <div class="section-header">
+                <h1>Berkas Sidang - Revisi</h1>
             </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table id="table-sidang-final" class="table table-bordered table-striped">
-                        <thead>
-                            <tr>
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">Berkas Sidang Final</h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="table-sidang-final" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
                                 <th>No</th>
                                 <th>Nama Mahasiswa</th>
                                 <th>NIM</th>
