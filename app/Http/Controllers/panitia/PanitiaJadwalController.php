@@ -11,6 +11,8 @@ use App\Models\PengajuanPembimbing;
 use App\Models\Sempro;
 use App\Exports\JadwalTemplateExport;
 use App\Imports\JadwalTemplateImport;
+use App\Exports\JadwalSeminarExport;
+use App\Exports\JadwalSidangExport;
 use App\Models\Sidang;
 
 class PanitiaJadwalController extends Controller
@@ -277,7 +279,7 @@ public function create($jenis)
         return view('pages.panitia.jadwal.import', compact('jenis'));
     }
 
-    public function importJadwal(Request $request)
+public function importJadwal(Request $request)
 {
     $jenis = $request->input('jenis');
     if (!in_array($jenis, ['seminar', 'sidang'])) abort(404);
@@ -287,22 +289,36 @@ public function create($jenis)
     ]);
 
     try {
-        Excel::import(new JadwalTemplateImport($jenis), $request->file('file'));
+        $import = new JadwalTemplateImport($jenis);
+        Excel::import($import, $request->file('file'));
+
+        if ($import->getProcessedCount() === 0) {
+            return redirect()->back()->with('error', 'Gagal impor: File tidak berisi data jadwal yang valid.');
+        }
 
         $msg = 'Jadwal berhasil diimpor.';
         if (session()->has('import_warnings')) {
-            $msg .= ' Beberapa baris dilewati:';
+            $msg .= ' Beberapa baris dilewati.';
         }
 
         return redirect()->route('panitia.jadwal.jenis.index', ['jenis' => $jenis])
             ->with('success', $msg)
             ->with('warnings', session()->get('import_warnings'));
+
     } catch (\Exception $e) {
         return back()->with('error', 'Gagal impor: ' . $e->getMessage());
     }
 }
 
+    public function exportSeminar()
+    {
+        return Excel::download(new JadwalSeminarExport, 'jadwal_seminar.xlsx');
+    }
 
+    public function exportSidang()
+    {
+        return Excel::download(new JadwalSidangExport, 'jadwal_sidang.xlsx');
+    }
     // === YUDISIUM TERPISAH ===
 
     public function indexYudisium()

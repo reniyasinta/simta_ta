@@ -33,12 +33,12 @@
                     </form>
 
                         {{-- Input Cari Mahasiswa / NIM --}}
-                        <input type="text" id="searchInput" class="form-control mb-3" placeholder="Cari Mahasiswa" />
+                        <input type="text" id="searchInput" class="form-control mb-3" placeholder="Cari" />
 
-<div class="p-3 rounded text-white" style="background-color: #4c6ef5;">
-    <strong>Kuota Bimbingan:</strong> {{ $kuota }} &nbsp; | &nbsp;
-    <strong>Jumlah Bimbingan Aktif:</strong> {{ $totalBimbingan }}
-</div>
+                    <div class="p-3 rounded text-white" style="background-color: #4c6ef5;">
+                        <strong>Kuota Bimbingan:</strong> {{ $kuota }} &nbsp; | &nbsp;
+                        <strong>Jumlah Bimbingan Aktif:</strong> {{ $totalBimbingan }}
+                    </div>
 
                     </div>
                     {{-- Mahasiswa Bimbingan 1 --}}
@@ -53,30 +53,35 @@
                                         <tr>
                                             <th>No</th>
                                             <th>Nama Mahasiswa</th>
+                                            <th>Kelas</th>
                                             <th>Prodi</th>
                                             <th>Judul TA</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @php $no1 = 1; @endphp
-                                        @foreach($sebagaiPembimbing1 as $item)
-                                            @foreach($item->kelompok->anggota as $mhs)
-                                            <tr class="search-item">
-                                                <td>{{ $no1++ }}</td>
-                                                <td>{{ $mhs->nama_mhs }}</td>
-                                                <td>{{ $mhs->prodi->nama_prodi ?? '-' }}</td>
-                                                <td>{{ $item->judul_ta ?? '-' }}</td>
-                                                <td>
-                                                    <a href="{{ route('dosen.mahasiswa.show', $mhs->id_mhs) }}" class="btn btn-sm btn-success">
-                                                        <i class="fas fa-user"></i> Profil
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                            @endforeach
+                                    @php $start1 = ($sebagaiPembimbing1->currentPage() - 1) * $sebagaiPembimbing1->perPage() + 1; @endphp
+                                            @foreach($sebagaiPembimbing1 as $item)
+                                        @foreach($item->kelompok->anggota as $mhs)
+                                        <tr class="search-item">
+                                    <td>{{ $start1++ }}</td>
+                                            <td>{{ $mhs->nama_mhs }}</td>
+                                            <td>{{ $mhs->kelas ?? '-' }}</td>
+                                            <td>{{ $mhs->prodi->nama_prodi ?? '-' }}</td>
+                                            <td>{{ $item->judul_ta ?? '-' }}</td>
+                                            <td>
+                                                <a href="{{ route('dosen.mahasiswa.show', $mhs->id_mhs) }}" class="btn btn-sm btn-success">
+                                                    <i class="fas fa-user"></i> Profil
+                                                </a>
+                                            </td>
+                                        </tr>
                                         @endforeach
+                                    @endforeach
                                     </tbody>
-                                </table>
+                                    </table>
+                                    <div class="d-flex justify-content-center mt-3">
+                                        {{ $sebagaiPembimbing1->links() }}
+                                    </div>
                             </div>
                         </div>
                     </div>
@@ -93,18 +98,20 @@
                                         <tr>
                                             <th>No</th>
                                             <th>Nama Mahasiswa</th>
+                                            <th>Kelas</th>
                                             <th>Prodi</th>
                                             <th>Judul TA</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @php $no2 = 1; @endphp
+                                        @php $start2 = ($sebagaiPembimbing2->currentPage() - 1) * $sebagaiPembimbing2->perPage() + 1; @endphp
                                         @foreach($sebagaiPembimbing2 as $item)
                                             @foreach($item->kelompok->anggota as $mhs)
                                             <tr class="search-item">
-                                                <td>{{ $no2++ }}</td>
+                                                <td>{{ $start2++ }}</td>
                                                 <td>{{ $mhs->nama_mhs }}</td>
+                                                <td>{{ $mhs->kelas ?? '-' }}</td>
                                                 <td>{{ $mhs->prodi->nama_prodi ?? '-' }}</td>
                                                 <td>{{ $item->judul_ta ?? '-' }}</td>
                                                 <td>
@@ -117,6 +124,10 @@
                                         @endforeach
                                     </tbody>
                                 </table>
+                                <div class="d-flex justify-content-center mt-3">
+    {{ $sebagaiPembimbing2->links() }}
+</div>
+
                             </div>
                         </div>
                     </div>

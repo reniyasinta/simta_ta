@@ -14,6 +14,7 @@ class JadwalTemplateImport implements ToCollection, WithHeadingRow
 {
     protected $jenis;
     protected $warnings = [];
+    protected $processedCount = 0;
 
     public function __construct($jenis)
     {
@@ -80,6 +81,7 @@ class JadwalTemplateImport implements ToCollection, WithHeadingRow
                     'pembimbing_2' => $pengajuan->dosen2->name ?? '-',
                 ]
             );
+             $this->processedCount++;
         }
 
         // Simpan warning ke session
@@ -87,4 +89,8 @@ class JadwalTemplateImport implements ToCollection, WithHeadingRow
             session()->flash('import_warnings', $this->warnings);
         }
     }
+       public function getProcessedCount() // ✅ Tambahan
+        {
+            return $this->processedCount;
+        }
 }

@@ -41,6 +41,7 @@
                             <tr>
                                 <th>No</th>
                                 <th>Anggota Kelompok</th>
+                                <th>Kelas</th>
                                 <th>Prodi</th>
                                 <th>Judul TA</th>
                                 <th>Proposal TA</th>
@@ -64,6 +65,13 @@
                                         <ul class="mb-0">
                                             @foreach($item->pengajuan->kelompok->anggota as $mhs)
                                                 <li>{{ $mhs->nama_mhs }} ({{ $mhs->nim_mhs }})</li>
+                                            @endforeach
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <ul class="mb-0">
+                                            @foreach($item->pengajuan->kelompok->anggota as $mhs)
+                                                <li>{{ $mhs->kelas ?? '-' }}</li>
                                             @endforeach
                                         </ul>
                                     </td>
@@ -116,9 +124,13 @@
                                     </td>
                                     <td>
                                         @if($status === 'Menunggu')
-                                            <div class="d-flex gap-2">
-                                                <button form="form-{{ $item->id_sempro }}" type="submit" name="status" value="Disetujui" class="btn btn-sm btn-success">Setujui</button>
-                                                <button form="form-{{ $item->id_sempro }}" type="submit" name="status" value="Revisi" class="btn btn-sm btn-warning">Revisi</button>
+                                            <div class="d-flex flex-wrap">
+                                                <button form="form-{{ $item->id_sempro }}" type="submit" name="status" value="Disetujui" class="btn btn-sm btn-success mr-2">
+                                                    Setujui
+                                                </button>
+                                                <button form="form-{{ $item->id_sempro }}" type="submit" name="status" value="Revisi" class="btn btn-sm btn-warning">
+                                                    Revisi
+                                                </button>
                                             </div>
                                         @else
                                             <span class="text-muted">Sudah divalidasi</span>
@@ -145,7 +157,7 @@
     $(document).ready(function () {
         $('#table-sempro').DataTable({
             language: {
-                search: "Cari Mahasiswa / NIM / Judul:",
+                search: "Cari Mahasiswa / Kelas / NIM / Judul:",
                 lengthMenu: "Tampilkan _MENU_ data",
                 zeroRecords: "Data tidak ditemukan",
                 info: "Menampilkan _PAGE_ dari _PAGES_",

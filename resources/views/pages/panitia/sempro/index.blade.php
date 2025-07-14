@@ -35,6 +35,7 @@
                             <tr>
                                 <th class="text-center" style="width: 50px;">No</th>
                                 <th class="text-center">Anggota Kelompok</th>
+                                <th class="text-center">Kelas</th>
                                 <th class="text-center">Prodi</th>
                                 <th class="text-center">Proposal TA</th>
                                 <th class="text-center">Form Persetujuan</th>
@@ -68,6 +69,18 @@
                                             @endif
                                             @if($pengajuan->kelompok->anggota3?->mahasiswa)
                                                 <li>{{ $pengajuan->kelompok->anggota3->mahasiswa->nama_mhs }} ({{ $pengajuan->kelompok->anggota3->mahasiswa->nim_mhs }})</li>
+                                            @endif
+                                        </ul>
+                                    </td>
+                                    <td class="text-center">
+                                            @if($pengajuan->kelompok->anggota1?->mahasiswa)
+                                                <li>{{ $pengajuan->kelompok->anggota1->mahasiswa->kelas ?? '-' }}</li>
+                                            @endif
+                                            @if($pengajuan->kelompok->anggota2?->mahasiswa)
+                                                <li>{{ $pengajuan->kelompok->anggota2->mahasiswa->kelas ?? '-' }}</li>
+                                            @endif
+                                            @if($pengajuan->kelompok->anggota3?->mahasiswa)
+                                                <li>{{ $pengajuan->kelompok->anggota3->mahasiswa->kelas ?? '-' }}</li>
                                             @endif
                                         </ul>
                                     </td>

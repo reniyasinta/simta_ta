@@ -25,6 +25,7 @@
                             <th>No</th>
                             <th>Nama Mahasiswa</th>
                             <th>NIM</th>
+                            <th>Kelas</th>
                             <th>Prodi</th>
                             <th>Revisi Laporan</th>
                             <th>Status Revisi</th>
@@ -34,21 +35,29 @@
                         @forelse ($sidangList as $index => $sidang)
                             <tr>
                                 <td>{{ $index + 1 }}</td>
-<td>
-    @foreach (['anggota1', 'anggota2', 'anggota3'] as $pos)
-        @if($sidang->kelompok && $sidang->kelompok->$pos && $sidang->kelompok->$pos->mahasiswa)
-            <div>{{ $sidang->kelompok->$pos->mahasiswa->nama_mhs ?? '-' }}</div>
-        @endif
-    @endforeach
-</td>
-<td>
-    @foreach (['anggota1', 'anggota2', 'anggota3'] as $pos)
-        @if($sidang->kelompok && $sidang->kelompok->$pos && $sidang->kelompok->$pos->mahasiswa)
-            <div>{{ $sidang->kelompok->$pos->mahasiswa->nim_mhs ?? '-' }}</div>
-        @endif
-    @endforeach
-</td>
-
+                                <td>
+                                    @foreach (['anggota1', 'anggota2', 'anggota3'] as $pos)
+                                        @if($sidang->kelompok && $sidang->kelompok->$pos && $sidang->kelompok->$pos->mahasiswa)
+                                            <div>{{ $sidang->kelompok->$pos->mahasiswa->nama_mhs ?? '-' }}</div>
+                                        @endif
+                                    @endforeach
+                                </td>
+                                <td>
+                                    @foreach (['anggota1', 'anggota2', 'anggota3'] as $pos)
+                                        @if($sidang->kelompok && $sidang->kelompok->$pos && $sidang->kelompok->$pos->mahasiswa)
+                                            <div>{{ $sidang->kelompok->$pos->mahasiswa->nim_mhs ?? '-' }}</div>
+                                        @endif
+                                    @endforeach
+                                </td>
+                                <td>
+                                    @php
+                                        $kelas = $sidang->kelompok->anggota1->mahasiswa->kelas
+                                            ?? $sidang->kelompok->anggota2->mahasiswa->kelas
+                                            ?? $sidang->kelompok->anggota3->mahasiswa->kelas
+                                            ?? '-';
+                                    @endphp
+                                    {{ $kelas }}
+                                </td>
                                 <td>{{ $sidang->mahasiswa->prodi->nama_prodi ?? '-' }}</td>
                                 <td>
                                     @if ($sidang->revisi_laporan)

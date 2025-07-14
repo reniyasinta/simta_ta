@@ -104,6 +104,10 @@
                         @endforelse
                     </tbody>
                 </table>
+<a href="{{ route('panitia.jadwal.sidang.export') }}" class="btn btn-success">
+    <i class="fas fa-file-export"></i> Export Jadwal
+</a>
+
             </div>
         </div>
 

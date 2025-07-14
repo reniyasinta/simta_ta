@@ -109,7 +109,7 @@ public function bimbingan(Request $request)
         ->when($prodiFilter, function ($query) use ($prodiFilter) {
             $query->whereHas('kelompok.anggota1.mahasiswa', fn($q) => $q->where('id_prodi', $prodiFilter));
         })
-        ->get();
+        ->paginate(5, ['*'], 'bimbingan1_page');
 
     $sebagaiPembimbing2 = PengajuanPembimbing::with(['kelompok.anggota.prodi', 'dosen2'])
         ->where('id_dosen2', $user->id)
@@ -117,7 +117,7 @@ public function bimbingan(Request $request)
         ->when($prodiFilter, function ($query) use ($prodiFilter) {
             $query->whereHas('kelompok.anggota1.mahasiswa', fn($q) => $q->where('id_prodi', $prodiFilter));
         })
-        ->get();
+        ->paginate(5, ['*'], 'bimbingan2_page');
 
     $totalBimbingan = $sebagaiPembimbing1->sum(fn($p) => $p->kelompok?->anggota->count() ?? 0)
         + $sebagaiPembimbing2->sum(fn($p) => $p->kelompok?->anggota->count() ?? 0);

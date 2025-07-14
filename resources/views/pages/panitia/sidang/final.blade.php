@@ -33,6 +33,7 @@
                                 <th>No</th>
                                 <th>Nama Mahasiswa</th>
                                 <th>NIM</th>
+                                <th>Kelas</th>
                                 <th>Prodi</th>
                                 <th>Laporan Akhir (PDF)</th>
                                 <th>Word</th>
@@ -63,6 +64,14 @@
                                     @foreach ($sidang->kelompok->anggota as $anggota)
                                         <div>{{ $anggota->nim_mhs }}</div>
                                     @endforeach
+                                </td>
+                                
+                                {{-- Kelas --}}
+                                <td>
+                                    @php
+                                        $kelas = $sidang->kelompok->anggota->first()->kelas ?? '-';
+                                    @endphp
+                                    {{ $kelas }}
                                 </td>
 
                                 {{-- Prodi --}}

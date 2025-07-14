@@ -25,6 +25,7 @@
                             <tr>
                                 <th>No</th>
                                 <th>Nama Mahasiswa</th>
+                                <th>Kelas</th>
                                 <th>Revisi Laporan</th>
                                 <th>Status Revisi</th>
                                 <th>Catatan</th>
@@ -53,6 +54,15 @@
                                     {!! implode('<br>', $anggotaList) !!}
                                 </td>
 
+                                <td>
+                                    @php
+                                        $kelas = $sidang->kelompok->anggota1->mahasiswa->kelas
+                                            ?? $sidang->kelompok->anggota2->mahasiswa->kelas
+                                            ?? $sidang->kelompok->anggota3->mahasiswa->kelas
+                                            ?? '-';
+                                    @endphp
+                                    {{ $kelas }}
+                                </td>
                                 {{-- Revisi Laporan --}}
                                 <td>
                                     @if($sidang->revisi_laporan)
@@ -137,7 +147,7 @@
     $(document).ready(function () {
         $('#table-revisi').DataTable({
             "language": {
-                "search": "Cari Mahasiswa / NIM:",
+                "search": "Cari Mahasiswa / Kelas / NIM:",
                 "lengthMenu": "Tampilkan _MENU_ data per halaman",
                 "zeroRecords": "Data tidak ditemukan",
                 "info": "Menampilkan _PAGE_ dari _PAGES_",

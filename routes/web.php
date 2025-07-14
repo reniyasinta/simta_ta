@@ -133,7 +133,10 @@ Route::middleware(['role:panitia'])->prefix('panitia')->name('panitia.')->group(
         Route::get('/export/{jenis}', [PanitiaJadwalController::class, 'export'])->name('export');
         Route::get('/import/{jenis}', [PanitiaJadwalController::class, 'importForm'])->name('import.form');
         Route::post('/import', [PanitiaJadwalController::class, 'importJadwal'])->name('import');
-    });
+        // Perbaiki nama route export sidang
+        Route::get('/seminar/export', [PanitiaJadwalController::class, 'exportSeminar'])->name('seminar.export');
+        Route::get('/sidang/export', [PanitiaJadwalController::class, 'exportSidang'])->name('sidang.export');
+     });
 
     // SEMPRO
     Route::get('/sempro/create', [PanitiaSemproController::class, 'create'])->name('sempro.create');

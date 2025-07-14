@@ -21,6 +21,7 @@
                                 <th class="text-center" style="width: 50px;">No</th>
                                 <th class="text-center">Nama Mahasiswa</th>
                                 <th class="text-center">NIM</th>
+                                <th class="text-center">Kelas</th>
                                 <th class="text-center">Prodi</th>
                                 <th class="text-center">Laporan TA</th>
                                 <th class="text-center">Form Persetujuan</th>
@@ -40,6 +41,11 @@
                                     <td>
                                         @foreach ($sidang->kelompok->anggota as $anggota)
                                             <div>{{ $anggota->nim_mhs ?? '-' }}</div>
+                                        @endforeach
+                                    </td>
+                                     <td>
+                                        @foreach ($sidang->kelompok->anggota as $anggota)
+                                            <div>{{ $anggota->kelas ?? '-' }}</div>
                                         @endforeach
                                     </td>
                                     <td class="text-center">
